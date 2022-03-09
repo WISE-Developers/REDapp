@@ -1,0 +1,21 @@
+package ca.redapp.util;
+
+import io.github.g00fy2.versioncompare.Version;
+
+public class BuildConfig {
+
+	/**
+	 * The PSaaS Manager version.
+	 */
+	public static final Version version = new Version("@buildversion@");
+	
+	/**
+	 * The time that PSaaS Manager was last packaged at.
+	 */
+	public static final String buildTime = "@buildtime@";
+	
+	/**
+	 * Is the application running in a debug configuration.
+	 */
+	public static final boolean debug = @debug@;
+}
