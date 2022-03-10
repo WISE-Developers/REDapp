@@ -279,6 +279,25 @@
                         token="@DATE@" value="${release.time.fr}" />
                     <replace file="res/about_fr.rtf"
                         token="@YEAR@" value="${release.year}" />
+
+                    <mkdir dir="licence.out"/>
+                    <copy file="res/licence.html" tofile="licence.out/licence.html" overwrite="true" />
+                    <copy file="res/licence_fr.html" tofile="licence.out/licence_fr.html" overwrite="true" />
+                    <copy file="licence.in/licence.txt" tofile="licence.out/licence.txt" overwrite="true" />
+                    <replace file="licence.out/licence.txt"
+                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                    <replace file="licence.out/licence.txt"
+                        token="@DATE@" value="${release.time.en}" />
+                    <copy file="licence.in/licence.rtf" tofile="licence.out/licence.rtf" overwrite="true" />
+                    <replace file="licence.out/licence.rtf"
+                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                    <replace file="licence.out/licence.rtf"
+                        token="@DATE@" value="${release.time.en}" />
+                    <copy file="licence.in/licence_fr.rtf" tofile="licence.out/licence_fr.rtf" overwrite="true" />
+                    <replace file="licence.out/licence_fr.rtf"
+                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                    <replace file="licence.out/licence_fr.rtf"
+                        token="@DATE@" value="${release.time.fr}" />
                   </tasks>
                   <sourceRoot>src/main/java/ca/redapp/util</sourceRoot>
                 </configuration>
