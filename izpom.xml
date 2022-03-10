@@ -73,9 +73,9 @@
         <version>5.1.3</version>
         <extensions>true</extensions>
         <configuration>
-          <baseDir>installers/linux</baseDir>
-          <installFile>installers/linux/install.xml</installFile>
-          <outputDirectory>installers/linux</outputDirectory>
+          <baseDir>installers/all</baseDir>
+          <installFile>installers/all/install.xml</installFile>
+          <outputDirectory>installers/all</outputDirectory>
           <finalName>REDapp-All-${release.timestamp}</finalName>
           <mkdirs>true</mkdirs>
         </configuration>
