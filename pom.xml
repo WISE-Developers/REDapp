@@ -278,10 +278,10 @@
                     <mkdir dir="licence.out"/>
                     <copy file="res/licence.html" tofile="licence.out/licence.html" overwrite="true" />
                     <copy file="res/licence_fr.html" tofile="licence.out/licence_fr.html" overwrite="true" />
-                    <copy file="licence.in/licence.txt" tofile="licence.out/licence.txt" overwrite="true" />
-                    <replace file="licence.out/licence.txt"
+                    <copy file="licence.in/Licence.txt" tofile="licence.out/Licence.txt" overwrite="true" />
+                    <replace file="licence.out/Licence.txt"
                         token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
-                    <replace file="licence.out/licence.txt"
+                    <replace file="licence.out/Licence.txt"
                         token="@DATE@" value="${release.time.en}" />
                     <copy file="licence.in/licence.rtf" tofile="licence.out/licence.rtf" overwrite="true" />
                     <replace file="licence.out/licence.rtf"
