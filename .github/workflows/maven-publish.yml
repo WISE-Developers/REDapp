@@ -1,0 +1,540 @@
+name: Maven Publish
+
+on: 
+  workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    
+    outputs:
+      release_version: ${{ steps.version-numbers.outputs.prometheus_version }}
+      user_friendly_version: ${{ steps.library-build.outputs.user_friendly_version }}
+      build_date: ${{ steps.library-build.outputs.build_date }}
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: PSaaS-Developers/versions
+        path: versions
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        repository: PSaaS-Developers/FWI
+        path: FWI
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        repository: PSaaS-Developers/Fuel
+        path: Fuel
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        repository: PSaaS-Developers/Grid
+        path: Grid
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        repository: PSaaS-Developers/REDapp_Lib
+        path: REDapp_Lib
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        repository: PSaaS-Developers/Weather
+        path: Weather
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        repository: PSaaS-Developers/REDapp
+        path: REDapp
+        token: ${{ secrets.PSAAS_PAT }}
+
+    - name: Set up JDK 8
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+        cache: 'maven'
+    
+    - name: Setup the Maven configuration file
+      uses: whelk-io/maven-settings-xml-action@v20
+      with:
+        servers: '[{ "id": "github", "username": "spydmobile", "password": "${{ secrets.PSAAS_PAT }}" }, { "id": "github_hss", "username": "tredpath", "password": "${{ secrets.HSS_PAT }}" }]'
+
+    - name: Load values from versions
+      id: version-numbers
+      shell: pwsh
+      run: |
+        $versions = ConvertFrom-StringData (Get-Content versions/versions.properties -raw)
+        echo "::set-output name=prometheus_version::$($versions.prometheus)"
+        echo "::set-output name=hss_math_version::$($versions.hss_math)"
+        echo "::set-output name=wtime_version::$($versions.wtime)"
+        echo "::set-output name=hss_java_version::$($versions.hss_java)"
+      
+    - name: Update the versions
+      run: |
+        cd FWI/java
+        mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
+        mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
+        mvn versions:commit
+        cd -
+        cd Fuel/java
+        mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
+        mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
+        mvn versions:commit
+        cd -
+        cd Grid/java
+        mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
+        mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
+        mvn versions:commit
+        cd -
+        cd REDapp_Lib/java
+        mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
+        mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
+        mvn versions:commit
+        cd -
+        cd Weather/java
+        mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
+        mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
+        mvn versions:commit
+        cd -
+        cd REDapp/java
+        mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
+        mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
+        mvn versions:commit
+        mvn -f izpom.xml versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
+        mvn -f izpom.xml versions:commit
+    
+    - uses: suisei-cn/actions-download-file@v1
+      name: Download GeoLiteCity-Blocks.csv
+      with:
+        url: "https://github.com/UM-USElab/geolocate_users/raw/master/geolocate_users/GeoIP/GeoLiteCity-Blocks.csv"
+        target: REDapp/res/data
+    
+    - uses: suisei-cn/actions-download-file@v1
+      name: Download GeoLiteCity-Location.csv
+      with:
+        url: "https://github.com/UM-USElab/geolocate_users/raw/master/geolocate_users/GeoIP/GeoLiteCity-Location.csv"
+        target: REDapp/res/data
+    
+    - name: Install Protoc
+      uses: arduino/setup-protoc@v1
+      with:
+        version: '3.11.1'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Build the libraries
+      id: library-build
+      run: |
+        cd FWI/java
+        mvn install
+        cd -
+        cd Fuel/java
+        protoc --java_out src/main/java --proto_path ../proto/ accAlpha.proto
+        protoc --java_out src/main/java --proto_path ../proto/ ccwfgmFuel.proto
+        protoc --java_out src/main/java --proto_path ../proto/ cfb.proto
+        protoc --java_out src/main/java --proto_path ../proto/ dbh.proto
+        protoc --java_out src/main/java --proto_path ../proto/ flame.proto
+        protoc --java_out src/main/java --proto_path ../proto/ fmc.proto
+        protoc --java_out src/main/java --proto_path ../proto/ fuelNames.proto
+        protoc --java_out src/main/java --proto_path ../proto/ isf.proto
+        protoc --java_out src/main/java --proto_path ../proto/ lb.proto
+        protoc --java_out src/main/java --proto_path ../proto/ rsi.proto
+        protoc --java_out src/main/java --proto_path ../proto/ sfc.proto
+        protoc --java_out src/main/java --proto_path ../proto/ spreadParms.proto
+        protoc --java_out src/main/java --proto_path ../proto/ tfc.proto
+        mvn install
+        cd -
+        cd Grid/java
+        protoc --java_out src/main/java --proto_path ../proto/ cwfgmFilter.proto
+        protoc --java_out src/main/java --proto_path ../proto/ cwfgmFuelMap.proto
+        protoc --java_out src/main/java --proto_path ../proto/ cwfgmGrid.proto
+        protoc --java_out src/main/java --proto_path ../proto/ wcsData.proto
+        mvn install
+        cd -
+        cd REDapp_Lib
+        mvn install
+        cd -
+        cd Weather/java
+        protoc --java_out src/main/java --proto_path ../proto/ cwfgmWeatherStation.proto
+        protoc --java_out src/main/java --proto_path ../proto/ cwfgmWeatherStream.proto
+        protoc --java_out src/main/java --proto_path ../proto/ dailyConditions.proto
+        protoc --java_out src/main/java --proto_path ../proto/ weatherGridFilter.proto
+        protoc --java_out src/main/java --proto_path ../proto/ weatherStream.proto
+        protoc --java_out src/main/java --proto_path ../proto/ windGrid.proto
+        mvn install
+        cd -
+        cd REDapp
+        mvn package
+        APPLICATION_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec | cut -d "." -f2-)
+        APPLICATION_VERSION=$(echo "${APPLICATION_VERSION/-/.}")
+        echo "::set-output name=user_friendly_version::$APPLICATION_VERSION"
+        CURRENT_DATE=$(date +'%Y%m%d')
+        echo "::set-output name=build_date::$CURRENT_DATE"
+        mvn -f izpom.xml package
+        mv installers/all/REDapp-All-$CURRENT_DATE.jar ..
+    
+    - name: Archive generated files
+      shell: pwsh
+      run: |
+        Compress-Archive -DestinationPath REDapp-${{ steps.library-build.outputs.user_friendly_version }}.zip -Path REDapp/target/REDapp.jar,REDapp/target/REDapp_lib,REDapp/res/html
+        Compress-Archive -DestinationPath licence.zip -Path REDapp/licence.out/*
+
+    - name: Upload generated files
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-libs
+        path: REDapp-${{ steps.library-build.outputs.user_friendly_version }}.zip
+        retention-days: 1
+    
+    - name: Upload all platform installer
+      uses: actions/upload-artifact@v2
+      with:
+        name: installers
+        path: REDapp-All-${{ steps.library-build.outputs.build_date }}.jar
+        retention-days: 1
+    
+    - name: Upload licence files
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-libs
+        path: licence.zip
+        retention-days: 1
+
+  platform-installers:
+    runs-on: windows-latest
+    needs: build
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Download Libraries
+      uses: actions/download-artifact@v2
+      with:
+        name: release-libs
+
+    - name: Extract the files
+      shell: pwsh
+      run: |
+        Expand-Archive licence.zip -DestinationPath installers/bin
+        Expand-Archive REDapp-${{ needs.build.outputs.user_friendly_version }}.zip -DestinationPath installers/bin
+
+    - name: Build the installer
+      run: |
+        cd installers/windows
+        makensis /DVER_PUBLIC=${{ needs.build.outputs.user_friendly_version }} /DOUTPUT_FILENAME=REDapp-Windows-${{ needs.build.outputs.build_date }}.exe installer.nsi
+        mv REDapp-Windows-${{ needs.build.outputs.build_date }}.exe ../..
+    
+    - name: Upload installer
+      uses: actions/upload-artifact@v2
+      with:
+        name: installers
+        path: REDapp-Windows-${{ needs.build.outputs.build_date }}.exe
+        retention-days: 1
+
+  release:
+    runs-on: ubuntu-latest
+    needs:
+    - build
+    - platform-installers
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        repository: PSaaS-Developers/versions
+        path: versions
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        repository: PSaaS-Developers/FWI
+        path: FWI
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        repository: PSaaS-Developers/Fuel
+        path: Fuel
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        repository: PSaaS-Developers/Grid
+        path: Grid
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        repository: PSaaS-Developers/REDapp_Lib
+        path: REDapp_Lib
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        repository: PSaaS-Developers/Weather
+        path: Weather
+        token: ${{ secrets.PSAAS_PAT }}
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        repository: PSaaS-Developers/REDapp
+        path: REDapp
+        token: ${{ secrets.PSAAS_PAT }}
+    
+    - name: Download Libraries
+      uses: actions/download-artifact@v2
+      with:
+        name: release-libs
+
+    - name: Download Installers
+      uses: actions/download-artifact@v2
+      with:
+        name: installers
+
+    - name: Tag the repositories
+      id: last-tags
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        cd versions
+        VERSIONS_TAG=$(git describe --tags --abbrev=0)
+        echo "::set-output name=versions_tag::$VERSIONS_TAG"
+        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        cd -
+        cd FWI
+        FWI_TAG=$(git describe --tags --abbrev=0)
+        echo "::set-output name=fwi_tag::$FWI_TAG"
+        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        cd -
+        cd Fuel
+        FUEL_TAG=$(git describe --tags --abbrev=0)
+        echo "::set-output name=fuel_tag::$FUEL_TAG"
+        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        cd -
+        cd Grid
+        GRID_TAG=$(git describe --tags --abbrev=0)
+        echo "::set-output name=grid_tag::$GRID_TAG"
+        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        cd -
+        cd REDapp_Lib
+        REDAPP_LIB_TAG=$(git describe --tags --abbrev=0)
+        echo "::set-output name=redapp_lib_tag::$REDAPP_LIB_TAG"
+        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        cd -
+        cd Weather
+        WEATHER_TAG=$(git describe --tags --abbrev=0)
+        echo "::set-output name=weather_tag::$WEATHER_TAG"
+        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        cd -
+        cd REDapp
+        REDAPP_TAG=$(git describe --tags --abbrev=0)
+        echo "::set-output name=redapp_tag::$REDAPP_TAG"
+        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+
+    - name: Push versions changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.PSAAS_PAT }}
+        repository: PSaaS-Developers/versions
+        directory: versions
+        tags: true
+  
+    - name: Push FWI changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.PSAAS_PAT }}
+        repository: PSaaS-Developers/FWI
+        directory: FWI
+        tags: true
+  
+    - name: Push Fuel changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.PSAAS_PAT }}
+        repository: PSaaS-Developers/Fuel
+        directory: Fuel
+        tags: true
+  
+    - name: Push Grid changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.PSAAS_PAT }}
+        repository: PSaaS-Developers/Grid
+        directory: Grid
+        tags: true
+  
+    - name: Push REDapp_Lib changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.PSAAS_PAT }}
+        repository: PSaaS-Developers/REDapp_Lib
+        directory: REDapp_Lib
+        tags: true
+  
+    - name: Push Weather changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.PSAAS_PAT }}
+        repository: PSaaS-Developers/Weather
+        directory: Weather
+        tags: true
+  
+    - name: Push REDapp changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.PSAAS_PAT }}
+        branch: ${{ github.ref }}
+        tags: true
+
+    - name: Create FWI Release Notes
+      id: fwi-notes
+      uses: mikepenz/release-changelog-builder-action@v2.9.0
+      with:
+        owner: PSaaS-Developers
+        repo: FWI
+        path: FWI
+        toTag: ${{ needs.build.outputs.release_version }}
+        fromTag: ${{ steps.last-tags.outputs.fwi_tag }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
+
+    - name: Create Fuel Release Notes
+      id: fuel-notes
+      uses: mikepenz/release-changelog-builder-action@v2.9.0
+      with:
+        owner: PSaaS-Developers
+        repo: Fuel
+        path: Fuel
+        toTag: ${{ needs.build.outputs.release_version }}
+        fromTag: ${{ steps.last-tags.outputs.fuel_tag }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
+
+    - name: Create Grid Release Notes
+      id: grid-notes
+      uses: mikepenz/release-changelog-builder-action@v2.9.0
+      with:
+        owner: PSaaS-Developers
+        repo: Grid
+        path: Grid
+        toTag: ${{ needs.build.outputs.release_version }}
+        fromTag: ${{ steps.last-tags.outputs.grid_tag }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
+
+    - name: Create REDapp_Lib Release Notes
+      id: redapp-lib-notes
+      uses: mikepenz/release-changelog-builder-action@v2.9.0
+      with:
+        owner: PSaaS-Developers
+        repo: REDapp_Lib
+        path: REDapp_Lib
+        toTag: ${{ needs.build.outputs.release_version }}
+        fromTag: ${{ steps.last-tags.outputs.redapp_lib_tag }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
+
+    - name: Create Weather Release Notes
+      id: weather-notes
+      uses: mikepenz/release-changelog-builder-action@v2.9.0
+      with:
+        owner: PSaaS-Developers
+        repo: Weather
+        path: Weather
+        toTag: ${{ needs.build.outputs.release_version }}
+        fromTag: ${{ steps.last-tags.outputs.weather_tag }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
+
+    - name: Create REDapp Release Notes
+      id: redapp-notes
+      uses: mikepenz/release-changelog-builder-action@v2.9.0
+      with:
+        owner: PSaaS-Developers
+        repo: REDapp
+        path: REDapp
+        toTag: ${{ needs.build.outputs.release_version }}
+        fromTag: ${{ steps.last-tags.outputs.redapp_tag }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
+
+    - name: Create FWI release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: ${{ needs.build.outputs.release_version }}
+        body: ${{ steps.fwi-notes.outputs.changelog }}
+        tag_name: refs/tags/${{ needs.build.outputs.release_version }}
+        token: ${{ secrets.PSAAS_PAT }}
+      env:
+        GITHUB_REPOSITORY: PSaaS-Developers/FWI
+
+    - name: Create Fuel release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: ${{ needs.build.outputs.release_version }}
+        body: ${{ steps.fuel-notes.outputs.changelog }}
+        tag_name: refs/tags/${{ needs.build.outputs.release_version }}
+        token: ${{ secrets.PSAAS_PAT }}
+      env:
+        GITHUB_REPOSITORY: PSaaS-Developers/Fuel
+
+    - name: Create Grid release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: ${{ needs.build.outputs.release_version }}
+        body: ${{ steps.grid-notes.outputs.changelog }}
+        tag_name: refs/tags/${{ needs.build.outputs.release_version }}
+        token: ${{ secrets.PSAAS_PAT }}
+      env:
+        GITHUB_REPOSITORY: PSaaS-Developers/Grid
+
+    - name: Create REDapp_Lib release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: ${{ needs.build.outputs.release_version }}
+        body: ${{ steps.redapp-lib-notes.outputs.changelog }}
+        tag_name: refs/tags/${{ needs.build.outputs.release_version }}
+        token: ${{ secrets.PSAAS_PAT }}
+      env:
+        GITHUB_REPOSITORY: PSaaS-Developers/REDapp_Lib
+
+    - name: Create Weather release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: ${{ needs.build.outputs.release_version }}
+        body: ${{ steps.weather-notes.outputs.changelog }}
+        tag_name: refs/tags/${{ needs.build.outputs.release_version }}
+        token: ${{ secrets.PSAAS_PAT }}
+      env:
+        GITHUB_REPOSITORY: PSaaS-Developers/Weather
+
+    - name: Create release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: ${{ needs.build.outputs.release_version }}
+        body: ${{ steps.redapp-notes.outputs.changelog }}
+        files: |
+          REDapp-Windows-${{ needs.build.outputs.build_date }}.exe
+          REDapp-All-${{ needs.build.outputs.build_date }}.jar
+          REDapp-${{ needs.build.outputs.user_friendly_version }}.zip
+        tag_name: refs/tags/${{ needs.build.outputs.release_version }}
