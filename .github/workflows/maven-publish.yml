@@ -97,7 +97,7 @@ jobs:
         mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
         mvn versions:commit
         cd -
-        cd REDapp_Lib/java
+        cd REDapp_Lib
         mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
         mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
         mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
@@ -111,7 +111,7 @@ jobs:
         mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
         mvn versions:commit
         cd -
-        cd REDapp/java
+        cd REDapp
         mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
         mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
         mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
