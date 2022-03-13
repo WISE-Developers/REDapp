@@ -484,8 +484,7 @@ jobs:
         body: ${{ steps.fwi-notes.outputs.changelog }}
         tag_name: refs/tags/${{ needs.build.outputs.release_version }}
         token: ${{ secrets.PSAAS_PAT }}
-      env:
-        GITHUB_REPOSITORY: PSaaS-Developers/FWI
+        repository: PSaaS-Developers/FWI
 
     - name: Create Fuel release
       uses: softprops/action-gh-release@v1
@@ -494,8 +493,7 @@ jobs:
         body: ${{ steps.fuel-notes.outputs.changelog }}
         tag_name: refs/tags/${{ needs.build.outputs.release_version }}
         token: ${{ secrets.PSAAS_PAT }}
-      env:
-        GITHUB_REPOSITORY: PSaaS-Developers/Fuel
+        repository: PSaaS-Developers/Fuel
 
     - name: Create Grid release
       uses: softprops/action-gh-release@v1
@@ -504,8 +502,7 @@ jobs:
         body: ${{ steps.grid-notes.outputs.changelog }}
         tag_name: refs/tags/${{ needs.build.outputs.release_version }}
         token: ${{ secrets.PSAAS_PAT }}
-      env:
-        GITHUB_REPOSITORY: PSaaS-Developers/Grid
+        repository: PSaaS-Developers/Grid
 
     - name: Create REDapp_Lib release
       uses: softprops/action-gh-release@v1
@@ -514,8 +511,7 @@ jobs:
         body: ${{ steps.redapp-lib-notes.outputs.changelog }}
         tag_name: refs/tags/${{ needs.build.outputs.release_version }}
         token: ${{ secrets.PSAAS_PAT }}
-      env:
-        GITHUB_REPOSITORY: PSaaS-Developers/REDapp_Lib
+        repository: PSaaS-Developers/REDapp_Lib
 
     - name: Create Weather release
       uses: softprops/action-gh-release@v1
@@ -524,8 +520,7 @@ jobs:
         body: ${{ steps.weather-notes.outputs.changelog }}
         tag_name: refs/tags/${{ needs.build.outputs.release_version }}
         token: ${{ secrets.PSAAS_PAT }}
-      env:
-        GITHUB_REPOSITORY: PSaaS-Developers/Weather
+        repository: PSaaS-Developers/Weather
 
     - name: Create release
       uses: softprops/action-gh-release@v1
@@ -538,5 +533,4 @@ jobs:
           REDapp-${{ needs.build.outputs.user_friendly_version }}.zip
         tag_name: refs/tags/${{ needs.build.outputs.release_version }}
         token: ${{ secrets.PSAAS_PAT }}
-      env:
-        GITHUB_REPOSITORY: PSaaS-Developers/REDapp
+        repository: PSaaS-Developers/REDapp
