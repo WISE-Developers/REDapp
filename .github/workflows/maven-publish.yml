@@ -132,12 +132,6 @@ jobs:
         url: "https://github.com/UM-USElab/geolocate_users/raw/master/geolocate_users/GeoIP/GeoLiteCity-Location.csv"
         target: REDapp/res/data
     
-    - name: Install Protoc
-      uses: arduino/setup-protoc@v1
-      with:
-        version: '3.11.1'
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-    
     - name: Build the libraries
       id: library-build
       run: |
@@ -145,38 +139,15 @@ jobs:
         mvn install
         cd -
         cd Fuel/java
-        protoc --java_out src/main/java --proto_path ../proto/ accAlpha.proto
-        protoc --java_out src/main/java --proto_path ../proto/ ccwfgmFuel.proto
-        protoc --java_out src/main/java --proto_path ../proto/ cfb.proto
-        protoc --java_out src/main/java --proto_path ../proto/ dbh.proto
-        protoc --java_out src/main/java --proto_path ../proto/ flame.proto
-        protoc --java_out src/main/java --proto_path ../proto/ fmc.proto
-        protoc --java_out src/main/java --proto_path ../proto/ fuelNames.proto
-        protoc --java_out src/main/java --proto_path ../proto/ isf.proto
-        protoc --java_out src/main/java --proto_path ../proto/ lb.proto
-        protoc --java_out src/main/java --proto_path ../proto/ rsi.proto
-        protoc --java_out src/main/java --proto_path ../proto/ sfc.proto
-        protoc --java_out src/main/java --proto_path ../proto/ spreadParms.proto
-        protoc --java_out src/main/java --proto_path ../proto/ tfc.proto
         mvn install
         cd -
         cd Grid/java
-        protoc --java_out src/main/java --proto_path ../proto/ cwfgmFilter.proto
-        protoc --java_out src/main/java --proto_path ../proto/ cwfgmFuelMap.proto
-        protoc --java_out src/main/java --proto_path ../proto/ cwfgmGrid.proto
-        protoc --java_out src/main/java --proto_path ../proto/ wcsData.proto
         mvn install
         cd -
         cd REDapp_Lib
         mvn install
         cd -
         cd Weather/java
-        protoc --java_out src/main/java --proto_path ../proto/ cwfgmWeatherStation.proto
-        protoc --java_out src/main/java --proto_path ../proto/ cwfgmWeatherStream.proto
-        protoc --java_out src/main/java --proto_path ../proto/ dailyConditions.proto
-        protoc --java_out src/main/java --proto_path ../proto/ weatherGridFilter.proto
-        protoc --java_out src/main/java --proto_path ../proto/ weatherStream.proto
-        protoc --java_out src/main/java --proto_path ../proto/ windGrid.proto
         mvn install
         cd -
         cd REDapp
