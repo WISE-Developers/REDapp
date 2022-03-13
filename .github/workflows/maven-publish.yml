@@ -300,39 +300,51 @@ jobs:
     - name: Tag the repositories
       id: last-tags
       run: |
+        cd versions
         git config user.name github-actions
         git config user.email github-actions@github.com
-        cd versions
         VERSIONS_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=versions_tag::$VERSIONS_TAG"
         git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
         cd -
         cd FWI
+        git config user.name github-actions
+        git config user.email github-actions@github.com
         FWI_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=fwi_tag::$FWI_TAG"
         git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
         cd -
         cd Fuel
+        git config user.name github-actions
+        git config user.email github-actions@github.com
         FUEL_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=fuel_tag::$FUEL_TAG"
         git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
         cd -
         cd Grid
+        git config user.name github-actions
+        git config user.email github-actions@github.com
         GRID_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=grid_tag::$GRID_TAG"
         git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
         cd -
         cd REDapp_Lib
+        git config user.name github-actions
+        git config user.email github-actions@github.com
         REDAPP_LIB_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=redapp_lib_tag::$REDAPP_LIB_TAG"
         git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
         cd -
         cd Weather
+        git config user.name github-actions
+        git config user.email github-actions@github.com
         WEATHER_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=weather_tag::$WEATHER_TAG"
         git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
         cd -
         cd REDapp
+        git config user.name github-actions
+        git config user.email github-actions@github.com
         REDAPP_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=redapp_tag::$REDAPP_TAG"
         git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
