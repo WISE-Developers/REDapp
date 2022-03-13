@@ -401,7 +401,8 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.PSAAS_PAT }}
-        branch: ${{ github.ref }}
+        repository: PSaaS-Developers/REDapp
+        directory: REDapp
         tags: true
 
     - name: Create FWI Release Notes
@@ -536,3 +537,6 @@ jobs:
           REDapp-All-${{ needs.build.outputs.build_date }}.jar
           REDapp-${{ needs.build.outputs.user_friendly_version }}.zip
         tag_name: refs/tags/${{ needs.build.outputs.release_version }}
+        token: ${{ secrets.PSAAS_PAT }}
+      env:
+        GITHUB_REPOSITORY: PSaaS-Developers/REDapp
