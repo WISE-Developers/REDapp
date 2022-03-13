@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<title> &mdash; Preview</title>
+		<style>
+			ul {
+				list-style-type: none;
+				margin-left: 10px
+			}
+		</style>
+	</head>
+	<body>
+		<p>
+			REDapp is an implementation of the Canadian Forest Fire Behavior Prediction (FBP) System and Canadian Forest Fire Weather Index (FWI) System. Users of REDapp must be careful to not apply these Systems beyond their useful range.</p>
+		<p>
+			<strong>General FBP System Assumptions</strong></p>
+		<p>
+			In the FBP System, predictions are limited to a fire spreading during one burning period from a single point source ignition or line of fire, assuming that:</p>
+		<ul>
+			<li>
+				&bull;    Fuel conditions are similar to one of the 16 benchmark fuel types.</li>
+			<li>
+				&bull;    The fuel moisture codes used are representative of the site conditions.</li>
+			<li>
+				&bull;    Fuels are uniform and continuous, topography simple and homogeneous, and wind is constant and unidirectional.</li>
+			<li>
+				&bull;    The fire is wind or wind/slope driven, and spread is not affected by a convective column.&nbsp; Wind is represented by the 10-m open wind.</li>
+			<li>
+				&bull;    The fire is unaffected by suppression activities (free burning).</li>
+			<li>
+				&bull;    A fire starting from a point source will have an elliptical shape under the above conditions.</li>
+			<li>
+				&bull;    The effect of firebrands on spread is accounted for.</li>
+		</ul>
+		<p>
+			The FBP system will give a good estimate of Fire Intensity Class and Type of Fire in most cases.&nbsp; In most fuel types users should be able to estimate fire size characteristics within &plusmn; 20% of computed value for rate of spread &gt; 3 m/min.</p>
+		<p>
+			<strong>General FWI System Assumptions</strong></p>
+		<ul>
+			<li>
+				&bull;    The system depends solely on weather readings taken each day at noon local standard time (LST): temperature, relative humidity, 10-m open wind speed, and rain (if any) during the previous 24 hours. The current month must also be specified.</li>
+			<li>
+				&bull;    Since the FWI System depends only on weather readings and the date (by month), its output can just as easily be calculated from forecast weather to yield a forecast of fire danger.</li>
+			<li>
+				&bull;    Although the FWI is calculated from noon weather readings, it really represents fire danger at its midafternoon peak, generally specified as 1600 hours LST.</li>
+			<li>
+				&bull;    The so-called standard fuel type can be described as a generalized pine forest, most nearly the jack pine and lodgepole pine type, which is found in an almost continuous band across Canada. This concept fits the nature of the field data that form the foundation for the FWI.</li>
+			<li>
+				&bull;    The question of how fire behavior varies with fuel type was judged to be a separate problem, to be tackled in other ways. The FWI System does not account for green-up. Different fuel types can exhibit different fire behavior despite having the same FWI System values.</li>
+		</ul>
+		<p>
+			&nbsp;</p>
+	</body>
+</html>

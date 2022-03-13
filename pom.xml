@@ -1,0 +1,416 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ca.redapp</groupId>
+  <artifactId>REDapp</artifactId>
+  <packaging>jar</packaging>
+  <version>7.2021.7-2</version>
+  <name>REDapp</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+  <repositories>
+    <repository>
+      <id>JOSM</id>
+      <name>JOSM Repository</name>
+      <url>https://josm.openstreetmap.de/nexus/content/repositories/releases/</url>
+    </repository>
+    <repository>
+      <id>osgeo</id>
+      <name>Geotools repository</name>
+      <url>http://repo.boundlessgeo.com/main/</url>
+    </repository>
+    <repository>
+      <id>GeoMajas</id>
+      <name>GeoMajas</name>
+      <url>http://maven.geomajas.org/</url>
+    </repository>
+    <repository>
+      <id>github_hss</id>
+      <name>Heartland Software GitHub</name>
+      <url>https://maven.pkg.github.com/HeartlandSoftware/*</url>
+    </repository>
+    <repository>
+      <id>github</id>
+      <name>PSaaS Developers GitHub</name>
+      <url>https://maven.pkg.github.com/PSaaS-Developers/*</url>
+    </repository>
+  </repositories>
+  <dependencies>
+    <!-- https://mvnrepository.com/artifact/de.micromata.jak/JavaAPIforKml -->
+    <dependency>
+      <groupId>de.micromata.jak</groupId>
+      <artifactId>JavaAPIforKml</artifactId>
+      <version>2.2.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>4.1.2</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>4.1.2</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-compress</artifactId>
+      <version>1.20</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-math3</artifactId>
+      <version>3.6.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.30</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>30.1.1-jre</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/net.harawata/appdirs -->
+    <dependency>
+      <groupId>net.harawata</groupId>
+      <artifactId>appdirs</artifactId>
+      <version>1.2.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-core -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.12.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.12.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.12.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3 -->
+    <dependency>
+      <groupId>org.eclipse.paho</groupId>
+      <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+      <version>1.2.5</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.3.0-RC1</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <!-- https://josm.openstreetmap.de/nexus/content/groups/public/org/openstreetmap/jmapviewer -->
+    <dependency>
+      <groupId>org.openstreetmap.jmapviewer</groupId>
+      <artifactId>jmapviewer</artifactId>
+      <version>2.15</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.openstreetmap.josm/josm -->
+    <dependency>
+      <groupId>org.openstreetmap.josm</groupId>
+      <artifactId>josm</artifactId>
+      <version>17915</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.geotools/gt-shapefile -->
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-shapefile</artifactId>
+      <version>22.2</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/io.github.g00fy2/versioncompare -->
+    <dependency>
+      <groupId>io.github.g00fy2</groupId>
+      <artifactId>versioncompare</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+    <dependency>
+      <groupId>ca.hss</groupId>
+      <artifactId>hss-java</artifactId>
+      <version>1.2.0-3</version>
+    </dependency>
+    <dependency>
+      <groupId>ca.hss.times</groupId>
+      <artifactId>WTime</artifactId>
+      <version>2.5.0-6</version>
+    </dependency>
+    <dependency>
+      <groupId>ca.cwfgm</groupId>
+      <artifactId>REDapp_Lib</artifactId>
+      <version>7.2021.7-2</version>
+    </dependency>
+    <dependency>
+      <groupId>ca.cwfgm</groupId>
+      <artifactId>Weather</artifactId>
+      <version>7.2021.7-2</version>
+    </dependency>
+  </dependencies>
+  
+  <profiles>
+    <profile>
+      <id>release</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+              <execution>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <copy file="BuildConfig.java.template" tofile="src/main/java/ca/redapp/util/BuildConfig.java" overwrite="true" />
+                    <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
+                        token="@buildversion@" value="${project.version}" />
+                    <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
+                        token="@buildtime@" value="${maven.build.timestamp}" />
+                    <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
+                        token="@debug@" value="false" />
+                    <copy file="licence.in/licence.html" tofile="res/licence.html" overwrite="true" />
+                    <replace file="res/licence.html"
+                        token="@VERSION@" value="${project.version}" />
+                    <replace file="res/licence.html"
+                        token="@DATE@" value="${maven.build.timestamp}" />
+                  </tasks>
+                  <sourceRoot>src/main/java/ca/redapp/util</sourceRoot>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>debug</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+              <execution>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <copy file="BuildConfig.java.template" tofile="src/main/java/ca/redapp/util/BuildConfig.java" overwrite="true" />
+                    <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
+                        token="@buildversion@" value="${project.version}" />
+                    <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
+                        token="@buildtime@" value="${maven.build.timestamp}" />
+                    <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
+                        token="@debug@" value="true" />
+                    <copy file="licence.in/licence.html" tofile="res/licence.html" overwrite="true" />
+                    <replace file="res/licence.html"
+                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                    <replace file="res/licence.html"
+                        token="@DATE@" value="${release.time.en}" />
+                    <copy file="licence.in/licence_fr.html" tofile="res/licence_fr.html" overwrite="true" />
+                    <replace file="res/licence_fr.html"
+                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                    <replace file="res/licence_fr.html"
+                        token="@DATE@" value="${release.time.fr}" />
+                    <copy file="licence.in/about_en.rtf" tofile="res/about_en.rtf" overwrite="true" />
+                    <replace file="res/about_en.rtf"
+                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                    <replace file="res/about_en.rtf"
+                        token="@DATE@" value="${release.time.en}" />
+                    <replace file="res/about_en.rtf"
+                        token="@YEAR@" value="${release.year}" />
+                    <copy file="licence.in/about_fr.rtf" tofile="res/about_fr.rtf" overwrite="true" />
+                    <replace file="res/about_fr.rtf"
+                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                    <replace file="res/about_fr.rtf"
+                        token="@DATE@" value="${release.time.fr}" />
+                    <replace file="res/about_fr.rtf"
+                        token="@YEAR@" value="${release.year}" />
+
+                    <mkdir dir="licence.out"/>
+                    <copy file="res/licence.html" tofile="licence.out/licence.html" overwrite="true" />
+                    <copy file="res/licence_fr.html" tofile="licence.out/licence_fr.html" overwrite="true" />
+                    <copy file="licence.in/licence.txt" tofile="licence.out/licence.txt" overwrite="true" />
+                    <replace file="licence.out/licence.txt"
+                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                    <replace file="licence.out/licence.txt"
+                        token="@DATE@" value="${release.time.en}" />
+                    <copy file="licence.in/licence.rtf" tofile="licence.out/licence.rtf" overwrite="true" />
+                    <replace file="licence.out/licence.rtf"
+                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                    <replace file="licence.out/licence.rtf"
+                        token="@DATE@" value="${release.time.en}" />
+                    <copy file="licence.in/licence_fr.rtf" tofile="licence.out/licence_fr.rtf" overwrite="true" />
+                    <replace file="licence.out/licence_fr.rtf"
+                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                    <replace file="licence.out/licence_fr.rtf"
+                        token="@DATE@" value="${release.time.fr}" />
+                  </tasks>
+                  <sourceRoot>src/main/java/ca/redapp/util</sourceRoot>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <build>
+    <finalName>REDapp</finalName>
+    <resources>
+      <resource>
+        <directory>res</directory>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>parse-version</id>
+            <goals>
+              <goal>parse-version</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+          <execution>
+            <id>timestamp-property-en</id>
+            <goals>
+              <goal>timestamp-property</goal>
+            </goals>
+            <configuration>
+              <name>release.time.en</name>
+              <pattern>MMMM dd, yyyy</pattern>
+              <locale>en</locale>
+            </configuration>
+          </execution>
+          <execution>
+            <id>timestamp-property-fr</id>
+            <goals>
+              <goal>timestamp-property</goal>
+            </goals>
+            <configuration>
+              <name>release.time.fr</name>
+              <pattern>MMMM dd, yyyy</pattern>
+              <locale>fr</locale>
+            </configuration>
+          </execution>
+          <execution>
+            <id>get-year</id>
+            <goals>
+              <goal>timestamp-property</goal>
+            </goals>
+            <configuration>
+              <name>release.year</name>
+              <pattern>yyyy</pattern>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.6.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <classpathPrefix>REDapp_lib/</classpathPrefix>
+              <mainClass>ca.redapp.ui.Launcher</mainClass>
+            </manifest>
+            <manifestEntries>
+              <Class-Path>REDapp_lib/activation.jar REDapp_lib/appdirs.jar REDapp_lib/checker-qual.jar REDapp_lib/commons-codec.jar REDapp_lib/commons-collections4.jar REDapp_lib/commons-compress.jar REDapp_lib/commons-lang3.jar REDapp_lib/commons-math3.jar REDapp_lib/commons-pool.jar REDapp_lib/commons-text.jar REDapp_lib/curvesapi.jar REDapp_lib/ejml-core.jar REDapp_lib/ejml-ddense.jar REDapp_lib/error_prone_annotations.jar REDapp_lib/failureaccess.jar REDapp_lib/Fuel.jar REDapp_lib/FWI.jar REDapp_lib/GeographicLib-Java.jar REDapp_lib/Grid.jar REDapp_lib/gson.jar REDapp_lib/gt-main.jar REDapp_lib/gt-metadata.jar REDapp_lib/gt-opengis.jar REDapp_lib/gt-referencing.jar REDapp_lib/gt-shapefile.jar REDapp_lib/guava.jar REDapp_lib/hss-java.jar REDapp_lib/istack-commons-runtime.jar REDapp_lib/j2objc-annotations.jar REDapp_lib/jackson-annotations.jar REDapp_lib/jackson-core.jar REDapp_lib/jackson-databind.jar REDapp_lib/jai_core.jar REDapp_lib/jakarta.activation.jar REDapp_lib/jakarta.xml.bind-api.jar REDapp_lib/JavaAPIforKml.jar REDapp_lib/javaee-api.jar REDapp_lib/javax.activation-api.jar REDapp_lib/javax.mail.jar REDapp_lib/jaxb-api.jar REDapp_lib/jaxb-core.jar REDapp_lib/jaxb-impl.jar REDapp_lib/jaxb-runtime.jar REDapp_lib/jaxb-xjc.jar REDapp_lib/jdom2.jar REDapp_lib/jgridshift-core.jar REDapp_lib/jmapviewer.jar REDapp_lib/jna-platform.jar REDapp_lib/jna.jar REDapp_lib/josm.jar REDapp_lib/jsr305.jar REDapp_lib/jts-core.jar REDapp_lib/listenablefuture.jar REDapp_lib/logback-classic.jar REDapp_lib/logback-core.jar REDapp_lib/math.jar REDapp_lib/org.eclipse.paho.client.mqttv3.jar REDapp_lib/poi-ooxml-schemas.jar REDapp_lib/poi-ooxml.jar REDapp_lib/poi.jar REDapp_lib/protobuf-java.jar REDapp_lib/protobuf-java-util.jar REDapp_lib/REDapp_Lib.jar REDapp_lib/si-quantity.jar REDapp_lib/si-units-java8.jar REDapp_lib/slf4j-api.jar REDapp_lib/SparseBitSet.jar REDapp_lib/systems-common-java8.jar REDapp_lib/txw2.jar REDapp_lib/unit-api.jar REDapp_lib/uom-lib-common.jar REDapp_lib/uom-se.jar REDapp_lib/versioncompare.jar REDapp_lib/Weather.jar REDapp_lib/WTime.jar REDapp_lib/xml-apis.jar REDapp_lib/xmlbeans.jar</Class-Path>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/REDapp_lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+              <includeScope>compile</includeScope>
+              <stripVersion>true</stripVersion>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>JavaAppLauncher</string>
+	<key>CFBundleIconFile</key>
+	<string>icon.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>ca.hss.app.redapp.ui.Launcher</string>
+	<key>CFBundleDisplayName</key>
+	<string>REDapp</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>2021.09.00</string>
+	<key>CFBundleName</key>
+	<string>REDapp</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>NSHumanReadableCopyright</key>
+	<string></string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.developer-tools</string>
+	<key>JVMMainClassName</key>
+	<string>ca.redapp.ui.Launcher</string>
+	<key>JVMOptions</key>
+	<array/>
+	<key>CFBundleShortVersionString</key>
+	<string>2021.09.00</string>
+	<key>JVMArguments</key>
+	<array/>
+</dict>
+</plist>
