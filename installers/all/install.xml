@@ -37,16 +37,16 @@
         The ids must be these ones if you want to use the LicencePanel and/or the InfoPanel.
     -->
     <resources>
-        <res id="HTMLLicencePanel.licence" src="..\bin\licence.html"/>
-        <res id="HTMLLicencePanel.licence_fra" src="..\bin\licence_fr.html"/>
-		<res id="JFrameIcon" src="..\bin\redapplogo16.png"/>
-		<res id="Installer.image.0" src="..\bin\Installer.image.png"/>
-		<res id="Installer.image.1" src="..\bin\Installer.image.png"/>
-		<res id="Installer.image.2" src="..\bin\Installer.image.png"/>
-		<res id="Installer.image.3" src="..\bin\Installer.image.png"/>
-		<res id="Installer.image.4" src="..\bin\Installer.image.png"/>
-		<res id="Installer.image.5" src="..\bin\Installer.image.png"/>
-		<res id="Installer.image.6" src="..\bin\Installer.image.png"/>
+        <res id="HTMLLicencePanel.licence" src="../bin/licence.html"/>
+        <res id="HTMLLicencePanel.licence_fra" src="../bin/licence_fr.html"/>
+		<res id="JFrameIcon" src="../bin/redapplogo16.png"/>
+		<res id="Installer.image.0" src="../bin/Installer.image.png"/>
+		<res id="Installer.image.1" src="../bin/Installer.image.png"/>
+		<res id="Installer.image.2" src="../bin/Installer.image.png"/>
+		<res id="Installer.image.3" src="../bin/Installer.image.png"/>
+		<res id="Installer.image.4" src="../bin/Installer.image.png"/>
+		<res id="Installer.image.5" src="../bin/Installer.image.png"/>
+		<res id="Installer.image.6" src="../bin/Installer.image.png"/>
     </resources>
 
     <!-- 
@@ -69,13 +69,13 @@
     <packs>
         <pack name="Documentation" required="yes">
             <description>REDapp Documentation</description>
-            <file src="..\bin\gpl-3.0.en.txt" targetdir="$INSTALL_PATH"/>
+            <file src="../bin/gpl-3.0.en.txt" targetdir="$INSTALL_PATH"/>
         </pack>
         <pack name="Binaries" required="no">
             <description>REDapp Binaries</description>
-            <file src="..\bin\REDapp.jar" targetdir="$INSTALL_PATH"/>
-            <fileset dir="..\bin\html" targetdir="$INSTALL_PATH/html"/>
-            <fileset dir="..\bin\REDapp_Lib" targetdir="$INSTALL_PATH/REDapp_Lib"/>
+            <file src="../bin/REDapp.jar" targetdir="$INSTALL_PATH"/>
+            <fileset dir="../bin/html" targetdir="$INSTALL_PATH/html"/>
+            <fileset dir="../bin/REDapp_Lib" targetdir="$INSTALL_PATH/REDapp_Lib"/>
         </pack>
     </packs>
 
