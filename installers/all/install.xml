@@ -75,7 +75,7 @@
             <description>REDapp Binaries</description>
             <file src="../bin/REDapp.jar" targetdir="$INSTALL_PATH"/>
             <fileset dir="../bin/html" targetdir="$INSTALL_PATH/html"/>
-            <fileset dir="../bin/REDapp_Lib" targetdir="$INSTALL_PATH/REDapp_Lib"/>
+            <fileset dir="../bin/REDapp_lib" targetdir="$INSTALL_PATH/REDapp_lib"/>
         </pack>
     </packs>
 
