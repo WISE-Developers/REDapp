@@ -18,37 +18,37 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        repository: PSaaS-Developers/versions
+        repository: WISE-Developers/versions
         path: versions
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
       with:
-        repository: PSaaS-Developers/FWI
+        repository: WISE-Developers/WISE_FWI_Module
         path: FWI
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
       with:
-        repository: PSaaS-Developers/Fuel
+        repository: WISE-Developers/WISE_FBP_Module
         path: Fuel
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
       with:
-        repository: PSaaS-Developers/Grid
+        repository: WISE-Developers/WISE_Grid_Module
         path: Grid
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
       with:
-        repository: PSaaS-Developers/REDapp_Lib
+        repository: WISE-Developers/REDapp_Lib
         path: REDapp_Lib
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
       with:
-        repository: PSaaS-Developers/Weather
+        repository: WISE-Developers/WISE_Weather_Module
         path: Weather
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
       with:
-        repository: PSaaS-Developers/REDapp
+        repository: WISE-Developers/REDapp
         path: REDapp
         token: ${{ secrets.PSAAS_PAT }}
 
