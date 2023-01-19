@@ -1,5 +1,5 @@
-![Latest Version](https://img.shields.io/github/v/release/PSaaS-Developers/REDapp)
-![Maven Package](https://github.com/PSaaS-Developers/REDapp/actions/workflows/maven-publish.yml/badge.svg)
+![Latest Version](https://img.shields.io/github/v/release/WISE-Developers/REDapp)
+![Maven Package](https://github.com/WISE-Developers/REDapp/actions/workflows/maven-publish.yml/badge.svg)
 
 # REDapp &#8211; The Universal Fire Behaviour Calculator
 
