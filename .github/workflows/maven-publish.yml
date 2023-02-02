@@ -3,6 +3,9 @@ name: Maven Publish
 on: 
   workflow_dispatch
 
+env:
+  PROTO_VERSION: 21.10
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,7 +21,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        repository: WISE-Developers/versions
+        repository: WISE-Developers/WISE_Versions
         path: versions
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
@@ -52,6 +55,39 @@ jobs:
         path: REDapp
         token: ${{ secrets.PSAAS_PAT }}
 
+    - name: Download Math protobuf files
+      uses: robinraju/release-downloader@v1.7
+      with:
+        repository: "HeartlandSoftware/HSS_Math_2"
+        latest: true
+        fileName: "proto_def.zip"
+        tarBall: false
+        zipBall: false
+        out-file-path: "proto/HSS_Math"
+        token: ${{ secrets.HSS_PAT }}
+
+    - name: Download Geography protobuf files
+      uses: robinraju/release-downloader@v1.7
+      with:
+        repository: "HeartlandSoftware/HSS_Geography_2"
+        latest: true
+        fileName: "proto_def.zip"
+        tarBall: false
+        zipBall: false
+        out-file-path: "proto/HSS_Geography"
+        token: ${{ secrets.HSS_PAT }}
+
+    - name: Download WTime protobuf files
+      uses: robinraju/release-downloader@v1.7
+      with:
+        repository: "HeartlandSoftware/WTime"
+        latest: true
+        fileName: "proto_def.zip"
+        tarBall: false
+        zipBall: false
+        out-file-path: "proto/WTime"
+        token: ${{ secrets.HSS_PAT }}
+
     - name: Set up JDK 8
       uses: actions/setup-java@v2
       with:
@@ -62,14 +98,14 @@ jobs:
     - name: Setup the Maven configuration file
       uses: whelk-io/maven-settings-xml-action@v20
       with:
-        servers: '[{ "id": "github", "username": "spydmobile", "password": "${{ secrets.PSAAS_PAT }}" }, { "id": "github_hss", "username": "tredpath", "password": "${{ secrets.HSS_PAT }}" }]'
+        servers: '[{ "id": "github", "username": "spydmobile", "password": "${{ secrets.PSAAS_PAT }}" }, { "id": "github_hss", "username": "spydmobile", "password": "${{ secrets.PSAAS_PAT }}" }]'
 
     - name: Load values from versions
       id: version-numbers
       shell: pwsh
       run: |
         $versions = ConvertFrom-StringData (Get-Content versions/versions.properties -raw)
-        echo "::set-output name=prometheus_version::$($versions.prometheus)"
+        echo "::set-output name=prometheus_version::$($versions.redapp)"
         echo "::set-output name=hss_math_version::$($versions.hss_math)"
         echo "::set-output name=wtime_version::$($versions.wtime)"
         echo "::set-output name=hss_java_version::$($versions.hss_java)"
@@ -147,6 +183,59 @@ jobs:
         url: "https://github.com/UM-USElab/geolocate_users/raw/master/geolocate_users/GeoIP/GeoLiteCity-Location.csv"
         target: REDapp/res/data
     
+    - name: Download protobuf
+      shell: pwsh
+      run: |
+        Invoke-WebRequest "https://heartlandsoftwaresolutions.sharepoint.com/:u:/g/HSS_Releases/EUZ4knsEFP5FjNHHWR5dHc0BofAFyEPdLKRvzAgaTuDi1w?e=XW0Muc&download=1" -OutFile protobuf.zip
+        Expand-Archive protobuf.zip -DestinationPath protobuf
+        mv protobuf/protobuf-3.${{ env.PROTO_VERSION }}/* protobuf
+        
+    - name: Build protobuf
+      shell: pwsh
+      run: |
+        cd protobuf
+        cd cmake
+        mkdir build
+        cd build
+        cmake ../ -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+        cmake --build . --target protoc
+        
+    - name: Build Proto definition files
+      shell: pwsh
+      run: |
+        Expand-Archive proto/HSS_Math/proto_def.zip -DestinationPath . -Force
+        Expand-Archive proto/HSS_Geography/proto_def.zip -DestinationPath . -Force
+        Expand-Archive proto/WTime/proto_def.zip -DestinationPath . -Force
+        Copy-Item Fuel/proto/*.proto -Destination proto -Force
+        Copy-Item Grid/proto/*.proto -Destination proto -Force
+        Copy-Item Weather/proto/*.proto -Destination proto -Force
+        cd Fuel
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto accAlpha.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto ccwfgmFuel.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto cfb.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto dbh.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto flame.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto fmc.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto fuelNames.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto isf.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto lb.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto rsi.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto sfc.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto spreadParms.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto tfc.proto
+        cd ../Grid
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto cwfgmFilter.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto cwfgmFuelMap.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto cwfgmGrid.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto wcsData.proto
+        cd ../Weather
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto cwfgmWeatherStation.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto cwfgmWeatherStream.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto dailyConditions.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto weatherGridFilter.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto weatherStream.proto
+        ../protobuf/cmake/build/protoc --experimental_allow_proto3_optional --java_out java/src/main/java --proto_path ../protobuf/src --proto_path ../proto windGrid.proto
+
     - name: Build the libraries
       id: library-build
       run: |
@@ -159,10 +248,10 @@ jobs:
         cd Grid/java
         mvn install
         cd -
-        cd REDapp_Lib
+        cd Weather/java
         mvn install
         cd -
-        cd Weather/java
+        cd REDapp_Lib
         mvn install
         cd -
         cd REDapp
@@ -247,12 +336,6 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-        repository: PSaaS-Developers/versions
-        path: versions
-        token: ${{ secrets.PSAAS_PAT }}
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
         repository: PSaaS-Developers/FWI
         path: FWI
         token: ${{ secrets.PSAAS_PAT }}
@@ -300,13 +383,6 @@ jobs:
     - name: Tag the repositories
       id: last-tags
       run: |
-        cd versions
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        VERSIONS_TAG=$(git describe --tags --abbrev=0)
-        echo "::set-output name=versions_tag::$VERSIONS_TAG"
-        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
-        cd -
         cd FWI
         git config user.name github-actions
         git config user.email github-actions@github.com
@@ -349,14 +425,6 @@ jobs:
         echo "::set-output name=redapp_tag::$REDAPP_TAG"
         git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
 
-    - name: Push versions changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/versions
-        directory: versions
-        tags: true
-  
     - name: Push FWI changes
       uses: ad-m/github-push-action@master
       with:
