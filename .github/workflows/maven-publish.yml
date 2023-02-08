@@ -115,58 +115,59 @@ jobs:
         cd FWI/java
         mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
         mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:wtime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
         mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
         mvn versions:commit
         cd -
         cd Fuel/java
         mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
         mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:wtime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
         mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:FWI -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:fwi -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
         mvn versions:commit
         cd -
         cd Grid/java
         mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
         mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:wtime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
         mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:FWI -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:Fuel -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:fwi -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:fuel -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
         mvn versions:commit
         cd -
         cd REDapp_Lib
         mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
         mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:wtime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
         mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:FWI -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:Fuel -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:Grid -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:fwi -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:fuel -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:grid -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:weather -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
         mvn versions:commit
         cd -
         cd Weather/java
         mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
         mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:wtime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
         mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:FWI -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:Fuel -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:Grid -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:fwi -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:fuel -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:grid -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
         mvn versions:use-dep-version -Dincludes=ca.cwfgm:REDapp_Lib -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
         mvn versions:commit
         cd -
         cd REDapp
         mvn versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
         mvn versions:use-dep-version -Dincludes=ca.hss:hss-java -DdepVersion=${{ steps.version-numbers.outputs.hss_java_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.hss.times:WTime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.hss.times:wtime -DdepVersion=${{ steps.version-numbers.outputs.wtime_version }} -DforceVersion=true
         mvn versions:use-dep-version -Dincludes=ca.hss:math -DdepVersion=${{ steps.version-numbers.outputs.hss_math_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:FWI -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:Fuel -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:Grid -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:fwi -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:fuel -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:grid -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
         mvn versions:use-dep-version -Dincludes=ca.cwfgm:REDapp_Lib -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
-        mvn versions:use-dep-version -Dincludes=ca.cwfgm:Weather -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
+        mvn versions:use-dep-version -Dincludes=ca.cwfgm:weather -DdepVersion=${{ steps.version-numbers.outputs.prometheus_version }} -DforceVersion=true
         mvn versions:commit
         mvn -f izpom.xml versions:set -DnewVersion=${{ steps.version-numbers.outputs.prometheus_version }}
         mvn -f izpom.xml versions:commit
@@ -388,42 +389,42 @@ jobs:
         git config user.email github-actions@github.com
         FWI_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=fwi_tag::$FWI_TAG"
-        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        git tag -a REDapp_${{ needs.build.outputs.release_version }} -m "REDapp release on $(date +'%Y-%m-%d')"
         cd -
         cd Fuel
         git config user.name github-actions
         git config user.email github-actions@github.com
         FUEL_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=fuel_tag::$FUEL_TAG"
-        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        git tag -a REDapp_${{ needs.build.outputs.release_version }} -m "REDapp release on $(date +'%Y-%m-%d')"
         cd -
         cd Grid
         git config user.name github-actions
         git config user.email github-actions@github.com
         GRID_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=grid_tag::$GRID_TAG"
-        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        git tag -a REDapp_${{ needs.build.outputs.release_version }} -m "REDapp release on $(date +'%Y-%m-%d')"
         cd -
         cd REDapp_Lib
         git config user.name github-actions
         git config user.email github-actions@github.com
         REDAPP_LIB_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=redapp_lib_tag::$REDAPP_LIB_TAG"
-        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        git tag -a REDapp_${{ needs.build.outputs.release_version }} -m "REDapp release on $(date +'%Y-%m-%d')"
         cd -
         cd Weather
         git config user.name github-actions
         git config user.email github-actions@github.com
         WEATHER_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=weather_tag::$WEATHER_TAG"
-        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        git tag -a REDapp_${{ needs.build.outputs.release_version }} -m "REDapp release on $(date +'%Y-%m-%d')"
         cd -
         cd REDapp
         git config user.name github-actions
         git config user.email github-actions@github.com
         REDAPP_TAG=$(git describe --tags --abbrev=0)
         echo "::set-output name=redapp_tag::$REDAPP_TAG"
-        git tag -a ${{ needs.build.outputs.release_version }} -m "Release on $(date +'%Y-%m-%d') for commit $(git rev-parse HEAD)"
+        git tag -a ${{ needs.build.outputs.release_version }} -m "REDapp release on $(date +'%Y-%m-%d')"
 
     - name: Push FWI changes
       uses: ad-m/github-push-action@master
@@ -473,66 +474,6 @@ jobs:
         directory: REDapp
         tags: true
 
-    - name: Create FWI Release Notes
-      id: fwi-notes
-      uses: mikepenz/release-changelog-builder-action@v2.9.0
-      with:
-        owner: PSaaS-Developers
-        repo: FWI
-        path: FWI
-        toTag: ${{ needs.build.outputs.release_version }}
-        fromTag: ${{ steps.last-tags.outputs.fwi_tag }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
-
-    - name: Create Fuel Release Notes
-      id: fuel-notes
-      uses: mikepenz/release-changelog-builder-action@v2.9.0
-      with:
-        owner: PSaaS-Developers
-        repo: Fuel
-        path: Fuel
-        toTag: ${{ needs.build.outputs.release_version }}
-        fromTag: ${{ steps.last-tags.outputs.fuel_tag }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
-
-    - name: Create Grid Release Notes
-      id: grid-notes
-      uses: mikepenz/release-changelog-builder-action@v2.9.0
-      with:
-        owner: PSaaS-Developers
-        repo: Grid
-        path: Grid
-        toTag: ${{ needs.build.outputs.release_version }}
-        fromTag: ${{ steps.last-tags.outputs.grid_tag }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
-
-    - name: Create REDapp_Lib Release Notes
-      id: redapp-lib-notes
-      uses: mikepenz/release-changelog-builder-action@v2.9.0
-      with:
-        owner: PSaaS-Developers
-        repo: REDapp_Lib
-        path: REDapp_Lib
-        toTag: ${{ needs.build.outputs.release_version }}
-        fromTag: ${{ steps.last-tags.outputs.redapp_lib_tag }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
-
-    - name: Create Weather Release Notes
-      id: weather-notes
-      uses: mikepenz/release-changelog-builder-action@v2.9.0
-      with:
-        owner: PSaaS-Developers
-        repo: Weather
-        path: Weather
-        toTag: ${{ needs.build.outputs.release_version }}
-        fromTag: ${{ steps.last-tags.outputs.weather_tag }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
-
     - name: Create REDapp Release Notes
       id: redapp-notes
       uses: mikepenz/release-changelog-builder-action@v2.9.0
@@ -544,51 +485,6 @@ jobs:
         fromTag: ${{ steps.last-tags.outputs.redapp_tag }}
       env:
         GITHUB_TOKEN: ${{ secrets.PSAAS_PAT }}
-
-    - name: Create FWI release
-      uses: softprops/action-gh-release@v1
-      with:
-        name: ${{ needs.build.outputs.release_version }}
-        body: ${{ steps.fwi-notes.outputs.changelog }}
-        tag_name: refs/tags/${{ needs.build.outputs.release_version }}
-        token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/FWI
-
-    - name: Create Fuel release
-      uses: softprops/action-gh-release@v1
-      with:
-        name: ${{ needs.build.outputs.release_version }}
-        body: ${{ steps.fuel-notes.outputs.changelog }}
-        tag_name: refs/tags/${{ needs.build.outputs.release_version }}
-        token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/Fuel
-
-    - name: Create Grid release
-      uses: softprops/action-gh-release@v1
-      with:
-        name: ${{ needs.build.outputs.release_version }}
-        body: ${{ steps.grid-notes.outputs.changelog }}
-        tag_name: refs/tags/${{ needs.build.outputs.release_version }}
-        token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/Grid
-
-    - name: Create REDapp_Lib release
-      uses: softprops/action-gh-release@v1
-      with:
-        name: ${{ needs.build.outputs.release_version }}
-        body: ${{ steps.redapp-lib-notes.outputs.changelog }}
-        tag_name: refs/tags/${{ needs.build.outputs.release_version }}
-        token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/REDapp_Lib
-
-    - name: Create Weather release
-      uses: softprops/action-gh-release@v1
-      with:
-        name: ${{ needs.build.outputs.release_version }}
-        body: ${{ steps.weather-notes.outputs.changelog }}
-        tag_name: refs/tags/${{ needs.build.outputs.release_version }}
-        token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/Weather
 
     - name: Create release
       uses: softprops/action-gh-release@v1
