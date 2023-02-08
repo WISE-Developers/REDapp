@@ -44,7 +44,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.text.JTextComponent;
 
-import ca.cwfgm.grid.IWXData;
+import ca.wise.grid.IWXData;
 import ca.redapp.data.DayModel;
 import ca.redapp.data.ExcelAdapter;
 import ca.redapp.ui.component.HeaderRenderer;

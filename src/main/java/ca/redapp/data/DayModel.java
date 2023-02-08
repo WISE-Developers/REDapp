@@ -21,7 +21,7 @@ package ca.redapp.data;
 
 import javax.swing.table.AbstractTableModel;
 
-import ca.cwfgm.grid.IWXData;
+import ca.wise.grid.IWXData;
 import ca.hss.math.Convert;
 import ca.hss.math.Convert.UnitSystem;
 import ca.redapp.ui.Main;

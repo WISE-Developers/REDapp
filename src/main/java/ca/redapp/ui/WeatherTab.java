@@ -75,7 +75,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
-import ca.cwfgm.grid.IWXData;
+import ca.wise.grid.IWXData;
 import ca.hss.general.DecimalUtils;
 import ca.hss.general.OutVariable;
 import ca.hss.math.Convert;
