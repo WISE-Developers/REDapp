@@ -49,7 +49,7 @@ import javax.swing.event.DocumentListener;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
-import ca.cwfgm.fbp.FBPCalculations;
+import ca.wise.fbp.FBPCalculations;
 import ca.cwfgm.mapunits.MetricPrefix;
 import ca.cwfgm.mapunits.MetricUnits;
 import ca.hss.general.DecimalUtils;

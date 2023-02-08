@@ -55,7 +55,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultFormatter;
 
-import ca.cwfgm.fwi.FWICalculations;
+import ca.wise.fwi.FWICalculations;
 import ca.hss.general.DecimalUtils;
 import ca.hss.general.OutVariable;
 import ca.hss.general.DecimalUtils.DataType;

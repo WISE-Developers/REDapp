@@ -37,7 +37,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import ca.cwfgm.grid.IWXData;
+import ca.wise.grid.IWXData;
 import ca.hss.general.DecimalUtils;
 import ca.hss.general.DecimalUtils.DataType;
 import ca.hss.math.Convert;

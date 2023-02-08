@@ -83,16 +83,16 @@ import ca.hss.general.TwoString;
 import ca.hss.general.DecimalUtils.DataType;
 import ca.cwfgm.export.DataExporter;
 import ca.cwfgm.export.DataExporter.RowBuilder;
-import ca.cwfgm.fbp.FBPCalculations;
-import ca.cwfgm.fwi.CwfgmFwi;
-import ca.cwfgm.grid.CWFGM_GRID_ATTRIBUTE;
-import ca.cwfgm.grid.DFWIData;
-import ca.cwfgm.grid.IFWIData;
-import ca.cwfgm.grid.IWXData;
-import ca.cwfgm.weather.CWFGM_WEATHERSTREAM_IMPORT;
-import ca.cwfgm.weather.CWFGM_WEATHER_OPTION;
-import ca.cwfgm.weather.CWFGM_WeatherStream;
-import ca.cwfgm.weather.NoonWeatherCondition;
+import ca.wise.fbp.FBPCalculations;
+import ca.wise.fwi.Fwi;
+import ca.wise.grid.GRID_ATTRIBUTE;
+import ca.wise.grid.DFWIData;
+import ca.wise.grid.IFWIData;
+import ca.wise.grid.IWXData;
+import ca.wise.weather.WEATHERSTREAM_IMPORT;
+import ca.wise.weather.WEATHER_OPTION;
+import ca.wise.weather.CWFGM_WeatherStream;
+import ca.wise.weather.NoonWeatherCondition;
 import ca.hss.general.DecimalUtils;
 import ca.hss.general.OutVariable;
 import ca.hss.math.Convert;
@@ -857,22 +857,22 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 
 	//Get the values from the form.
 	private boolean wsGetValuesFromForm() {
-		ws.setAttribute(CWFGM_WEATHER_OPTION.TEMP_ALPHA,
+		ws.setAttribute(WEATHER_OPTION.TEMP_ALPHA,
 				Double.valueOf(prefs.getDouble(TEMP_ALPHA_KEY, DEFAULT_TEMP_ALPHA)));
-		ws.setAttribute(CWFGM_WEATHER_OPTION.TEMP_BETA,
+		ws.setAttribute(WEATHER_OPTION.TEMP_BETA,
 				Double.valueOf(prefs.getDouble(TEMP_BETA_KEY, DEFAULT_TEMP_BETA)));
-		ws.setAttribute(CWFGM_WEATHER_OPTION.TEMP_GAMMA,
+		ws.setAttribute(WEATHER_OPTION.TEMP_GAMMA,
 				Double.valueOf(prefs.getDouble(TEMP_GAMMA_KEY, DEFAULT_TEMP_GAMMA)));
-		ws.setAttribute(CWFGM_WEATHER_OPTION.WIND_ALPHA,
+		ws.setAttribute(WEATHER_OPTION.WIND_ALPHA,
 				Double.valueOf(prefs.getDouble(WIND_ALPHA_KEY, DEFAULT_WIND_ALPHA)));
-		ws.setAttribute(CWFGM_WEATHER_OPTION.WIND_BETA,
+		ws.setAttribute(WEATHER_OPTION.WIND_BETA,
 				Double.valueOf(prefs.getDouble(WIND_BETA_KEY, DEFAULT_WIND_BETA)));
-		ws.setAttribute(CWFGM_WEATHER_OPTION.WIND_GAMMA,
+		ws.setAttribute(WEATHER_OPTION.WIND_GAMMA,
 				Double.valueOf(prefs.getDouble(WIND_GAMMA_KEY, DEFAULT_WIND_GAMMA)));
 
 		Double ffmc = prefs.getDouble(DAILY_FFMC_KEY, DEFAULT_DAILY_FFMC);
-		ws.setAttribute(CWFGM_WEATHER_OPTION.INITIAL_FFMC, ffmc);
-		nwc.setAttribute(CWFGM_WEATHER_OPTION.INITIAL_FFMC, ffmc);
+		ws.setAttribute(WEATHER_OPTION.INITIAL_FFMC, ffmc);
+		nwc.setAttribute(WEATHER_OPTION.INITIAL_FFMC, ffmc);
 		
 		if(chkDailyFit.isSelected() && fitFFMCVal != -1)
 			fbpCalculations.ffmc = fitFFMCVal;
@@ -880,22 +880,22 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			fbpCalculations.ffmc = ffmc;
 		
 		Double dmc = prefs.getDouble(DAILY_DMC_KEY, DEFAULT_DAILY_DMC);
-		ws.setAttribute(CWFGM_WEATHER_OPTION.INITIAL_DMC, dmc);
-		nwc.setAttribute(CWFGM_WEATHER_OPTION.INITIAL_DMC, dmc);
+		ws.setAttribute(WEATHER_OPTION.INITIAL_DMC, dmc);
+		nwc.setAttribute(WEATHER_OPTION.INITIAL_DMC, dmc);
 		fbpCalculations.dmc = dmc;
 		Double dc = prefs.getDouble(DAILY_DC_KEY, DEFAULT_DAILY_DC);
-		ws.setAttribute(CWFGM_WEATHER_OPTION.INITIAL_DC, dc);
-		nwc.setAttribute(CWFGM_WEATHER_OPTION.INITIAL_DC, dc);
+		ws.setAttribute(WEATHER_OPTION.INITIAL_DC, dc);
+		nwc.setAttribute(WEATHER_OPTION.INITIAL_DC, dc);
 		fbpCalculations.dc = dc;
 		Double precip = prefs.getDouble(DAILY_PRECIPITATION_KEY, 0.0);
-		ws.setAttribute(CWFGM_WEATHER_OPTION.INITIAL_RAIN, precip);
+		ws.setAttribute(WEATHER_OPTION.INITIAL_RAIN, precip);
 
 		if (comboHourlyMethod.getSelectedIndex() == 0)
-			ws.setAttribute(CWFGM_WEATHER_OPTION.FFMC_LAWSON, Boolean.valueOf(true));
+			ws.setAttribute(WEATHER_OPTION.FFMC_LAWSON, Boolean.valueOf(true));
 		else {
-			ws.setAttribute(CWFGM_WEATHER_OPTION.FFMC_VANWAGNER, Boolean.valueOf(true));
-			ws.setAttribute(CWFGM_WEATHER_OPTION.INITIAL_HFFMCTIME, Long.valueOf((long)((prefs.getInt(HOURLY_FFMC_START_KEY, 0)) * 60 * 60)));
-			ws.setAttribute(CWFGM_WEATHER_OPTION.INITIAL_HFFMC,
+			ws.setAttribute(WEATHER_OPTION.FFMC_VANWAGNER, Boolean.valueOf(true));
+			ws.setAttribute(WEATHER_OPTION.INITIAL_HFFMCTIME, Long.valueOf((long)((prefs.getInt(HOURLY_FFMC_START_KEY, 0)) * 60 * 60)));
+			ws.setAttribute(WEATHER_OPTION.INITIAL_HFFMC,
 					Double.valueOf(Double.parseDouble((String)prefs.get(HOURLY_FFMC_KEY, DEFAULT_HOURLY_FFMC.toString()))));
 		}
 
@@ -906,14 +906,14 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		if (lat != null) {
 			fbpCalculations.latitude = lat;
 			lat = DEGREE_TO_RADIAN(lat);
-			ws.setAttribute(CWFGM_GRID_ATTRIBUTE.LATITUDE, lat);
-			nwc.setAttribute(CWFGM_GRID_ATTRIBUTE.LATITUDE, lat);
+			ws.setAttribute(GRID_ATTRIBUTE.LATITUDE, lat);
+			nwc.setAttribute(GRID_ATTRIBUTE.LATITUDE, lat);
 		}
 		if (lon != null) {
 			fbpCalculations.longitude = lon;
 			lon = DEGREE_TO_RADIAN(lon);
-			ws.setAttribute(CWFGM_GRID_ATTRIBUTE.LONGITUDE, lon);
-			nwc.setAttribute(CWFGM_GRID_ATTRIBUTE.LONGITUDE, lon);
+			ws.setAttribute(GRID_ATTRIBUTE.LONGITUDE, lon);
+			nwc.setAttribute(GRID_ATTRIBUTE.LONGITUDE, lon);
 		}
 		
 		fbpCalculations.fuelType = FbpTab.adjustIndexComboBoxToFuelType(prefs.getInt(FUEL_TYPE_INDEX_KEY, 0));
@@ -1164,7 +1164,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			noonbuilist.put(t, DecimalUtils.format(noon_bui.value, DataType.BUI));
 			noonisilist.put(t, DecimalUtils.format(noon_isi.value, DataType.ISI));
 			noonfwilist.put(t, DecimalUtils.format(noon_fwi.value, DataType.FWI));
-            double temp_dsr = CwfgmFwi.dsr(noon_fwi.value);
+            double temp_dsr = Fwi.dsr(noon_fwi.value);
             noondsrlist.put(t, DecimalUtils.format(temp_dsr));
 			
 			double dFBP_FMC = 0;
@@ -1519,7 +1519,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			int hffmcHour = (int)(t.getHour(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST));
 			cmb_hourlyStart.setSelectedIndex(hffmcHour);
 			if (comboHourlyMethod.getSelectedIndex() == 1)
-				ws.setAttribute(CWFGM_WEATHER_OPTION.INITIAL_HFFMCTIME, Long.valueOf((long)(hffmcHour * 60 * 60)));
+				ws.setAttribute(WEATHER_OPTION.INITIAL_HFFMCTIME, Long.valueOf((long)(hffmcHour * 60 * 60)));
 		}
 		
 		calculateSunrise(tWs);
@@ -1683,10 +1683,10 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				TwoString hdew = new TwoString(DecimalUtils.format(val, DecimalUtils.DataType.TEMPERATURE), DecimalUtils.format(wx.value.dewPointTemperature, DecimalUtils.DataType.FORCE_2));
 				dewlist.put(t, hdew);
 				
-				if ((wx.value.specifiedBits & ca.cwfgm.grid.IWXData.SPECIFIED.INTERPOLATED) != 0)
+				if ((wx.value.specifiedBits & ca.wise.grid.IWXData.SPECIFIED.INTERPOLATED) != 0)
 					model.makeInterpolated(t);
 				//if the user wants corrected data highlighted and this row had invalid data in it
-				if (highlightCorrectedRows && (wx.value.specifiedBits & ca.cwfgm.grid.IWXData.SPECIFIED.INVALID_DATA) != 0)
+				if (highlightCorrectedRows && (wx.value.specifiedBits & ca.wise.grid.IWXData.SPECIFIED.INVALID_DATA) != 0)
 				    model.makeCorrected(t);
 				if (tWs.getHour(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST) == noonlst) {
 					noonRiseList.put(t, riseStr);
@@ -1818,11 +1818,11 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				dbuilist.put(t, DecimalUtils.format(dfwi.value.dBUI, DecimalUtils.DataType.BUI));
 				ddclist.put(t, DecimalUtils.format(dfwi.value.dDC, DecimalUtils.DataType.DC));
 				try {
-					double temp_isi = CwfgmFwi.isiFWI(dfwi.value.dFFMC, wxnoon.value.windSpeed, 60 * 60);
+					double temp_isi = Fwi.isiFWI(dfwi.value.dFFMC, wxnoon.value.windSpeed, 60 * 60);
 					disilist.put(t, DecimalUtils.format(temp_isi, DecimalUtils.DataType.ISI));
-					double temp_fwi = CwfgmFwi.fwi(temp_isi, dfwi.value.dBUI);
+					double temp_fwi = Fwi.fwi(temp_isi, dfwi.value.dBUI);
 					dafwilist.put(t, DecimalUtils.format(temp_fwi, DecimalUtils.DataType.FWI));
-			        double temp_dsr = CwfgmFwi.dsr(temp_fwi);
+			        double temp_dsr = Fwi.dsr(temp_fwi);
 			        dadsrlist.put(tWs,  DecimalUtils.format(temp_dsr));
 					if ((first && tWs.getHour(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST) > noonlst) ||
 							tWs.getHour(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST) == noonlst) {
@@ -2193,13 +2193,13 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 	public void updateHourlyWeather(Calendar dt, double temp, double rh, double precip, double wndsp, double wd) throws IllegalArgumentException {
 		if (!canTransferTo())
 			return;
-		WTime st = new WTime((Long)ws.getAttribute(CWFGM_WEATHER_OPTION.START_TIME), ws.getTimeManager());
+		WTime st = new WTime((Long)ws.getAttribute(WEATHER_OPTION.START_TIME), ws.getTimeManager());
 		long tm = st.getTime(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST);
 		if (tm == 0) {
 			//the timezone may not have been set yet
 			setTimezoneFromGlobal();
 			//update the time with the possibly new timezone
-			st = new WTime((Long)ws.getAttribute(CWFGM_WEATHER_OPTION.START_TIME), ws.getTimeManager());
+			st = new WTime((Long)ws.getAttribute(WEATHER_OPTION.START_TIME), ws.getTimeManager());
 		}
 		OutVariable<IWXData> data = new OutVariable<IWXData>();
 		data.value = new IWXData();
@@ -2230,7 +2230,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			throw new IllegalArgumentException("The data array must contain information for all hours of a day");
 		WTime time = WTime.fromLocal(startTime.get(Calendar.YEAR), startTime.get(Calendar.MONTH) + 1, startTime.get(Calendar.DAY_OF_MONTH),
 				0, 0, 0, ws.getTimeManager());
-		WTime st = new WTime((Long)ws.getAttribute(CWFGM_WEATHER_OPTION.START_TIME), ws.getTimeManager());
+		WTime st = new WTime((Long)ws.getAttribute(WEATHER_OPTION.START_TIME), ws.getTimeManager());
 		long tm = st.getTime(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST);
 		if (tm == 0) {
 			//the timezone may not have been set yet
@@ -2239,7 +2239,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			time = WTime.fromLocal(startTime.get(Calendar.YEAR), startTime.get(Calendar.MONTH) + 1, startTime.get(Calendar.DAY_OF_MONTH),
 					0, 0, 0, ws.getTimeManager());
 			//set the start time of the weather stream
-			ws.setAttribute(CWFGM_WEATHER_OPTION.START_TIME, Long.valueOf(time.getTime(0)));
+			ws.setAttribute(WEATHER_OPTION.START_TIME, Long.valueOf(time.getTime(0)));
 		}
 		if (!ws.makeHourlyObservations(time)) {
 			JOptionPane.showMessageDialog(app.frmRedapp, Main.resourceManager.getString("ui.label.stats.error.noadd"));
@@ -2269,9 +2269,9 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 	public void addDayWeather(Calendar dt, double min_temp, double max_temp, double min_ws, double max_ws, double rh, double precip, double wd) {
 		WTime time = WTime.fromLocal(dt.get(Calendar.YEAR), dt.get(Calendar.MONTH) + 1, dt.get(Calendar.DAY_OF_MONTH),
 				0, 0, 0, ws.getTimeManager());
-		WTime st = new WTime((Long)ws.getAttribute(CWFGM_WEATHER_OPTION.START_TIME), ws.getTimeManager());
+		WTime st = new WTime((Long)ws.getAttribute(WEATHER_OPTION.START_TIME), ws.getTimeManager());
 		if (st.getTime(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST) == 0) {//Redmine 809 && !timezoneOverride) {
-			ws.setAttribute(CWFGM_WEATHER_OPTION.START_TIME, Long.valueOf(time.getTime(0)));
+			ws.setAttribute(WEATHER_OPTION.START_TIME, Long.valueOf(time.getTime(0)));
 		}
 		ws.makeDailyObservations(time);
 		ws.setDailyValues(time, min_temp, max_temp, min_ws, max_ws, rh, precip, wd);
@@ -2341,7 +2341,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		if (type == Import.FileType.WEATHER_STREAM) {
 			long err;
 			try {
-				err = ws.importFile(filename, (int)(CWFGM_WEATHERSTREAM_IMPORT.PURGE | CWFGM_WEATHERSTREAM_IMPORT.INVALID_FIX));
+				err = ws.importFile(filename, (int)(WEATHERSTREAM_IMPORT.PURGE | WEATHERSTREAM_IMPORT.INVALID_FIX));
 			}
 			catch (IOException ex) {
 				JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.error.import2"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -2488,7 +2488,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		else if (type == FileType.NOON_WEATHER) {
 			long err;
 			try {
-				err = nwc.importFile(filename, (int)CWFGM_WEATHERSTREAM_IMPORT.PURGE);
+				err = nwc.importFile(filename, (int)WEATHERSTREAM_IMPORT.PURGE);
 			}
 			catch (IOException ex) {
 				JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.error.import2"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -2601,7 +2601,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				c.set(Calendar.DAY_OF_MONTH, dt.getDate());
 				double rh = dlg.getRelativeHumidity() / 100.0;
 				double wd = DEGREE_TO_RADIAN(COMPASS_TO_CARTESIAN_DEGREE(dlg.getWindDirection()));
-				WTime st = new WTime((Long)ws.getAttribute(CWFGM_WEATHER_OPTION.START_TIME), ws.getTimeManager());
+				WTime st = new WTime((Long)ws.getAttribute(WEATHER_OPTION.START_TIME), ws.getTimeManager());
 				long time = st.getTime(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST);
 				
 				txtTempAlphaChanged(dlg.getTempAlpha());
@@ -3064,8 +3064,8 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 					noon.purgeToDay(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST);
 					ws.getInstantaneousValues(noon, 0, wxnoon, null, null);
 				}
-				temp_isi = CwfgmFwi.isiFWI(dfwi.value.dFFMC, wxnoon.value.windSpeed, 60 * 60);
-				temp_fwi = CwfgmFwi.fwi(temp_isi, dfwi.value.dBUI);
+				temp_isi = Fwi.isiFWI(dfwi.value.dFFMC, wxnoon.value.windSpeed, 60 * 60);
+				temp_fwi = Fwi.fwi(temp_isi, dfwi.value.dBUI);
 			}
 			catch (Exception ex) {
 				REDappLogger.error("Error getting instantaneous values", ex);
@@ -3166,8 +3166,8 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 					ws.getInstantaneousValues(noon, 0, wxnoon, null, null);
 					rainStartTime = new WTime(noon);
 				}
-				temp_isi = CwfgmFwi.isiFBP(dfwi.value.dFFMC, wxnoon.value.windSpeed, 60 * 60);
-				temp_fwi = CwfgmFwi.fwi(temp_isi, dfwi.value.dBUI);
+				temp_isi = Fwi.isiFBP(dfwi.value.dFFMC, wxnoon.value.windSpeed, 60 * 60);
+				temp_fwi = Fwi.fwi(temp_isi, dfwi.value.dBUI);
 			}
 			catch (Exception ex) {
 				REDappLogger.error("Error getting instantaneous values", ex);
@@ -3271,8 +3271,8 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 					ws.getInstantaneousValues(noon, 0, wxnoon, null, null);
 					rainStartTime = new WTime(noon);
 				}
-				temp_isi = CwfgmFwi.isiFBP(dfwi.value.dFFMC, wxnoon.value.windSpeed, 60 * 60);
-				temp_fwi = CwfgmFwi.fwi(temp_isi, dfwi.value.dBUI);
+				temp_isi = Fwi.isiFBP(dfwi.value.dFFMC, wxnoon.value.windSpeed, 60 * 60);
+				temp_fwi = Fwi.fwi(temp_isi, dfwi.value.dBUI);
 			}
 			catch (Exception ex) {
 				REDappLogger.error("Error getting instantaneous values", ex);
@@ -3372,8 +3372,8 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		EditDailyDialog dlg = new EditDailyDialog(app.frmRedapp, time);
 		setDialogPosition(dlg);
 		WTime nt = new WTime(time);
-		WTime startTime = new WTime((Long)ws.getAttribute(CWFGM_WEATHER_OPTION.START_TIME), ws.getTimeManager());
-		WTime endTime = new WTime((Long)ws.getAttribute(CWFGM_WEATHER_OPTION.END_TIME), ws.getTimeManager());
+		WTime startTime = new WTime((Long)ws.getAttribute(WEATHER_OPTION.START_TIME), ws.getTimeManager());
+		WTime endTime = new WTime((Long)ws.getAttribute(WEATHER_OPTION.END_TIME), ws.getTimeManager());
 		List<DailyWeatherData> data = new ArrayList<EditDailyDialog.DailyWeatherData>();
 		while (WTime.lessThan(startTime, endTime)) {
 			OutVariable<Double> min_temp = new OutVariable<Double>();
@@ -3465,8 +3465,8 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 	private void editNoon(WTime time) {
 		EditNoonDialog dlg = new EditNoonDialog(app.frmRedapp, time);
 		WTime nt = new WTime(time);
-		WTime startTime = new WTime((Long)nwc.getAttribute(CWFGM_WEATHER_OPTION.START_TIME), nwc.getTimeManager());
-		WTime endTime = new WTime((Long)nwc.getAttribute(CWFGM_WEATHER_OPTION.END_TIME), nwc.getTimeManager());
+		WTime startTime = new WTime((Long)nwc.getAttribute(WEATHER_OPTION.START_TIME), nwc.getTimeManager());
+		WTime endTime = new WTime((Long)nwc.getAttribute(WEATHER_OPTION.END_TIME), nwc.getTimeManager());
 		List<NoonWeatherData> data = new ArrayList<>();
 		while (WTime.lessThan(startTime, endTime)) {
 			OutVariable<Double> temp = new OutVariable<Double>();
@@ -4541,10 +4541,10 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			dstEnd = 0;
 		}
 		
-		ws.setAttribute(CWFGM_GRID_ATTRIBUTE.DST_END, dstEnd);
-		nwc.setAttribute(CWFGM_GRID_ATTRIBUTE.DST_END, dstEnd);
-		ws.setAttribute(CWFGM_GRID_ATTRIBUTE.TIMEZONE, totalOffset);
-		nwc.setAttribute(CWFGM_GRID_ATTRIBUTE.TIMEZONE, totalOffset);
+		ws.setAttribute(GRID_ATTRIBUTE.DST_END, dstEnd);
+		nwc.setAttribute(GRID_ATTRIBUTE.DST_END, dstEnd);
+		ws.setAttribute(GRID_ATTRIBUTE.TIMEZONE, totalOffset);
+		nwc.setAttribute(GRID_ATTRIBUTE.TIMEZONE, totalOffset);
 	}
 
 	@Override
