@@ -337,37 +337,37 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-        repository: PSaaS-Developers/FWI
+        repository: WISE-Developers/FWI
         path: FWI
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-        repository: PSaaS-Developers/Fuel
+        repository: WISE-Developers/Fuel
         path: Fuel
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-        repository: PSaaS-Developers/Grid
+        repository: WISE-Developers/Grid
         path: Grid
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-        repository: PSaaS-Developers/REDapp_Lib
+        repository: WISE-Developers/REDapp_Lib
         path: REDapp_Lib
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-        repository: PSaaS-Developers/Weather
+        repository: WISE-Developers/Weather
         path: Weather
         token: ${{ secrets.PSAAS_PAT }}
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-        repository: PSaaS-Developers/REDapp
+        repository: WISE-Developers/REDapp
         path: REDapp
         token: ${{ secrets.PSAAS_PAT }}
     
@@ -430,7 +430,7 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/FWI
+        repository: WISE-Developers/FWI
         directory: FWI
         tags: true
   
@@ -438,7 +438,7 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/Fuel
+        repository: WISE-Developers/Fuel
         directory: Fuel
         tags: true
   
@@ -446,7 +446,7 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/Grid
+        repository: WISE-Developers/Grid
         directory: Grid
         tags: true
   
@@ -454,7 +454,7 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/REDapp_Lib
+        repository: WISE-Developers/REDapp_Lib
         directory: REDapp_Lib
         tags: true
   
@@ -462,7 +462,7 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/Weather
+        repository: WISE-Developers/Weather
         directory: Weather
         tags: true
   
@@ -470,7 +470,7 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/REDapp
+        repository: WISE-Developers/REDapp
         directory: REDapp
         tags: true
 
@@ -478,7 +478,7 @@ jobs:
       id: redapp-notes
       uses: mikepenz/release-changelog-builder-action@v2.9.0
       with:
-        owner: PSaaS-Developers
+        owner: WISE-Developers
         repo: REDapp
         path: REDapp
         toTag: ${{ needs.build.outputs.release_version }}
@@ -497,4 +497,4 @@ jobs:
           REDapp-${{ needs.build.outputs.user_friendly_version }}.zip
         tag_name: refs/tags/${{ needs.build.outputs.release_version }}
         token: ${{ secrets.PSAAS_PAT }}
-        repository: PSaaS-Developers/REDapp
+        repository: WISE-Developers/REDapp
