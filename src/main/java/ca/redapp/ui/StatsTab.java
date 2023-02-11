@@ -1097,6 +1097,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		OutVariable<Double> noon_rh = new OutVariable<>();
 		OutVariable<Double> noon_precip = new OutVariable<>();
 		OutVariable<Double> noon_ws = new OutVariable<>();
+		OutVariable<Double> noon_wg = new OutVariable<>();
 		OutVariable<Double> noon_wd = new OutVariable<>();
 		OutVariable<Double> noon_dc = new OutVariable<>();
 		OutVariable<Double> noon_dmc = new OutVariable<>();
@@ -1124,7 +1125,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		
 		while (WTime.lessThan(t, te)) {
 			try {
-				nwc.getNoonWeatherValues(tWs, noon_temp, noon_dew, noon_rh, noon_ws, noon_wd, noon_precip);
+				nwc.getNoonWeatherValues(tWs, noon_temp, noon_dew, noon_rh, noon_ws, noon_wg, noon_wd, noon_precip);
 				nwc.getNoonFWI(tWs, noon_dc, noon_dmc, noon_ffmc, noon_bui, noon_isi, noon_fwi);
 			}
 			catch (Exception ex) {
@@ -1239,6 +1240,8 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		OutVariable<Double> day_precip = new OutVariable<>();
 		OutVariable<Double> min_ws = new OutVariable<>();
 		OutVariable<Double> max_ws = new OutVariable<>();
+		OutVariable<Double> min_wg = new OutVariable<>();
+		OutVariable<Double> max_wg = new OutVariable<>();
 		OutVariable<Double> day_wd = new OutVariable<>();
 		min_temp.value = 0.0;
 		max_temp.value = 0.0;
@@ -1544,7 +1547,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				ws.getInstantaneousValues(tWs, 0, wx, ifwi, dfwi);
 				daySumPrecip += wx.value.precipitation;
 				if (first || tWs.getHour(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST) == 0)
-					ws.getDailyValues(tWs, min_temp, max_temp, min_ws, max_ws, day_rh, day_precip, day_wd);
+					ws.getDailyValues(tWs, min_temp, max_temp, min_ws, max_ws, min_wg, max_wg, day_rh, day_precip, day_wd);
 			}
 			catch (Exception ex) {
 				System.out.println(ex.toString());
@@ -2274,7 +2277,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			ws.setAttribute(CWFGM_WEATHER_OPTION.START_TIME, Long.valueOf(time.getTime(0)));
 		}
 		ws.makeDailyObservations(time);
-		ws.setDailyValues(time, min_temp, max_temp, min_ws, max_ws, rh, precip, wd);
+		ws.setDailyValues(time, min_temp, max_temp, min_ws, max_ws, 0.0, 0.0, rh, precip, wd);
 		calculate();
 	}
 
@@ -2555,7 +2558,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				if (!dlg.getWindDirection(val))
 					return;
 				double wd = val.value;
-				nwc.setNoonWeatherValues(t, temp, rh, ws, wd, precip);
+				nwc.setNoonWeatherValues(t, temp, rh, ws, 0.0, wd, precip);
 				dlg.dispose();
 				calculate();
 			}
@@ -3119,6 +3122,8 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		OutVariable<Double> max_temp = new OutVariable<Double>();
 		OutVariable<Double> min_ws = new OutVariable<Double>();
 		OutVariable<Double> max_ws = new OutVariable<Double>();
+		OutVariable<Double> min_wg = new OutVariable<Double>();
+		OutVariable<Double> max_wg = new OutVariable<Double>();
 		OutVariable<Double> rh = new OutVariable<Double>();
 		OutVariable<Double> precip = new OutVariable<Double>();
 		OutVariable<Double> wd = new OutVariable<Double>();
@@ -3134,7 +3139,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			double temp_isi = 0;
 			double temp_fwi = 0;
 			WTime temp = new WTime(timeWS);
-			ws.getDailyValues(timeWS, min_temp, max_temp, min_ws, max_ws, rh, precip, wd);
+			ws.getDailyValues(timeWS, min_temp, max_temp, min_ws, max_ws, min_wg, max_wg, rh, precip, wd);
 			WTime noon = new WTime(timeWS);
 			WTime rainEndTime = new WTime(timeWS);
 			WTime rainStartTime;
@@ -3336,6 +3341,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		OutVariable<Double> noon_rh = new OutVariable<>();
 		OutVariable<Double> noon_precip = new OutVariable<>();
 		OutVariable<Double> noon_ws = new OutVariable<>();
+		OutVariable<Double> noon_wg = new OutVariable<>();
 		OutVariable<Double> noon_wd = new OutVariable<>();
 		OutVariable<Double> noon_ffmc = new OutVariable<>();
 		OutVariable<Double> noon_dmc = new OutVariable<>();
@@ -3344,7 +3350,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		OutVariable<Double> noon_bui = new OutVariable<>();
 		OutVariable<Double> noon_fwi = new OutVariable<>();
 		while (WTime.lessThanEqualTo(time, endTime)) {
-			nwc.getNoonWeatherValues(timeWS, noon_temp, noon_dew, noon_rh, noon_ws, noon_wd, noon_precip);
+			nwc.getNoonWeatherValues(timeWS, noon_temp, noon_dew, noon_rh, noon_ws, noon_wg, noon_wd, noon_precip);
 			nwc.getNoonFWI(timeWS, noon_dc, noon_dmc, noon_ffmc, noon_bui, noon_isi, noon_fwi);
 			builder.addData(time.toString(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST | WTime.FORMAT_STRING_YYYY_MM_DD | WTime.FORMAT_DATE));
 			builder.addData(DecimalUtils.format(noon_temp.value, DataType.TEMPERATURE));
@@ -3380,10 +3386,12 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			OutVariable<Double> max_temp = new OutVariable<Double>();
 			OutVariable<Double> min_ws = new OutVariable<Double>();
 			OutVariable<Double> max_ws = new OutVariable<Double>();
+			OutVariable<Double> min_wg = new OutVariable<Double>();
+			OutVariable<Double> max_wg = new OutVariable<Double>();
 			OutVariable<Double> rh = new OutVariable<Double>();
 			OutVariable<Double> precip = new OutVariable<Double>();
 			OutVariable<Double> wd = new OutVariable<Double>();
-			ws.getDailyValues(startTime, min_temp, max_temp, min_ws, max_ws, rh, precip, wd);
+			ws.getDailyValues(startTime, min_temp, max_temp, min_ws, max_ws, min_wg, max_wg, rh, precip, wd);
 			wd.value = CARTESIAN_TO_COMPASS_DEGREE(RADIAN_TO_DEGREE(wd.value));
 			DailyWeatherData d = new DailyWeatherData();
 			d.time = new WTime(startTime);
@@ -3415,7 +3423,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 						modcount++;
 						double wd = DEGREE_TO_RADIAN(COMPASS_TO_CARTESIAN_DEGREE(d.wd));
 						ws.makeDailyObservations(d.time);
-						ws.setDailyValues(d.time, d.minTemp, d.maxTemp, d.minWS, d.maxWS, d.rh / 100.0, d.precip, wd);
+						ws.setDailyValues(d.time, d.minTemp, d.maxTemp, d.minWS, d.maxWS, 0.0, 0.0, d.rh / 100.0, d.precip, wd);
 					}
 				}
 				if (modcount > 0) {
@@ -3472,10 +3480,11 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			OutVariable<Double> temp = new OutVariable<Double>();
 			OutVariable<Double> dew = new OutVariable<Double>();
 			OutVariable<Double> ws = new OutVariable<Double>();
+			OutVariable<Double> wg = new OutVariable<Double>();
 			OutVariable<Double> rh = new OutVariable<Double>();
 			OutVariable<Double> precip = new OutVariable<Double>();
 			OutVariable<Double> wd = new OutVariable<Double>();
-			nwc.getNoonWeatherValues(startTime, temp, dew, rh, ws, wd, precip);
+			nwc.getNoonWeatherValues(startTime, temp, dew, rh, ws, wg, wd, precip);
 			wd.value = CARTESIAN_TO_COMPASS_DEGREE(RADIAN_TO_DEGREE(wd.value));
 			NoonWeatherData d = new NoonWeatherData();
 			d.time = new WTime(startTime);
@@ -3500,7 +3509,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				if (d.modified) {
 					modcount++;
 					double wd = DEGREE_TO_RADIAN(COMPASS_TO_CARTESIAN_DEGREE(d.wd));
-					nwc.setNoonWeatherValues(d.time, d.temp, d.rh / 100.0, d.ws, wd, d.precip);
+					nwc.setNoonWeatherValues(d.time, d.temp, d.rh / 100.0, d.ws, 0.0, wd, d.precip);
 				}
 			}
 			if (modcount > 0) {
