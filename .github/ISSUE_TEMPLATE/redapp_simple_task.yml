@@ -1,11 +1,16 @@
 name: REDapp Project Task
 description: Creates a task for the REDapp Team
 title: "[REDapp TASK]: "
-labels: ["task", "triage", "REDapp"]
+labels: ["task", "triage"]
 assignees:
   - spydmobile
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report! By submitting this issue, you agree to follow our [Code of Conduct](https://firegrowthmodel.ca/pages/conduct.html)
+        Please complete the following project task:
+  - type: textarea
+    id: details
+    attributes:
+      label: Explain the task in detail
+      description: we ask you to use checkist items for multiple concenrs.

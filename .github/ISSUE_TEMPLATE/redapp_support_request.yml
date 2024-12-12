@@ -4,6 +4,7 @@ title: "[REDapp help]: "
 labels: ["support", "triage", "REDapp"]
 assignees:
   - emdiaz0031
+  - spydmobile
 body:
   - type: markdown
     attributes:
