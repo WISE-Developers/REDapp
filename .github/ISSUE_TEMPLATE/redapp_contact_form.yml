@@ -1,11 +1,12 @@
-name: Contact The Project
-description: Contact the project directly.
+name: Contact The REDapp Project
+description: Contact the REDapp project directly.
 title: "[Contact] Re: "
 labels: ["Communication Required"]
 assignees:
   - spydmobile
   - nealmcloughlin
   - BadgerOnABike
+  - emdiaz0031
 
 body:
   - type: markdown

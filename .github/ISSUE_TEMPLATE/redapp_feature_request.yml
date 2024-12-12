@@ -1,7 +1,7 @@
 name: REDapp Feature Request
 description: Request a new feature in REDapp
 title: "[REDapp FR]: "
-labels: ["feature", "triage", "REDapp"]
+labels: ["feature", "triage"]
 assignees:
   - spydmobile
 body:
@@ -31,13 +31,4 @@ body:
     attributes:
       label: How will this improve the project or tool?
       description: Proivide additional context.
-  - type: checkboxes
-    id: approval
-    attributes:
-      label: Approvals Process
-      description: All to be completed for induction into the tool
-      options:
-        - label: Testing For Issue
-        - label: Executive Approval
-        - label: Merge
-        - label: Provide Attribution
+      placeholder: Tell us how this will help!

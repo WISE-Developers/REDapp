@@ -1,14 +1,16 @@
 name: REDapp Bug Report
 description: File a REDapp bug report
 title: "[REDapp Bug]: "
-labels: ["bug", "triage", "REDapp"]
+labels: ["bug", "triage"]
 assignees:
   - spydmobile
+  - emdiaz0031
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report! By submitting this issue, you agree to follow our [Code of Conduct](https://firegrowthmodel.ca/pages/conduct.html)
+        Thanks for taking the time to fill out this bug report! By submitting this issue, 
+        you agree to follow our [Code of Conduct](https://firegrowthmodel.ca/pages/conduct.html)
   - type: input
     id: contact
     attributes:
@@ -32,15 +34,16 @@ body:
       label: Version
       description: What version of our software are you running (if your version is not listed, download the latest instead)?
       options:
+        - (Release) V7.2022.3-0 (latest release)
         - (Release) 2022.03.xx
         - (Release) 6.2.4
         - (Release) 6.2.3
     validations:
       required: true
   - type: dropdown
-    id: windows
+    id: operatingsystem
     attributes:
-      label: What version of Windows are you seeing the problem on?
+      label: What OS version are you seeing the problem on?
       multiple: true
       options:
         - Windows 7 32-bit
@@ -48,6 +51,9 @@ body:
         - Windows 10 32-bit
         - Windows 10 64-bit
         - Windows 11 
+        - macOS 13 Ventura
+        - macOS 14 Sonoma
+        - macOS 15 Sequoia
         - Other (indicate in "What happened" above)
   - type: textarea
     id: logs
@@ -55,12 +61,4 @@ body:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
       render: shell
-  - type: checkboxes
-    id: approval
-    attributes:
-      label: Approvals Process
-      description: All to be completed for bug fix
-      options:
-        - label: Testing For Issue
-        - label: Executive Approval
-        - label: Merge
+      placeholder: Paste your logs here!
