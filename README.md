@@ -22,12 +22,12 @@ This is main repository of the REDapp Project. It houses the REDapp UI and gener
 
 ### Project Dependencies ###
 
-* [REDapp_Lib](https://github.com/PSaaS-Developers/REDapp_Lib)
-* [Fuel](https://github.com/PSaaS-Developers/Fuel)
-* [FWI](https://github.com/PSaaS-Developers/FWI)
-* [Grid](https://github.com/PSaaS-Developers/Grid)
-* [Weather](https://github.com/PSaaS-Developers/Weather)
-* [versions](https://github.com/PSaaS-Developers/versions)
+* [REDapp_Lib](https://github.com/WISE-Developers/REDapp_Lib)
+* [Fuel](https://github.com/WISE-Developers/Fuel)
+* [FWI](https://github.com/WISE-Developers/FWI)
+* [Grid](https://github.com/WISE-Developers/Grid)
+* [Weather](https://github.com/WISE-Developers/Weather)
+* [versions](https://github.com/WISE-Developers/versions)
 * [HSS_Java](https://github.com/HeartlandSoftware/HSS_Java)
 * [WTime](https://github.com/HeartlandSoftware/WTime)
 
