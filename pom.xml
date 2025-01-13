@@ -13,26 +13,45 @@
   </properties>
   <repositories>
     <repository>
+      <id>WISEGit</id>
+      <name>WISE Developers GitHub</name>
+      <url>https://maven.pkg.github.com/WISE-Developers</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>WISEGit-grid</id>
+      <name>WISE Developers GitHub Grid</name>
+      <url>https://maven.pkg.github.com/WISE-Developers/WISE_Grid_Module</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
       <id>JOSM</id>
       <name>JOSM Repository</name>
-      <url>https://josm.openstreetmap.de/nexus/content/repositories/releases/</url>
+      <url>https://josm.openstreetmap.de/nexus/content/repositories/releases</url>
     </repository>
+
     <repository>
-      <id>OSGeo</id>
-      <name>OSGeo</name>
-      <url>https://repo.osgeo.org/repository/release/</url>
-    </repository>
-    <repository>
-      <id>github_hss</id>
-      <name>Heartland Software GitHub</name>
+      <id>HHSGit</id>
+      <name>HeartlandSoftware github</name>
       <url>https://maven.pkg.github.com/HeartlandSoftware/*</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </repository>
     <repository>
-      <id>github</id>
-      <name>PSaaS Developers GitHub</name>
-      <url>https://maven.pkg.github.com/PSaaS-Developers/*</url>
+      <id>HHSGitWeater</id>
+      <name>HeartlandSoftware github Weater</name>
+      <url>https://maven.pkg.github.com/HeartlandSoftware/WTime</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </repository>
   </repositories>
+
   <dependencies>
     <!-- https://mvnrepository.com/artifact/de.micromata.jak/JavaAPIforKml -->
     <dependency>
@@ -56,8 +75,9 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
-      <version>1.21</version>
+      <version>1.27.1</version>
     </dependency>
+
     <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -179,7 +199,7 @@
     <dependency>
       <groupId>ca.wise</groupId>
       <artifactId>weather</artifactId>
-      <version>7.2021.7-2</version>
+      <version>1.0.6-beta.5-dev-2023-03-01_21.04</version>
     </dependency>
   </dependencies>
   
