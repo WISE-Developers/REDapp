@@ -40,7 +40,11 @@ import javax.swing.JTextArea;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import ca.redapp.ui.component.RButton;
+//import ca.redapp.util.BuildConfig;
 import ca.redapp.util.BuildConfig;
+import ca.redapp.util.MavenProjectVersionGetter;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.swing.event.HyperlinkListener;
 import java.awt.BorderLayout;
@@ -51,13 +55,24 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.ImageIcon;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 public class AboutDialog extends JDialog implements MouseListener {
 	private static final long serialVersionUID = 1L;
@@ -142,11 +157,16 @@ public class AboutDialog extends JDialog implements MouseListener {
 
 		JPanel panel_1 = new JPanel(new BorderLayout());
 		getContentPane().add(panel_1, BorderLayout.CENTER);
+		String version = MavenProjectVersionGetter.getCurrentProjectVersion();//BuildConfig.version.getMinor() + "." + BuildConfig.version.getPatch() + BuildConfig.version.getSuffix().replace('-', '.');
 
-        String version = BuildConfig.version.getMinor() + "." + BuildConfig.version.getPatch() + BuildConfig.version.getSuffix().replace('-', '.');
+
+
         ZonedDateTime datetime = ZonedDateTime.parse(BuildConfig.buildTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         String displayDate = datetime.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy", Main.resourceManager.loc));
         String currentYear = String.valueOf(datetime.getYear());
+		//String displayDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMMM dd, yyyy", Main.resourceManager.loc));
+		//String currentYear = String.valueOf(LocalDateTime.now().getYear());
+
 		if (Main.isLinux()) {
 			JTextArea editor = new JTextArea();
 			editor.setEditable(false);
