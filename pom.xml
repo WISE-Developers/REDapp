@@ -174,7 +174,7 @@
     <dependency>
       <groupId>org.openstreetmap.jmapviewer</groupId>
       <artifactId>jmapviewer</artifactId>
-      <version>2.15</version>
+      <version>2.22</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.openstreetmap.josm/josm -->
     <dependency>
