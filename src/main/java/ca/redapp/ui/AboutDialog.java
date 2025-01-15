@@ -2,18 +2,15 @@
  * REDapp - AboutDialog.java
  * Copyright (C) 2015-2019 The REDapp Development Team
  * Homepage: http://redapp.org
- * 
  * REDapp is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * REDapp is distributed in the hope that it will be useful,
+  * REDapp is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
+  * You should have received a copy of the GNU General Public License
  * along with REDapp. If not see <http://www.gnu.org/licenses/>. 
  **********************************************************************/
 
@@ -40,12 +37,8 @@ import javax.swing.JTextArea;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import ca.redapp.ui.component.RButton;
-//import ca.redapp.util.BuildConfig;
 import ca.redapp.util.BuildConfig;
 import ca.redapp.util.MavenProjectVersionGetter;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
 import javax.swing.event.HyperlinkListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -55,24 +48,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.ImageIcon;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 public class AboutDialog extends JDialog implements MouseListener {
 	private static final long serialVersionUID = 1L;
