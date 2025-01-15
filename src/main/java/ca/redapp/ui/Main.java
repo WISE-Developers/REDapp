@@ -944,12 +944,12 @@ public class Main implements FocusListener, DocumentListener {
 		if (Desktop.isDesktopSupported()) {
 			try {
 				Desktop.getDesktop().browse(
-						new URI("http://www.redapp.org/contact"));
+						new URI("https://github.com/WISE-Developers/REDapp/issues/new/choose"));
 			} catch (Exception e) {
 				JOptionPane
 						.showMessageDialog(
 								null,
-								"Unable to open a browser with http://www.redapp.org/contact",
+								"Unable to open a browser with https://github.com/WISE-Developers/REDapp/issues/new/choose",
 								"Error", JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
