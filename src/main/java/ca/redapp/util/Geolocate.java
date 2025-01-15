@@ -174,8 +174,10 @@ public class Geolocate {
 			}
 
 
-			if (index == null)
+			if (index == null) {
+				_internalFinished();
 				return;
+			}
 			//geoLiteCityInputStream = Geolocate.class.getResourceAsStream("/GeoLiteCity-Location.csv");
 
 
