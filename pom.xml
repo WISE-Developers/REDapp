@@ -8,6 +8,11 @@
   <name>REDapp</name>
   <url>https://maven.apache.org</url>
   <properties>
+    <at>@</at>
+    <release.time.en>10:00</release.time.en>
+    <release.time.fr>10:00</release.time.fr>
+    <release.year>2025</release.year>
+
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -145,6 +150,7 @@
       <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
       <version>1.2.5</version>
     </dependency>
+
     <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -250,20 +256,21 @@
                   <tasks>
                     <copy file="BuildConfig.java.template" tofile="src/main/java/ca/redapp/util/BuildConfig.java" overwrite="true" />
                     <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
-                        token="@buildversion@" value="${project.version}" />
+                        token="${at}buildversion${at}" value="${project.version}" />
                     <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
-                        token="@buildtime@" value="${maven.build.timestamp}" />
+                        token="${at}buildtime${at}" value="${maven.build.timestamp}" />
                     <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
-                        token="@debug@" value="false" />
+                        token="${at}debug${at}" value="false" />
                     <copy file="licence.in/licence.html" tofile="res/licence.html" overwrite="true" />
                     <replace file="res/licence.html"
-                        token="@VERSION@" value="${project.version}" />
+                        token="${at}VERSION${at}" value="${project.version}" />
                     <replace file="res/licence.html"
-                        token="@DATE@" value="${maven.build.timestamp}" />
+                        token="${at}DATE${at}" value="${maven.build.timestamp}" />
                   </tasks>
                   <sourceRoot>src/main/java/ca/redapp/util</sourceRoot>
                 </configuration>
               </execution>
+
             </executions>
           </plugin>
         </plugins>
@@ -271,9 +278,10 @@
     </profile>
     <profile>
       <id>debug</id>
+      <!--
       <activation>
         <activeByDefault>true</activeByDefault>
-      </activation>
+      </activation>-->
       <build>
         <plugins>
           <plugin>
@@ -290,54 +298,54 @@
                   <tasks>
                     <copy file="BuildConfig.java.template" tofile="src/main/java/ca/redapp/util/BuildConfig.java" overwrite="true" />
                     <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
-                        token="@buildversion@" value="${project.version}" />
+                        token="${at}buildversion${at}" value="${project.version}" />
                     <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
-                        token="@buildtime@" value="${maven.build.timestamp}" />
+                        token="${at}buildtime${at}" value="${maven.build.timestamp}" />
                     <replace file="src/main/java/ca/redapp/util/BuildConfig.java"
-                        token="@debug@" value="true" />
+                        token="${at}debug${at}" value="true" />
                     <copy file="licence.in/licence.html" tofile="res/licence.html" overwrite="true" />
                     <replace file="res/licence.html"
-                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                        token="${at}VERSION${at}" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
                     <replace file="res/licence.html"
-                        token="@DATE@" value="${release.time.en}" />
+                        token="${at}DATE${at}" value="${release.time.en}" />
                     <copy file="licence.in/licence_fr.html" tofile="res/licence_fr.html" overwrite="true" />
                     <replace file="res/licence_fr.html"
-                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                        token="${at}VERSION${at}" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
                     <replace file="res/licence_fr.html"
-                        token="@DATE@" value="${release.time.fr}" />
+                        token="${at}DATE${at}" value="${release.time.fr}" />
                     <copy file="licence.in/about_en.rtf" tofile="res/about_en.rtf" overwrite="true" />
                     <replace file="res/about_en.rtf"
-                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                        token="${at}VERSION${at}" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
                     <replace file="res/about_en.rtf"
-                        token="@DATE@" value="${release.time.en}" />
+                        token="${at}DATE${at}" value="${release.time.en}" />
                     <replace file="res/about_en.rtf"
-                        token="@YEAR@" value="${release.year}" />
+                        token="${at}YEAR${at}" value="${release.year}" />
                     <copy file="licence.in/about_fr.rtf" tofile="res/about_fr.rtf" overwrite="true" />
                     <replace file="res/about_fr.rtf"
-                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                        token="${at}VERSION${at}" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
                     <replace file="res/about_fr.rtf"
-                        token="@DATE@" value="${release.time.fr}" />
+                        token="${at}DATE${at}" value="${release.time.fr}" />
                     <replace file="res/about_fr.rtf"
-                        token="@YEAR@" value="${release.year}" />
+                        token="${at}YEAR${at}" value="${release.year}" />
 
                     <mkdir dir="licence.out"/>
                     <copy file="res/licence.html" tofile="licence.out/licence.html" overwrite="true" />
                     <copy file="res/licence_fr.html" tofile="licence.out/licence_fr.html" overwrite="true" />
                     <copy file="licence.in/Licence.txt" tofile="licence.out/Licence.txt" overwrite="true" />
                     <replace file="licence.out/Licence.txt"
-                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                        token="${at}VERSION${at}" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
                     <replace file="licence.out/Licence.txt"
-                        token="@DATE@" value="${release.time.en}" />
+                        token="${at}DATE${at}" value="${release.time.en}" />
                     <copy file="licence.in/licence.rtf" tofile="licence.out/licence.rtf" overwrite="true" />
                     <replace file="licence.out/licence.rtf"
-                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                        token="${at}VERSION${at}" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
                     <replace file="licence.out/licence.rtf"
-                        token="@DATE@" value="${release.time.en}" />
+                        token="${at}DATE${at}" value="${release.time.en}" />
                     <copy file="licence.in/licence_fr.rtf" tofile="licence.out/licence_fr.rtf" overwrite="true" />
                     <replace file="licence.out/licence_fr.rtf"
-                        token="@VERSION@" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
+                        token="${at}VERSION${at}" value="${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${parsedVersion.buildNumber}" />
                     <replace file="licence.out/licence_fr.rtf"
-                        token="@DATE@" value="${release.time.fr}" />
+                        token="${at}DATE${at}" value="${release.time.fr}" />
                   </tasks>
                   <sourceRoot>src/main/java/ca/redapp/util</sourceRoot>
                 </configuration>
@@ -358,6 +366,28 @@
       </resource>
     </resources>
     <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>ca.redapp.ui.Launcher</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase> <!-- packaging phase -->
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -409,8 +439,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.6.1</version>
         <configuration>
-          <source>11</source>
-          <target>11</target>
+          <source>22</source>
+          <target>22</target>
         </configuration>
       </plugin>
       <plugin>
