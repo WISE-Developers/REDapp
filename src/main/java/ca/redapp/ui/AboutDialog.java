@@ -139,8 +139,8 @@ public class AboutDialog extends JDialog implements MouseListener {
 
 		JPanel panel_1 = new JPanel(new BorderLayout());
 		getContentPane().add(panel_1, BorderLayout.CENTER);
-		String version = MavenProjectVersionGetter.getCurrentProjectVersion();//BuildConfig.version.getMinor() + "." + BuildConfig.version.getPatch() + BuildConfig.version.getSuffix().replace('-', '.');
-
+		//String version = MavenProjectVersionGetter.getCurrentProjectVersion();//BuildConfig.version.getMinor() + "." + BuildConfig.version.getPatch() + BuildConfig.version.getSuffix().replace('-', '.');
+		String version = BuildConfig.version.getMajor() + "." + BuildConfig.version.getMinor() + "." + BuildConfig.version.getPatch() + BuildConfig.version.getSuffix().replace('-', '.');
 
 
         ZonedDateTime datetime = ZonedDateTime.parse(BuildConfig.buildTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
