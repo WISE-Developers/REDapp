@@ -24,17 +24,11 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Window;
 
-import javax.swing.BoxLayout;
-import javax.swing.JDialog;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import ca.redapp.ui.component.RButton;
 import ca.redapp.util.RPreferences;
-
-import javax.swing.JCheckBox;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
@@ -134,6 +128,7 @@ public class Assumptions extends JDialog implements ActionListener {
 		btnClose.setBounds(293, 5, 121, 41);
 		interactPanel.add(btnClose, BorderLayout.EAST);
 
+		/*
 		JEditorPane browser = new JEditorPane();
 		browser.setEditable(false);
 		String location = MapTab.getHTMLLocation().replace('\\', '/');
@@ -147,10 +142,23 @@ public class Assumptions extends JDialog implements ActionListener {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		JScrollPane pane = new JScrollPane(browser);
+		*/
+		JTextArea editor = new JTextArea();
+		editor.setEditable(false);
+		editor.setText(Main.resourceManager.getString("ui.label.assumptions.text"));
+		editor.setLineWrap(true);
+		editor.setWrapStyleWord(true);
+
+		//editor.setPreferredSize(new Dimension(0, 400));
+
+
+
+		JScrollPane pane = new JScrollPane(editor);
+
 		pane.setBounds(10, 11, 414, 191);
 		pane.setPreferredSize(new Dimension(414, 191));
 		contentPanel.add(pane);
+		editor.setCaretPosition(0);
 
 		addWindowListener(new WindowListener() {
 			@Override
