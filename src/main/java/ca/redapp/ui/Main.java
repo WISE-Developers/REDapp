@@ -114,7 +114,7 @@ public class Main implements FocusListener, DocumentListener {
 	private JSpinner spinnerDate;
 	private JTabbedPane tabPane;
 
-	private List<REDappTab> tabs = new ArrayList<REDappTab>();
+	private final List<REDappTab> tabs = new ArrayList<REDappTab>();
 	public WeatherTab weatherTab;
 	public FwiTab fwiTab;
 	public StatsTab statsTab;
@@ -140,7 +140,7 @@ public class Main implements FocusListener, DocumentListener {
 		}
 		String defLanguage = Locale.getDefault().getISO3Language();
 		int def = 0;
-		if (defLanguage.toLowerCase().indexOf("fr") >= 0)
+		if (defLanguage.toLowerCase().contains("fr"))
 			def = 1;
 		int lang = prefs.getInt("language", def);
 		if (lang == 0)
@@ -155,7 +155,7 @@ public class Main implements FocusListener, DocumentListener {
 			try {
 				cls = Class.forName("org.eclipse.paho.client.mqttv3.MqttCallback");
 			}
-			catch (ClassNotFoundException e1) { }
+			catch (ClassNotFoundException ignored) { }
 			shouldUseMqtt = cls != null;
 		}
 	}
@@ -178,8 +178,13 @@ public class Main implements FocusListener, DocumentListener {
 		frmRedapp.addWindowListener(new WindowListener() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				saveAllValues();
-				tabs.forEach((tab) -> tab.onClosing());
+				//saveAllValues was failing, and consequently the program could not close.  Added a try catch to allow the program to close in that circumstance. --Dylan 2025-01-13
+				try {
+					saveAllValues();
+				} catch (Exception ignored){
+					;
+				}
+				tabs.forEach(REDappTab::onClosing);
 				if (Launcher.mac.isMac())
 					System.exit(0);
 			}
@@ -223,7 +228,7 @@ public class Main implements FocusListener, DocumentListener {
 		});
 
 		for (String arg : Main.vmArgs) {
-			if (arg.toLowerCase().indexOf("-dhttp.proxyhost") >= 0) {
+			if (arg.toLowerCase().contains("-dhttp.proxyhost")) {
 				//Why would they set this from the command line,
 				//are they trying to break stuff?
 				int index = tabPane.indexOfComponent(mapTab);
@@ -939,12 +944,12 @@ public class Main implements FocusListener, DocumentListener {
 		if (Desktop.isDesktopSupported()) {
 			try {
 				Desktop.getDesktop().browse(
-						new URI("http://www.redapp.org/contact"));
+						new URI("https://github.com/WISE-Developers/REDapp/issues/new/choose"));
 			} catch (Exception e) {
 				JOptionPane
 						.showMessageDialog(
 								null,
-								"Unable to open a browser with http://www.redapp.org/contact",
+								"Unable to open a browser with https://github.com/WISE-Developers/REDapp/issues/new/choose",
 								"Error", JOptionPane.ERROR_MESSAGE);
 			}
 		} else {

@@ -46,6 +46,7 @@ public class Launcher {
 		VERSION_9(9),
 		VERSION_10(10),
 		VERSION_11(11),
+		VERSION_22(22),
 		VERSION_GT_10(100);
 		
 		public final int major;
@@ -61,8 +62,11 @@ public class Launcher {
 		    	int vers = (int)Double.parseDouble(version);
 		    	if (vers == 11)
 		    		return JavaVersion.VERSION_11;
+				else if (vers == 22)
+					return JavaVersion.VERSION_22;
 		    	else if (vers > 11)
 		    		return JavaVersion.VERSION_GT_10;
+
 		    	else
 		    		return JavaVersion.VERSION_INVALID;
 		    }
@@ -77,6 +81,8 @@ public class Launcher {
 		    	return JavaVersion.VERSION_10;
 		    else if (majorVersion == 11)
 		    	return JavaVersion.VERSION_11;
+			else if (majorVersion == 22)
+				return JavaVersion.VERSION_22;
 		    else if (majorVersion > 10)
 		    	return JavaVersion.VERSION_GT_10;
 		    else

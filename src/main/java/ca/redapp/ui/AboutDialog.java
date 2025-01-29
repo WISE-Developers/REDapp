@@ -2,18 +2,15 @@
  * REDapp - AboutDialog.java
  * Copyright (C) 2015-2019 The REDapp Development Team
  * Homepage: http://redapp.org
- * 
  * REDapp is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * REDapp is distributed in the hope that it will be useful,
+  * REDapp is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
+  * You should have received a copy of the GNU General Public License
  * along with REDapp. If not see <http://www.gnu.org/licenses/>. 
  **********************************************************************/
 
@@ -41,7 +38,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import ca.redapp.ui.component.RButton;
 import ca.redapp.util.BuildConfig;
-
+import ca.redapp.util.MavenProjectVersionGetter;
 import javax.swing.event.HyperlinkListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -142,11 +139,16 @@ public class AboutDialog extends JDialog implements MouseListener {
 
 		JPanel panel_1 = new JPanel(new BorderLayout());
 		getContentPane().add(panel_1, BorderLayout.CENTER);
+		//String version = MavenProjectVersionGetter.getCurrentProjectVersion();//BuildConfig.version.getMinor() + "." + BuildConfig.version.getPatch() + BuildConfig.version.getSuffix().replace('-', '.');
+		String version = BuildConfig.version.getMajor() + "." + BuildConfig.version.getMinor() + "." + BuildConfig.version.getPatch() + BuildConfig.version.getSuffix().replace('-', '.');
 
-        String version = BuildConfig.version.getMinor() + "." + BuildConfig.version.getPatch() + BuildConfig.version.getSuffix().replace('-', '.');
+
         ZonedDateTime datetime = ZonedDateTime.parse(BuildConfig.buildTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         String displayDate = datetime.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy", Main.resourceManager.loc));
         String currentYear = String.valueOf(datetime.getYear());
+		//String displayDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMMM dd, yyyy", Main.resourceManager.loc));
+		//String currentYear = String.valueOf(LocalDateTime.now().getYear());
+
 		if (Main.isLinux()) {
 			JTextArea editor = new JTextArea();
 			editor.setEditable(false);
