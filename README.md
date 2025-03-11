@@ -7,7 +7,7 @@
 
 This is the repository for the REDapp UI.
 
-You can visit the REDapp homepage by following [this link](http://redapp.org/).
+You can visit the REDapp homepage by following [this link](https://firegrowthmodel.ca/pages/redapp_overview_e.html).
 
 ## What is this repository for? ##
 
