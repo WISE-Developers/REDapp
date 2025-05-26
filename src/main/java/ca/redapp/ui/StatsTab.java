@@ -45,11 +45,13 @@ import ca.redapp.util.LineEditHelper;
 import ca.redapp.util.REDappLogger;
 import ca.redapp.util.RFileChooser;
 
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -104,14 +106,6 @@ import ca.hss.times.WorldLocation;
 
 import javax.swing.SwingConstants;
 
-import java.awt.CardLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.Point;
 import javax.swing.ListSelectionModel;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -121,7 +115,6 @@ import javax.swing.JTree;
 import static ca.hss.math.General.*;
 import static ca.redapp.util.LineEditHelper.lineEditHandleError;
 
-import java.awt.BorderLayout;
 import javax.swing.ScrollPaneConstants;
 
 public class StatsTab extends REDappTab implements StatsTableListener, DisplayableMapTab {
@@ -390,6 +383,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		txtHourlyFFMC.getDocument().addDocumentListener((DocumentListener)EventHandler.create(DocumentListener.class, this, "txtHourlyFFMCChanged"));
 		chkDailyFit.addActionListener(e -> chkDailyFitChanged(true));
 		btnImport.addActionListener((e) -> importFile());
+		btnSpotWxHelp.addActionListener((e) -> showSpotWxHelp());
 		comboHourlyMethod.addActionListener((e) -> hourlyMethodChanged());
 		cmb_hourlyStart.addActionListener((e) -> hourlyFFMCStartTimeChanged());
 		comboFbpFuelType.addActionListener((e) -> fuelTypeChanged());
@@ -2332,7 +2326,38 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			txtFbpAspect.setText(DecimalUtils.format(asp));
 		}
 	}
-	
+
+	/**
+	 * Opens a browser to show documentation on how to import spot wx data
+	 */
+
+	public void showSpotWxHelp() {
+
+		if (Desktop.isDesktopSupported()) {
+			try {
+				Desktop.getDesktop().browse(
+						new URI("https://firegrowthmodel.ca/#/redapp_documentation"));
+			} catch (Exception e) {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"Unable to open a browser with https://firegrowthmodel.ca/#/redapp_documentation",
+								"Error", JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+			String os = System.getProperty("os.name").toLowerCase();
+			if (os.contains("nix") || os.contains("nux")) {
+
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"Unable to open the web browser. Please ensure libgnome2.0 is installed.",
+								"Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+
+
+	}
 	/**
 	 * Import a weather stream file.
 	 * @param filename
@@ -3644,6 +3669,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 	private JTree st_tviewday;
 	private JTree st_tviewnoon;
 	private RButton btnImport;
+	private RButton btnSpotWxHelp;
 	private RButton btnReset;
 	private RContextMenuButton btnExport;
 	private RContextMenuButton btnAdd;
@@ -4216,6 +4242,9 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 
 		btnImport = new RButton(Main.resourceManager.getString("ui.label.stats.import.button"));
 		panel1.add(btnImport);
+
+		btnSpotWxHelp = new RButton(Main.resourceManager.getString("ui.label.stats.spotwxhelp.button"));
+		panel1.add(btnSpotWxHelp);
 
 		btnAdd = new RContextMenuButton(Main.resourceManager.getString("ui.label.stats.add.button"));
 		panel1.add(btnAdd);

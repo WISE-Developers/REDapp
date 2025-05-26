@@ -115,7 +115,6 @@ public class Main implements FocusListener, DocumentListener {
 	private JTabbedPane tabPane;
 
 	private final List<REDappTab> tabs = new ArrayList<REDappTab>();
-	public WeatherTab weatherTab;
 	public FwiTab fwiTab;
 	public StatsTab statsTab;
 	public MapTab mapTab;
@@ -448,9 +447,9 @@ public class Main implements FocusListener, DocumentListener {
 			initStats(tabPane);
 			initMap(tabPane);
 			initSpotting(tabPane);
-			initWeather(tabPane);
+
 			initMqtt(tabPane);
-			statsTab.addStatsTabListener(weatherTab);
+
 			statsTab.addStatsTabListener(fbpTab);
 			if (Boolean.parseBoolean(prefs.getString("saveValues", "true"))) {
 				fbpTab.loadAllValues();
@@ -597,7 +596,7 @@ public class Main implements FocusListener, DocumentListener {
 		btnLocate.setVisible(false);
 		tabPane.setSelectedComponent(fwiTab);
 		
-		int indexTab = tabPane.indexOfComponent(weatherTab);
+		int indexTab = tabPane.indexOfComponent(fwiTab);
 		tabPane.setEnabledAt(indexTab, false);
 		tabPane.setToolTipTextAt(indexTab, resourceManager.getString("ui.label.header.internet.testing"));
 
@@ -643,19 +642,11 @@ public class Main implements FocusListener, DocumentListener {
 		txtLongitude.setText(ConvertUtils.formatDegrees(d));
 	}
 
-	private void initWeather(JTabbedPane tabs) {
-		weatherTab = new WeatherTab(this);
-		tabs.insertTab(Main.resourceManager.getString("ui.dlg.title.weather"), null, weatherTab, null, 0);
-		this.tabs.add(weatherTab);
-	}
+
 
 	private void initFwi(JTabbedPane tabs) {
 		fwiTab = new FwiTab(this);
-		if (weatherTab != null) {
-			int index = tabs.indexOfComponent(weatherTab);
-			tabs.insertTab(Main.resourceManager.getString("ui.dlg.title.fwi"), null, fwiTab, null, index + 1);
-		}
-		else if (fbpTab != null) {
+		if (fbpTab != null) {
 			int index = tabs.indexOfComponent(fbpTab);
 			tabs.insertTab(Main.resourceManager.getString("ui.dlg.title.fwi"), null, fwiTab, null, index);
 		}
@@ -850,12 +841,7 @@ public class Main implements FocusListener, DocumentListener {
 		synchronized (this) {
 			mapTab.internetFound();
 			
-			if (m_StartupThread.locations != null) {
-				weatherTab.locationData = m_StartupThread.locations;
-				mapTab.locationData = m_StartupThread.locations;
-			} else
-				weatherTab.locationData = null;
-			
+
 			if (WebDownloader.hasInternetConnection()) {
 				locator = new Geolocate(this);
 				
@@ -866,7 +852,7 @@ public class Main implements FocusListener, DocumentListener {
 				hasNetworkConnection = true;
 				btnLocate.setVisible(true);
 				
-				indexTab = tabPane.indexOfComponent(weatherTab);
+				indexTab = tabPane.indexOfComponent(fwiTab);
 				tabPane.setEnabledAt(indexTab, true);
 				tabPane.setToolTipTextAt(indexTab, "");
 
@@ -878,7 +864,7 @@ public class Main implements FocusListener, DocumentListener {
 				tabPane.setSelectedComponent(fwiTab);
 				*/
 				
-				int index = tabPane.indexOfComponent(weatherTab);
+				int index = tabPane.indexOfComponent(fwiTab);
 				tabPane.setToolTipTextAt(index, resourceManager.getString("ui.label.header.internet.error.brief"));
 
 				fbpTab.setInternetConnected(false);
@@ -897,7 +883,7 @@ public class Main implements FocusListener, DocumentListener {
 			m_StartupBusyDialog = null;
 			*/
 			
-			weatherTab.filterForCanadianCities();
+
 			m_StartupThread = null;
 		}
 	}
@@ -973,7 +959,7 @@ public class Main implements FocusListener, DocumentListener {
 
 	public void settingsUpdated() {
 		populateTimezoneComboBox();
-		weatherTab.settingsUpdated();
+
 		fwiTab.settingsUpdated();
 		fbpTab.settingsUpdated();
 		spottingTab.settingsUpdated();

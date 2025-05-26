@@ -4,7 +4,7 @@
   <groupId>ca.redapp</groupId>
   <artifactId>REDapp</artifactId>
   <packaging>izpack-jar</packaging>
-  <version>7.25.2</version>
+  <version>7.26.0</version>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
