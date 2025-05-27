@@ -382,8 +382,6 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		txtPrecipitation.getDocument().addDocumentListener((DocumentListener)EventHandler.create(DocumentListener.class, this, "txtPrecipitationChanged"));
 		txtHourlyFFMC.getDocument().addDocumentListener((DocumentListener)EventHandler.create(DocumentListener.class, this, "txtHourlyFFMCChanged"));
 		chkDailyFit.addActionListener(e -> chkDailyFitChanged(true));
-		btnImport.addActionListener((e) -> importFile());
-		btnSpotWxHelp.addActionListener((e) -> showSpotWxHelp());
 		comboHourlyMethod.addActionListener((e) -> hourlyMethodChanged());
 		cmb_hourlyStart.addActionListener((e) -> hourlyFFMCStartTimeChanged());
 		comboFbpFuelType.addActionListener((e) -> fuelTypeChanged());
@@ -399,7 +397,24 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		tglHourly.addActionListener((e) -> boxDisplayHourlyChanged());
 		tglDaily.addActionListener((e) -> boxDisplayDailyChanged());
 		tglNoon.addActionListener((e) -> boxDisplayNoonChanged());
-		
+
+		btnImport.setContextButtonClickListener(new ContextButtonClickListener() {
+			@Override
+			public void clicked() {
+				importFile();
+			}
+
+			@Override
+			public void contextActionClicked(String title, Object value) {
+				int index = (Integer)value;
+				if (index == 0)
+					showSpotWxHelp();
+				else
+					importFile();
+			}
+		});
+		btnImport.addContextAction(Main.resourceManager.getString("ui.label.stats.spotwxhelp.button"), 0);
+
 		btnAdd.setContextButtonClickListener(new ContextButtonClickListener() {
 			@Override
 			public void clicked() {
@@ -418,6 +433,10 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 					inputDaily();
 			}
 		});
+
+
+
+
 		btnAdd.addContextAction(Main.resourceManager.getString("ui.label.stats.import.hourly"), 0);
 		btnAdd.addContextAction(Main.resourceManager.getString("ui.label.stats.import.daily"), 1);
 
@@ -2336,12 +2355,12 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		if (Desktop.isDesktopSupported()) {
 			try {
 				Desktop.getDesktop().browse(
-						new URI("https://firegrowthmodel.ca/#/redapp_documentation"));
+						new URI("https://firegrowthmodel.ca/assets/REDapp_spotwx_import_help.pdf"));
 			} catch (Exception e) {
 				JOptionPane
 						.showMessageDialog(
 								null,
-								"Unable to open a browser with https://firegrowthmodel.ca/#/redapp_documentation",
+								"Unable to open a browser with https://firegrowthmodel.ca/assets/REDapp_spotwx_import_help.pdf",
 								"Error", JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
@@ -3668,8 +3687,8 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 	private JTree st_tview;
 	private JTree st_tviewday;
 	private JTree st_tviewnoon;
-	private RButton btnImport;
-	private RButton btnSpotWxHelp;
+	private RContextMenuButton btnImport;
+
 	private RButton btnReset;
 	private RContextMenuButton btnExport;
 	private RContextMenuButton btnAdd;
@@ -4240,11 +4259,11 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			panel1.setBackground(Color.white);
 		add(panel1);
 
-		btnImport = new RButton(Main.resourceManager.getString("ui.label.stats.import.button"));
+		btnImport = new RContextMenuButton(Main.resourceManager.getString("ui.label.stats.import.button"));
 		panel1.add(btnImport);
 
-		btnSpotWxHelp = new RButton(Main.resourceManager.getString("ui.label.stats.spotwxhelp.button"));
-		panel1.add(btnSpotWxHelp);
+		//btnSpotWxHelp = new RButton(Main.resourceManager.getString("ui.label.stats.spotwxhelp.button"));
+		// panel1.add(btnSpotWxHelp);
 
 		btnAdd = new RContextMenuButton(Main.resourceManager.getString("ui.label.stats.add.button"));
 		panel1.add(btnAdd);

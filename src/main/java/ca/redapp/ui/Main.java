@@ -39,10 +39,7 @@ import ca.hss.times.WTimeSpan;
 import ca.hss.times.TimeZoneInfo;
 import ca.hss.times.WorldLocation;
 import ca.hss.times.WorldLocation.TimeZoneGroup;
-import ca.redapp.ui.component.RButton;
-import ca.redapp.ui.component.RGroupBox;
-import ca.redapp.ui.component.RLabel;
-import ca.redapp.ui.component.RTextField;
+import ca.redapp.ui.component.*;
 import ca.redapp.util.ConvertUtils;
 import ca.redapp.util.Geolocate;
 import ca.redapp.util.LineEditHelper;
@@ -113,7 +110,7 @@ public class Main implements FocusListener, DocumentListener {
 	private RButton btnLocate;
 	private JSpinner spinnerDate;
 	private JTabbedPane tabPane;
-
+	private RContextMenuButton btnHelp;
 	private final List<REDappTab> tabs = new ArrayList<REDappTab>();
 	public FwiTab fwiTab;
 	public StatsTab statsTab;
@@ -236,6 +233,32 @@ public class Main implements FocusListener, DocumentListener {
 				if (Launcher.debugJavaFX)
 					System.out.println("Disabling map tab due to unsupported command line proxy specification");
 			}
+		}
+
+		if(btnHelp != null) {
+			btnHelp.setContextButtonClickListener(new RContextMenuButton.ContextButtonClickListener() {
+				@Override
+				public void clicked() {
+					//open a help document of some kind?
+				}
+
+				@Override
+				public void contextActionClicked(String title, Object value) {
+					int index = (Integer) value;
+					if (index == 0)
+						openAboutDialog();
+					if (index == 1)
+						Assumptions.showAssumptionsDialog(Main.this, prefs);
+					if (index == 2)
+						bugsAndSupportButton();
+					else
+						;
+				}
+			});
+
+			btnHelp.addContextAction(Main.resourceManager.getString("ui.label.footer.about"), 0);
+			btnHelp.addContextAction(Main.resourceManager.getString("ui.label.footer.assumptions"), 1);
+			btnHelp.addContextAction(Main.resourceManager.getString("ui.label.footer.bugs"), 2);
 		}
 	}
 
@@ -442,6 +465,10 @@ public class Main implements FocusListener, DocumentListener {
 		
 		initFwi(tabPane);
 
+		btnHelp = new RContextMenuButton(resourceManager.getString("ui.label.footer.help"));
+
+		btnHelp.setBounds(860, 600, 121, 41);
+
 		SwingUtilities.invokeLater(() -> {
 			initFbp(tabPane);
 			initStats(tabPane);
@@ -462,27 +489,35 @@ public class Main implements FocusListener, DocumentListener {
 			btnPanel.setBounds(300, 595, 687, 51);
 			btnPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 			frmRedapp.getContentPane().add(btnPanel);
-	
+	/*
 			RButton btnBugsAndSupport = new RButton(resourceManager.getString("ui.label.footer.bugs"));
 			btnBugsAndSupport.setBounds(860, 600, 121, 41);
 			btnBugsAndSupport.addActionListener((e) -> bugsAndSupportButton());
 			btnPanel.add(btnBugsAndSupport);
-	
+	*/
 			RButton btnSettings = new RButton(resourceManager.getString("ui.label.footer.settings"));
 			btnSettings.addActionListener((e) -> showSettings());
 			btnSettings.setBounds(618, 600, 121, 41);
 			btnPanel.add(btnSettings);
-	
+
+			btnPanel.add(btnHelp);
+
+
+
+
+/*
 			RButton btnAssumptions = new RButton(resourceManager.getString("ui.label.footer.assumptions"));
 			btnAssumptions.addActionListener((e) -> Assumptions.showAssumptionsDialog(Main.this, prefs));
 			btnAssumptions.setBounds(497, 600, 121, 41);
 			btnPanel.add(btnAssumptions);
-	
+			*/
+
+	/*
 			RButton btnAbout = new RButton(resourceManager.getString("ui.label.footer.about"));
 			btnAbout.setBounds(860, 600, 121, 41);
 			btnAbout.addActionListener((e) -> openAboutDialog());
 			btnPanel.add(btnAbout);
-	
+	*/
 			if (isMac()) {
 				int index = tabPane.indexOfComponent(mapTab);
 				tabPane.setEnabledAt(index, false);
