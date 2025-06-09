@@ -120,6 +120,7 @@ public class Geolocate {
 		try {
 			URL url = new URL(apiUrl);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setReadTimeout(1000);
 			conn.setRequestMethod("GET");
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
