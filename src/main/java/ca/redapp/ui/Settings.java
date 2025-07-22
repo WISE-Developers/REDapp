@@ -117,7 +117,9 @@ public class Settings extends JDialog  {
 
 		comboLanguage = new JComboBox<String>();
 		comboLanguage.setModel(new DefaultComboBoxModel<String>(new String[] { Main.resourceManager.getString("ui.label.settings.general.english") + " (EN)",
-				Main.resourceManager.getString("ui.label.settings.general.french") + " (FR)"}));
+				Main.resourceManager.getString("ui.label.settings.general.french") + " (FR)"
+				,Main.resourceManager.getString("ui.label.settings.general.spanish") + " (SP)"
+		}));
 		comboLanguage.setSelectedIndex(0);
 		panelGeneral.add(comboLanguage);
 
@@ -389,8 +391,11 @@ public class Settings extends JDialog  {
 		
 		String defLanguage = Locale.getDefault().getISO3Language();
 		int def = 0;
-		if (defLanguage.indexOf("fr") >= 0)
+		if (defLanguage.contains("fr"))
 			def = 1;
+		if (defLanguage.contains("es"))
+			def = 2;
+
 		int lang = prefs.getInt("language", def);
 		comboLanguage.setSelectedIndex(lang);
 		comboLanguage.addActionListener((e) -> {

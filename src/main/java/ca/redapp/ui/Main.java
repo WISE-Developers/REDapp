@@ -122,11 +122,19 @@ public class Main implements FocusListener, DocumentListener {
 		int def = 0;
 		if (defLanguage.toLowerCase().contains("fr"))
 			def = 1;
+		else if (defLanguage.toLowerCase().contains("es"))
+			def = 2;
+
 		int lang = prefs.getInt("language", def);
 		if (lang == 0)
 			resourceManager = new ResourceManager(Locale.ENGLISH);
+		else if (lang == 2) {
+			Locale mx = new Locale("es" );
+			resourceManager = new ResourceManager(mx);
+		}
 		else
 			resourceManager = new ResourceManager(Locale.CANADA_FRENCH);
+
 		DecimalUtils.setLocale(resourceManager.loc);
 		TranslationCallback.instance = resourceManager;
 		shouldUseMqtt = prefs.getBoolean("mqtt_active_2", false);
@@ -1168,11 +1176,18 @@ public class Main implements FocusListener, DocumentListener {
 	}
 
 	public static volatile Boolean french = null;
+	public static volatile Boolean spanish = null;
 	public static boolean isFrench() {
 		if (french == null) {
 			french = resourceManager.loc.getISO3Language().contains("fr");
 		}
 		return french;
+	}
+	public static boolean isSpanish() {
+		if (spanish == null) {
+			spanish = resourceManager.loc.getISO3Language().contains("es");
+		}
+		return spanish;
 	}
 
 	private static volatile Boolean linux = null;

@@ -955,6 +955,8 @@ public class MapTab extends REDappTab implements javax.swing.event.ChangeListene
 			if (id.equals("language")) {
 				if (Main.resourceManager.loc.getISO3Language().contains("fr"))
 					return "fr";
+				if (Main.resourceManager.loc.getISO3Language().contains("es"))
+					return "es";
 				else
 					return "en";
 			}

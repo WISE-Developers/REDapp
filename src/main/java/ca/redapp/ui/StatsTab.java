@@ -4106,7 +4106,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		fuelTypeCards.add(panel_4, fuelTypeCardNames[1]);
 
 		RLabel lblFbpCrownBaseHeight = new RLabel(Main.resourceManager.getString("ui.label.fire.cbh.short"));
-		if (Main.isFrench())
+		if (Main.isFrench() || Main.isSpanish())
 			lblFbpCrownBaseHeight.setToolTipText(Main.resourceManager.getString("ui.label.fire.cbh"));
 		if (Main.isLinux() || Main.isMac())
 			lblFbpCrownBaseHeight.setFont(new Font("Tahoma", Font.PLAIN, 11));
