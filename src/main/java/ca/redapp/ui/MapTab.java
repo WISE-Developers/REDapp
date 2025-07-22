@@ -19,8 +19,9 @@
 
 package ca.redapp.ui;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -649,11 +650,13 @@ public class MapTab extends REDappTab implements javax.swing.event.ChangeListene
 			return;
 		initialized = true;
 
-		setLayout(null);
+		setLayout(new BorderLayout());
+		/*
 		if (Launcher.javaVersion.major < 9)
 			setBounds(0, 0, 971, 501);
 		else
 			setBounds(0, 0, 981, 506);
+*/
 
 		if (Main.isWindows())
 			setBackground(Color.white);
@@ -668,7 +671,8 @@ public class MapTab extends REDappTab implements javax.swing.event.ChangeListene
 		panel1.setLayout(layout);
 		if (Main.isWindows())
 			panel1.setBackground(Color.white);
-		add(panel1);
+
+		add(panel1, BorderLayout.AFTER_LAST_LINE);
 
 		AccessController.doPrivileged((PrivilegedAction<Void>)() -> {
 			try {
@@ -695,6 +699,13 @@ public class MapTab extends REDappTab implements javax.swing.event.ChangeListene
 		legend.setBackground(Color.white);
 		legend.setBounds(treeMap.getWidth() - 10 - 200, treeMap.getHeight() - 10 - 150, 200, 150);
 		treeMap.add(legend);
+
+		treeMap.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				legend.setBounds(treeMap.getWidth() - 10 - 200, treeMap.getHeight() - 10 - 150, 200, 150);
+			}
+		});
 		
 		mapScaleBar = new MapScalerOffline(treeMap, (Main.unitSystem() == UnitSystem.METRIC));
 		mapScaleBar.setBounds(7, 10);

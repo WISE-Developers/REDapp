@@ -19,6 +19,7 @@
 
 package ca.redapp.ui;
 
+import ca.hss.times.*;
 import ca.redapp.data.StatsDataType;
 import ca.redapp.data.StatsTableModel;
 import ca.redapp.data.StatsTableModel.Column;
@@ -48,43 +49,29 @@ import ca.redapp.util.RFileChooser;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.SpringLayout;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.DocumentListener;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import ca.hss.general.TwoString;
 import ca.hss.general.DecimalUtils.DataType;
 import ca.cwfgm.export.DataExporter;
 import ca.cwfgm.export.DataExporter.RowBuilder;
+import ca.redapp.util.RPreferences;
 import ca.wise.fbp.FBPCalculations;
 import ca.wise.fwi.Fwi;
 import ca.wise.grid.GRID_ATTRIBUTE;
@@ -99,23 +86,13 @@ import ca.hss.general.DecimalUtils;
 import ca.hss.general.OutVariable;
 import ca.hss.math.Convert;
 import ca.hss.math.Convert.UnitSystem;
-import ca.hss.times.WTime;
-import ca.hss.times.WTimeSpan;
-import ca.hss.times.WTimeManager;
-import ca.hss.times.WorldLocation;
 
-import javax.swing.SwingConstants;
-
-import javax.swing.ListSelectionModel;
 import javax.xml.parsers.ParserConfigurationException;
 
 import java.beans.EventHandler;
-import javax.swing.JTree;
 
 import static ca.hss.math.General.*;
 import static ca.redapp.util.LineEditHelper.lineEditHandleError;
-
-import javax.swing.ScrollPaneConstants;
 
 public class StatsTab extends REDappTab implements StatsTableListener, DisplayableMapTab {
 	// {{ variables
@@ -206,7 +183,10 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 	
 	private final RLabel lblFbpSlopeUnits = new RLabel(Main.resourceManager.getString("ui.label.units.percent"));
 	private static boolean firstImport = true;
-	
+
+	private Date selectedDate;
+
+	private RLabel selectedModelNameLabel;
 	// }}
 
 	// {{ Constructor
@@ -405,15 +385,19 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			}
 
 			@Override
-			public void contextActionClicked(String title, Object value) {
+			public void contextActionClicked(String title, Object value) throws IOException {
 				int index = (Integer)value;
-				if (index == 0)
+				if(index == 0){
+					openSpotWXImportDialog();
+				}
+				else if (index == 1)
 					showSpotWxHelp();
 				else
 					importFile();
 			}
 		});
-		btnImport.addContextAction(Main.resourceManager.getString("ui.label.stats.spotwxhelp.button"), 0);
+		btnImport.addContextAction(Main.resourceManager.getString("ui.label.stats.spotAutoImport.button"), 0);
+		btnImport.addContextAction(Main.resourceManager.getString("ui.label.stats.spotwxhelp.button"), 1);
 
 		btnAdd.setContextButtonClickListener(new ContextButtonClickListener() {
 			@Override
@@ -646,6 +630,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				st_tviewday.setVisible(false);
 				st_tviewnoon.setVisible(false);
 			}
+			scrollPane.repaint();
 		}
 	}
 	
@@ -664,6 +649,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				st_tviewnoon.setVisible(false);
 				st_tviewday.setVisible(true);
 			}
+			scrollPane.repaint();
 		}
 	}
 	
@@ -695,6 +681,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				st_tviewnoon.setVisible(true);
 			}
 		}
+		scrollPane.repaint();
 	}
 
 	public void txtFbpCrownBaseHeightChanged() {
@@ -2346,6 +2333,23 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		}
 	}
 
+	public void openSpotWXImportDialog() throws IOException {
+		double Latitude = app.getLatitude();
+		double Longitude = app.getLongitude();
+		SpotWXImportDialog dialog = new SpotWXImportDialog(this.app, Latitude, Longitude, selectedDate);
+		dialog.setVisible(true);
+
+		if(dialog.isConfirmed()){
+			selectedModelNameLabel.setText("Selected model: " + dialog.selectedModelName);
+			ImportChosenFile(dialog.tempFileName);
+			//importFromSpotWxApi(dialog.outputData);
+
+
+		}
+
+
+	}
+
 	/**
 	 * Opens a browser to show documentation on how to import spot wx data
 	 */
@@ -2389,6 +2393,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			long err;
 			try {
 				err = ws.importFile(filename, (int)(WEATHERSTREAM_IMPORT.PURGE | WEATHERSTREAM_IMPORT.INVALID_FIX));
+
 			}
 			catch (IOException ex) {
 				JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.error.import2"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -2743,58 +2748,66 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		if (retval == JFileChooser.APPROVE_OPTION) {
 			str = chooser.getSelectedFile().getAbsolutePath();
 			prefs.put("START_DIR", chooser.getParentDirectory());
-			
-			Import imdlg = null;
-			try {
-				imdlg = new Import(app, str);
-			}
-			catch (FileNotFoundException ex) {
-				REDappLogger.error("Error importing file", ex);
-			}
-			if (imdlg != null) {
-				double dmc, dc, ffmc, hffmc;
-				dmc = LineEditHelper.getDoubleFromLineEdit(txtDailyDMC);
-				dc = LineEditHelper.getDoubleFromLineEdit(txtDailyDC);
-				ffmc = LineEditHelper.getDoubleFromLineEdit(txtDailyFFMC);
-				hffmc = LineEditHelper.getDoubleFromLineEdit(txtHourlyFFMC);
-				imdlg.setStartupCodeDefaults(dc, dmc, ffmc, hffmc,  
-											 comboHourlyMethod.getSelectedIndex(), cmb_hourlyStart.getSelectedIndex(), chkDailyFit.isSelected());
-				setDialogPosition(imdlg);
-				imdlg.setVisible(true);
-				if (imdlg.getResult() == JFileChooser.APPROVE_OPTION) {
-					if (firstImport)
-						setTimezoneFromGlobal();
-					txtDailyDC.setText(DecimalUtils.format(imdlg.getDC(), DecimalUtils.DataType.DC));
-					txtDailyDMC.setText(DecimalUtils.format(imdlg.getDMC(), DecimalUtils.DataType.DMC));
-					txtDailyFFMC.setText(DecimalUtils.format(imdlg.getFFMC(), DecimalUtils.DataType.FFMC));
-					txtHourlyFFMC.setText(DecimalUtils.format(imdlg.getHFFMC(), DecimalUtils.DataType.FFMC));
-					comboHourlyMethod.setSelectedIndex(imdlg.getCalculationMethod());
-					
-					if(comboHourlyMethod.getSelectedIndex() == 1) {
-						importLock = true;
-						chkDailyFit.setSelected(imdlg.getDailyFit());
-						if (!chkDailyFit.isSelected())
-							cmb_hourlyStart.setSelectedIndex(imdlg.getHourlyStart());
-						importLock = false;
-					}
+			ImportChosenFile(str);
 
-					if (imdlg.getFileType() == FileType.UNKNOWN_FILE) {
-						CustomImportDlg cidlg = new CustomImportDlg(app.frmRedapp, new File(str), imdlg.delimiter(), imdlg.ignoreEmpty());
-						setDialogPosition(cidlg);
-						cidlg.setVisible(true);
-						if (cidlg.getResult() == JFileChooser.APPROVE_OPTION) {
-							filetype = FileType.WEATHER_STREAM;
-							importFile(cidlg.importFile(), FileType.WEATHER_STREAM);
-						}
+		}
+	}
+
+	public void ImportChosenFile(String FileName){
+		Import imdlg = null;
+		try {
+			imdlg = new Import(app, FileName);
+		}
+		catch (FileNotFoundException ex) {
+			REDappLogger.error("Error importing file", ex);
+		}
+		if (imdlg != null) {
+			double dmc, dc, ffmc, hffmc;
+			dmc = LineEditHelper.getDoubleFromLineEdit(txtDailyDMC);
+			dc = LineEditHelper.getDoubleFromLineEdit(txtDailyDC);
+			ffmc = LineEditHelper.getDoubleFromLineEdit(txtDailyFFMC);
+			hffmc = LineEditHelper.getDoubleFromLineEdit(txtHourlyFFMC);
+			imdlg.setStartupCodeDefaults(dc, dmc, ffmc, hffmc,
+					comboHourlyMethod.getSelectedIndex(), cmb_hourlyStart.getSelectedIndex(), chkDailyFit.isSelected());
+			setDialogPosition(imdlg);
+			imdlg.setVisible(true);
+			if (imdlg.getResult() == JFileChooser.APPROVE_OPTION) {
+				if (firstImport)
+					setTimezoneFromGlobal();
+				txtDailyDC.setText(DecimalUtils.format(imdlg.getDC(), DecimalUtils.DataType.DC));
+				txtDailyDMC.setText(DecimalUtils.format(imdlg.getDMC(), DecimalUtils.DataType.DMC));
+				txtDailyFFMC.setText(DecimalUtils.format(imdlg.getFFMC(), DecimalUtils.DataType.FFMC));
+				txtHourlyFFMC.setText(DecimalUtils.format(imdlg.getHFFMC(), DecimalUtils.DataType.FFMC));
+				comboHourlyMethod.setSelectedIndex(imdlg.getCalculationMethod());
+
+				if(comboHourlyMethod.getSelectedIndex() == 1) {
+					importLock = true;
+					chkDailyFit.setSelected(imdlg.getDailyFit());
+					if (!chkDailyFit.isSelected())
+						cmb_hourlyStart.setSelectedIndex(imdlg.getHourlyStart());
+					importLock = false;
+				}
+
+				if (imdlg.getFileType() == FileType.UNKNOWN_FILE) {
+					CustomImportDlg cidlg = new CustomImportDlg(app.frmRedapp, new File(FileName), imdlg.delimiter(), imdlg.ignoreEmpty());
+					setDialogPosition(cidlg);
+					cidlg.setVisible(true);
+					if (cidlg.getResult() == JFileChooser.APPROVE_OPTION) {
+						filetype = FileType.WEATHER_STREAM;
+						importFile(cidlg.importFile(), FileType.WEATHER_STREAM);
 					}
-					else {
-						filetype = imdlg.getFileType();
-						importFile(str, imdlg.getFileType());
-					}
+				}
+				else {
+					filetype = imdlg.getFileType();
+					importFile(FileName, imdlg.getFileType());
 				}
 			}
 		}
 	}
+
+
+
+
 
 	// {{ Export
 
@@ -3583,6 +3596,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		btnEdit.setRightEnabled(true);
 		btnExport.setRightEnabled(true);
 		lblStatsPrecipitation.setText("Precipitation");
+		selectedModelNameLabel.setText("");
 	}
 
 	@Override
@@ -3694,6 +3708,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 	private RContextMenuButton btnAdd;
 	private RContextMenuButton btnEdit;
 	private JButton btnFbpInformation;
+	private JPanel cardsColumnOptions;
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_2;
 	private JScrollPane scrollPaneDay;
@@ -3738,112 +3753,168 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			return;
 		initialized = true;
 
-		setLayout(null);
-		if (Launcher.javaVersion.major < 9)
-			setBounds(0, 0, 971, 501);
-		else
-			setBounds(0, 0, 981, 506);
+		this.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.insets = new Insets(3,10,3,10);
+		gbc.anchor = GridBagConstraints.NORTH;
 
-		tabsStats = new JTabbedPane(JTabbedPane.BOTTOM);
+
+		tabsStats = new JTabbedPane(JTabbedPane.TOP);
 		tabsStats.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		if (Main.isMac())
-			tabsStats.setBounds(2, 0, 237, 418);
-		else if (Main.isLinux())
-			tabsStats.setBounds(6, 0, 229, 418);
-		else
-			tabsStats.setBounds(10, 0, 221, 428);
-		add(tabsStats);
+
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 0.0;
+		gbc.ipadx = 50;
+		gbc.weighty = 1.0;
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.fill = GridBagConstraints.VERTICAL;
+		this.add(tabsStats, gbc);
+
+
+
 
 		JPanel tabColumns = new JPanel();
 		if (Main.isWindows())
-			tabColumns.setBackground(new Color(255, 255, 255));
+			tabColumns.setBackground(Color.white);
+
+
+		GridBagConstraints gbcColumns = new GridBagConstraints();
+		gbcColumns.insets = new Insets(3,10,3,10);
+		gbcColumns.gridx = 0;
+		gbcColumns.gridy = 0;
+		gbcColumns.gridwidth = 1;
+
+		gbcColumns.weightx = 1.0;
+		gbcColumns.weighty = 1.0;
+		gbcColumns.fill = GridBagConstraints.BOTH;
+
 		tabsStats.addTab(Main.resourceManager.getString("ui.label.stats.columns.title"), null, tabColumns, null);
-		tabColumns.setLayout(null);
+		tabColumns.setLayout(new GridBagLayout());
+
+
+
+		RLabel lblDisplayHourly = new RLabel(Main.resourceManager.getString("ui.label.stats.disp"));
+		gbcColumns.gridx = 0;
+		gbcColumns.gridy = 0;
+		gbcColumns.gridwidth = 3;
+		gbcColumns.ipady = 10;
+		gbcColumns.fill = GridBagConstraints.HORIZONTAL;
+		gbcColumns.weighty = 0.0;
+		tabColumns.add(lblDisplayHourly, gbcColumns);
+		
+		//Buttons to toggle between hourly, diurnal, and daily
+
+		RToggleButton.RToggleButtonGroup tglGroup = new RToggleButton.RToggleButtonGroup();
+
+		tglHourly = new RToggleButton(Main.resourceManager.getString("ui.label.stats.disp.hour"));
+		tglHourly.setLeft(true);
+		tglHourly.setMinimumSize(new Dimension(75,15));
+		gbcColumns.gridx = 0;
+		gbcColumns.gridy = 1;
+		gbcColumns.gridwidth = 1;
+		gbcColumns.ipady = 15;
+		gbcColumns.weighty = 0.0;
+		gbcColumns.fill = GridBagConstraints.HORIZONTAL;
+		gbcColumns.insets = new Insets(3,10,3,0);
+		tabColumns.add(tglHourly, gbcColumns);
+		tglGroup.add(tglHourly);
+		
+		tglDaily = new RToggleButton(Main.resourceManager.getString("ui.label.stats.disp.day"));
+		tglDaily.setMinimumSize(new Dimension(75,15));
+		//tglDaily.setBounds(73, 20, 70, 20);
+		gbcColumns.gridx = 1;
+		gbcColumns.gridy = 1;
+		gbcColumns.insets = new Insets(3,0,3,0);
+		tabColumns.add(tglDaily,gbcColumns);
+		tglGroup.add(tglDaily);
+		
+		tglNoon = new RToggleButton(Main.resourceManager.getString("ui.label.stats.disp.noon"));
+		tglNoon.setMinimumSize(new Dimension(75,15));
+		tglNoon.setRight(true);
+		//tglNoon.setBounds(143, 20, 69, 20);
+		gbcColumns.gridx = 2;
+		gbcColumns.gridy =1;
+		gbcColumns.insets = new Insets(3,0,3,10);
+		tabColumns.add(tglNoon, gbcColumns);
+		tglGroup.add(tglNoon);
+
+
+
+		// Group by
+
+		gbcColumns.gridx = 0;
+		gbcColumns.gridy = 2;
+		gbcColumns.ipady = 10;
+		gbcColumns.weighty = 0.0;
+		gbcColumns.gridwidth = 3;
+		gbcColumns.insets = new Insets(3,10,3,10);
+		gbcColumns.fill = GridBagConstraints.HORIZONTAL;
+		RLabel lblGroupBy = new RLabel(Main.resourceManager.getString("ui.label.stats.columns.groupby"));
+		lblGroupBy.setBounds(7, 40, 201, 20);
+		tabColumns.add(lblGroupBy, gbcColumns);
+
+
+		stats_groupBy = new JComboBox<String>();
+		stats_groupBy.setModel(new DefaultComboBoxModel<String>(new String[] {Main.resourceManager.getString("ui.label.stats.columns.groupby.type"),
+				Main.resourceManager.getString("ui.label.stats.columns.groupby.order") }));
+		//stats_groupBy.setBounds(4, 60, 208, 22);
+		gbcColumns.gridx = 0;
+		gbcColumns.gridy = 3;
+		gbcColumns.gridwidth = 3;
+		gbcColumns.ipady = 10;
+		gbcColumns.weighty = 0.0;
+		gbcColumns.fill = GridBagConstraints.HORIZONTAL;
+		tabColumns.add(stats_groupBy, gbcColumns);
+
+
+		//The different checkbox lists
+
+		cardsColumnOptions = new JPanel();
+		cardsColumnOptions.setLayout(new CardLayout());
+		gbcColumns.gridx = 0;
+		gbcColumns.gridy = 4;
+		gbcColumns.weighty = 1.0;
+		gbcColumns.gridwidth = 3;
+		gbcColumns.fill = GridBagConstraints.BOTH;
+		tabColumns.add(cardsColumnOptions, gbcColumns);
+
 
 		st_lview = new RCheckBoxList();
 		st_lview.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_2 = new JScrollPane(st_lview);
 		scrollPane_2.setOpaque(true);
-		if (Main.isLinux())
-			scrollPane_2.setBounds(5, 90, 205, 265);
-		else if (Main.isMac())
-			scrollPane_2.setBounds(5, 90, 205, 267);
-		else
-			scrollPane_2.setBounds(5, 90, 205, 307);
+
 		if (Main.isWindows())
 			scrollPane_2.setBackground(Color.white);
-		st_lview.setBounds(0, 0, 205, 226);
-		tabColumns.add(scrollPane_2);
-		
-		RLabel lblDisplayHourly = new RLabel(Main.resourceManager.getString("ui.label.stats.disp"));
-		lblDisplayHourly.setBounds(7, 0, 150, 20);
-		tabColumns.add(lblDisplayHourly);
-		
-		//TODO working UI
-		RToggleButton.RToggleButtonGroup tglGroup = new RToggleButton.RToggleButtonGroup();
-		
-		tglHourly = new RToggleButton(Main.resourceManager.getString("ui.label.stats.disp.hour"));
-		tglHourly.setLeft(true);
-		tglHourly.setBounds(4, 20, 69, 20);
-		tabColumns.add(tglHourly);
-		tglGroup.add(tglHourly);
-		
-		tglDaily = new RToggleButton(Main.resourceManager.getString("ui.label.stats.disp.day"));
-		tglDaily.setBounds(73, 20, 70, 20);
-		tabColumns.add(tglDaily);
-		tglGroup.add(tglDaily);
-		
-		tglNoon = new RToggleButton(Main.resourceManager.getString("ui.label.stats.disp.noon"));
-		tglNoon.setRight(true);
-		tglNoon.setBounds(143, 20, 69, 20);
-		tabColumns.add(tglNoon);
-		tglGroup.add(tglNoon);
 
-		RLabel lblGroupBy = new RLabel(Main.resourceManager.getString("ui.label.stats.columns.groupby"));
-		lblGroupBy.setBounds(7, 40, 201, 20);
-		tabColumns.add(lblGroupBy);
+		cardsColumnOptions.add(scrollPane_2);
 
-		stats_groupBy = new JComboBox<String>();
-		stats_groupBy.setModel(new DefaultComboBoxModel<String>(new String[] {Main.resourceManager.getString("ui.label.stats.columns.groupby.type"),
-				Main.resourceManager.getString("ui.label.stats.columns.groupby.order") }));
-		stats_groupBy.setBounds(4, 60, 208, 22);
-		tabColumns.add(stats_groupBy);
+
 
 		st_tview = new JTree();
 		scrollPane = new JScrollPane(st_tview);
-		if (Main.isLinux())
-			scrollPane.setBounds(5, 90, 205, 265);
-		else if (Main.isMac())
-			scrollPane.setBounds(5, 90, 205, 267);
-		else
-			scrollPane.setBounds(5, 90, 205, 307);
+
+
+
 		scrollPane.setOpaque(false);
-		st_tview.setBounds(0, 0, 205, 226);
-		tabColumns.add(scrollPane);
-		
+		cardsColumnOptions.add(scrollPane);
 		st_tviewday = new JTree();
 		scrollPaneDay = new JScrollPane(st_tviewday);
-		if (Main.isLinux())
-			scrollPaneDay.setBounds(5, 90, 205, 265);
-		else if (Main.isMac())
-			scrollPaneDay.setBounds(5, 90, 205, 267);
-		else
-			scrollPaneDay.setBounds(5, 90, 205, 307);
 		scrollPaneDay.setOpaque(false);
-		st_tviewday.setBounds(0, 0, 205, 226);
-		tabColumns.add(scrollPaneDay);
+		cardsColumnOptions.add(scrollPaneDay);
 		
 		st_tviewnoon = new JTree();
 		scrollPaneNoon = new JScrollPane(st_tviewnoon);
-		if (Main.isLinux())
-			scrollPaneNoon.setBounds(5, 90, 205, 265);
-		else if (Main.isMac())
-			scrollPaneNoon.setBounds(5, 90, 205, 267);
-		else
-			scrollPaneNoon.setBounds(5, 90, 205, 307);
 		scrollPaneNoon.setOpaque(false);
-		st_tviewnoon.setBounds(0, 0, 205, 226);
-		tabColumns.add(scrollPaneNoon);
+
+		cardsColumnOptions.add(scrollPaneNoon);
+
+
+		/*************************
+		 * FWI Tab Contents
+		 *************************/
 
 		JPanel tabStatsCodes = new JPanel();
 		if (Main.isWindows())
@@ -3963,6 +4034,11 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		lblHourlyFfmcStart.setForeground(chkDailyFit.isSelected() ? Color.GRAY : Color.BLACK);
 		txtHourlyFFMC.setEnabled(!chkDailyFit.isSelected());
 		cmb_hourlyStart.setEnabled(!chkDailyFit.isSelected());
+
+
+		/******************************
+		 * FBP Tab Contents
+		 ******************************/
 
 		JPanel tabFBP = new JPanel();
 		if (Main.isWindows())
@@ -4214,6 +4290,11 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 			scrollPane_1.getVerticalScrollBar().setVisible(true);
 		tabFBP.add(scrollPane_1);
 
+
+		/***********************
+		 * The main table full of numbers
+		 **********************/
+
 		tableStats = new JTable();
 		tableStats.setCellSelectionEnabled(true);
 		tableStats.getTableHeader().setDefaultRenderer(new HeaderRenderer());
@@ -4239,25 +4320,54 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 
 		JScrollPane spane = new JScrollPane(tableStats);
 		spane.setBorder(new LineBorder(new Color(130, 135, 144)));
+		/*
 		if (Main.isWindows())
 			spane.setBounds(241, 0, 722, 428);
 		else
 			spane.setBounds(241, 0, 722, 418);
+
+		 */
 		spane.setRowHeaderView(headerTable);
 		spane.setCorner(JScrollPane.UPPER_LEFT_CORNER, corner);
-		add(spane);
+
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+
+		gbc.fill = GridBagConstraints.BOTH;
+		//gbc.anchor = GridBagConstraints.NORTH;
+
+		this.add(spane, gbc);
+
+
+		/******************************
+		 * Buttons along the bottom of the screen
+		 *****************************/
 
 		JPanel panel1 = new JPanel();
-		if (Main.isWindows())
-			panel1.setBounds(10, 424, 951, 50);
-		else
-			panel1.setBounds(10, 419, 951, 50);
 		FlowLayout layout = new FlowLayout(FlowLayout.RIGHT);
-		layout.setAlignOnBaseline(true);
+		layout.setAlignOnBaseline(false);
 		panel1.setLayout(layout);
 		if (Main.isWindows())
 			panel1.setBackground(Color.white);
-		add(panel1);
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.gridwidth = 2;
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.0;
+		gbc.ipady = 40;
+		gbc.insets = new Insets(3,10,3,10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.anchor = GridBagConstraints.NORTHEAST;
+
+		this.add(panel1, gbc);
+
+		selectedModelNameLabel = new RLabel();
+		selectedModelNameLabel.setText(" ");
+		selectedModelNameLabel.setBackground(Color.green);
+		selectedModelNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		panel1.add(selectedModelNameLabel);
 
 		btnImport = new RContextMenuButton(Main.resourceManager.getString("ui.label.stats.import.button"));
 		panel1.add(btnImport);
@@ -4279,9 +4389,10 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		btnReset = new RButton(Main.resourceManager.getString("ui.label.footer.reset"));
 		btnReset.addActionListener((e) -> reset());
 		panel1.add(btnReset);
-	}
 
-	// }}
+
+
+	}
 
 	@Override
 	public void numberOfColumnsChanged(int count) {
@@ -4607,6 +4718,9 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 	@Override
 	public void onDateChanged() {
 		calculate();
+
+
+		selectedDate = app.getDate();
 	}
 
 	@Override
@@ -4816,3 +4930,4 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		return null;
 	}
 }
+

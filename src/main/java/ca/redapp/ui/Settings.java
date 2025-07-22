@@ -28,8 +28,7 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.Window;
 
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Toolkit;
@@ -46,17 +45,6 @@ import ca.redapp.ui.component.RTextField;
 import ca.redapp.ui.component.SpringUtilities;
 import ca.redapp.util.RPreferences;
 
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JOptionPane;
-import javax.swing.JCheckBox;
-import javax.swing.JTextField;
-import javax.swing.SpringLayout;
-import javax.swing.SwingConstants;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -70,6 +58,7 @@ public class Settings extends JDialog  {
 	//private RTextField txtAspect;
 	private RTextField txtScale;
 	private RTextField txtSpotWXAPIKey;
+
 	//private RTextField txtCurrent;
 	//private RTextField txtForecastEnsemble;
 	private RTextField txtWmsUrl;
@@ -221,6 +210,9 @@ public class Settings extends JDialog  {
 		txtSpotWXAPIKey.setColumns(10);
 		txtSpotWXAPIKey.setHorizontalAlignment(JTextField.LEFT);
 		panelLink.add(txtSpotWXAPIKey);
+
+		panelLink.add(new JLabel());
+
 
 
 /*
@@ -385,6 +377,7 @@ public class Settings extends JDialog  {
 		txtSpotWXAPIKey.setText(prefs.getString("SpotAPIKey", ""));
 		txtSpotWXAPIKey.setCaretPosition(0);
 
+
 		//txtForecastEnsemble.setText(prefs.getString("ensemble",				"http://dd.weatheroffice.ec.gc.ca/ensemble/naefs/xml/"));
 		//txtForecastEnsemble.setCaretPosition(0);
 		
@@ -469,7 +462,7 @@ public class Settings extends JDialog  {
 
 		chckbxScale.setSelected(false);
 		txtScale.setText("50000");
-
+		txtSpotWXAPIKey.setText("");
 
 		//txtForecastEnsemble.setText("http://dd.weatheroffice.ec.gc.ca/ensemble/naefs/xml/");
 
