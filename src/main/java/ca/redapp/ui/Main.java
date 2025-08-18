@@ -146,6 +146,7 @@ public class Main implements FocusListener, DocumentListener {
 			catch (ClassNotFoundException ignored) { }
 			shouldUseMqtt = cls != null;
 		}
+        prefs.putString("EncryptionKey", "yfj8aZrS77SW0yKFwIjWBw==");
 	}
 
 	/**

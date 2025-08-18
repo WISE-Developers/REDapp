@@ -4,22 +4,28 @@ import ca.redapp.ui.component.RButton;
 import ca.redapp.ui.component.RComboBox;
 import ca.redapp.ui.component.RLabel;
 import ca.redapp.ui.component.RTextField;
+import ca.redapp.util.EncryptionUtils;
 import ca.redapp.util.GeoValidator;
 import ca.redapp.util.RPreferences;
 import ca.redapp.util.SpotWXUtils;
 
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static ca.redapp.util.SpotWXUtils.DownloadSpotWXModelData;
 import static ca.redapp.util.SpotWXUtils.GetModelNameWithDescription;
+import static java.awt.SystemColor.text;
 
 public class SpotWXImportDialog extends JDialog {
     private final Main app;
@@ -77,7 +83,16 @@ public class SpotWXImportDialog extends JDialog {
 
         this.apiKey = prefs.getString("SpotAPIKey", "");
         if (this.apiKey.isEmpty()) {
-            this.apiKey = Main.resourceManager.getString("spotwx.api.defaultkey");
+            //this.apiKey = Main.resourceManager.getString("spotwx.api.defaultkey");
+            ResourceBundle keyResourceBundle = ResourceBundle.getBundle("key");
+            String encDefaultKey =keyResourceBundle.getString("spotwx.api.defaultkey");
+            EncryptionUtils encryptionUtils = new EncryptionUtils(prefs);
+            try {
+                this.apiKey = encryptionUtils.decrypt(encDefaultKey);
+            } catch (Exception ex){
+                ;
+            }
+
         }
 
         initialize();
@@ -195,9 +210,22 @@ public class SpotWXImportDialog extends JDialog {
         coordinateErrorLabel.setHorizontalAlignment(JLabel.CENTER);
         coordinateErrorLabel.setForeground(Color.red);
 
-        String defaultKey = Main.resourceManager.getString("spotwx.api.defaultkey");
 
-        if(apiKey == defaultKey){
+
+        String defaultKey = "";
+        try {
+
+            ResourceBundle keyResourceBundle = ResourceBundle.getBundle("key");
+            String encDefaultKey =keyResourceBundle.getString("spotwx.api.defaultkey");
+            EncryptionUtils encryptionUtils = new EncryptionUtils(prefs);
+            defaultKey = encryptionUtils.decrypt(encDefaultKey);
+
+
+        } catch (Exception ex) {
+            ;
+        }
+
+        if(Objects.equals(apiKey, defaultKey)){
             spotWXDefaultKeyNote1Label.setForeground(Color.blue);
             spotWXDefaultKeyNote2Label.setForeground(Color.blue);
 

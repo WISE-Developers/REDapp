@@ -15,7 +15,7 @@ public class SpotWXUtils {
 
     public static List<String> fetchModelListFromAPI(double Latitude, double Longitude, String apiKey) {
         List<String> li = new ArrayList<>();
-        String apiUrl = "https://spotwx.io/api.php?key=" + apiKey +"&lat=" + Latitude + "&lon=" + Longitude + "&model=inventory";
+        String apiUrl = "https://spotwx.io/api.php?key=" + apiKey +"&lat=" + Latitude + "&lon=" + Longitude + "&model=inventory&refer=redapp";
         try {
             URL url = new URL(apiUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -46,16 +46,16 @@ public class SpotWXUtils {
 
         SimpleDateFormat formatter = new  SimpleDateFormat("yyyyMMdd");
         String modelDate = formatter.format(date) + "_00Z";
-        String apiUrl = "https://spotwx.io/api.php?modelrun=" + modelDate + "&key=" + apiKey + "&lat=" + Latitude + "&lon=" + Longitude + "&model=" + modelName + "&format=prometheus";
+        String apiUrl = "https://spotwx.io/api.php?modelrun=" + modelDate + "&key=" + apiKey + "&lat=" + Latitude + "&lon=" + Longitude + "&model=" + modelName + "&format=prometheus&refer=redapp";
         List<String> responses0Z = fetchModelDataFromAPI(apiUrl);
 
         modelDate = formatter.format(date) + "_12Z";
-        apiUrl = "https://spotwx.io/api.php?modelrun=" + modelDate + "&key=" + apiKey + "&lat=" + Latitude + "&lon=" + Longitude + "&model=" + modelName + "&format=prometheus";
+        apiUrl = "https://spotwx.io/api.php?modelrun=" + modelDate + "&key=" + apiKey + "&lat=" + Latitude + "&lon=" + Longitude + "&model=" + modelName + "&format=prometheus&refer=redapp";
         List<String> responses12Z = fetchModelDataFromAPI(apiUrl);
         if(responses12Z.size() <= 1){
             responses12Z.clear();
             modelDate = formatter.format(date);
-            apiUrl = "https://spotwx.io/api.php?modelrun=" + modelDate + "&key=" + apiKey + "&lat=" + Latitude + "&lon=" + Longitude + "&model=" + modelName + "&format=prometheus";
+            apiUrl = "https://spotwx.io/api.php?modelrun=" + modelDate + "&key=" + apiKey + "&lat=" + Latitude + "&lon=" + Longitude + "&model=" + modelName + "&format=prometheus&refer=redapp";
             responses12Z = fetchModelDataFromAPI(apiUrl);
         }
 
