@@ -28,8 +28,7 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.Window;
 
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Toolkit;
@@ -46,17 +45,6 @@ import ca.redapp.ui.component.RTextField;
 import ca.redapp.ui.component.SpringUtilities;
 import ca.redapp.util.RPreferences;
 
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JOptionPane;
-import javax.swing.JCheckBox;
-import javax.swing.JTextField;
-import javax.swing.SpringLayout;
-import javax.swing.SwingConstants;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -69,8 +57,10 @@ public class Settings extends JDialog  {
 	//private RTextField txtSlope;
 	//private RTextField txtAspect;
 	private RTextField txtScale;
-	private RTextField txtCurrent;
-	private RTextField txtForecastEnsemble;
+	private RTextField txtSpotWXAPIKey;
+
+	//private RTextField txtCurrent;
+	//private RTextField txtForecastEnsemble;
 	private RTextField txtWmsUrl;
 	private RPreferences prefs;
 	private JComboBox<String> comboTimezoneRegions;
@@ -127,7 +117,9 @@ public class Settings extends JDialog  {
 
 		comboLanguage = new JComboBox<String>();
 		comboLanguage.setModel(new DefaultComboBoxModel<String>(new String[] { Main.resourceManager.getString("ui.label.settings.general.english") + " (EN)",
-				Main.resourceManager.getString("ui.label.settings.general.french") + " (FR)"}));
+				Main.resourceManager.getString("ui.label.settings.general.french") + " (FR)"
+				,Main.resourceManager.getString("ui.label.settings.general.spanish") + " (SP)"
+		}));
 		comboLanguage.setSelectedIndex(0);
 		panelGeneral.add(comboLanguage);
 
@@ -213,14 +205,19 @@ public class Settings extends JDialog  {
 		panelLink.setLayout(new SpringLayout());
 		contentPanel.add(panelLink);
 
-		RLabel lblCurrent = new RLabel(Main.resourceManager.getString("ui.label.settings.links.current"));
-		panelLink.add(lblCurrent);
+		RLabel lblSpotAPI = new RLabel(Main.resourceManager.getString("ui.label.settings.weather.spotwxapikey"));
+		panelLink.add(lblSpotAPI);
 
-		txtCurrent = new RTextField();
-		txtCurrent.setColumns(10);
-		txtCurrent.setHorizontalAlignment(JTextField.LEFT);
-		panelLink.add(txtCurrent);
+		txtSpotWXAPIKey = new RTextField();
+		txtSpotWXAPIKey.setColumns(10);
+		txtSpotWXAPIKey.setHorizontalAlignment(JTextField.LEFT);
+		panelLink.add(txtSpotWXAPIKey);
 
+		panelLink.add(new JLabel());
+
+
+
+/*
 		RLabel lblForecastEnsemble = new RLabel(Main.resourceManager.getString("ui.label.settings.links.ensemble"));
 		panelLink.add(lblForecastEnsemble);
 
@@ -228,8 +225,8 @@ public class Settings extends JDialog  {
 		txtForecastEnsemble.setColumns(10);
 		txtForecastEnsemble.setHorizontalAlignment(JTextField.LEFT);
 		panelLink.add(txtForecastEnsemble);
-		
-		SpringUtilities.makeCompactGrid(panelLink, 2, 2, 6, 6, 6, 6);
+		*/
+		SpringUtilities.makeCompactGrid(panelLink, 1, 2, 6, 6, 6, 6);
 		
 		contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		
@@ -255,7 +252,7 @@ public class Settings extends JDialog  {
 				Main.resourceManager.getString("ui.label.settings.general.maptype.osmonline"),
 				Main.resourceManager.getString("ui.label.settings.general.maptype.wms")}));
 		
-		comboMapType.setEnabled(WebDownloader.hasInternetConnection());
+		//comboMapType.setEnabled(WebDownloader.hasInternetConnection());
 		
 		panelMap.add(comboMapType);
 		
@@ -353,7 +350,8 @@ public class Settings extends JDialog  {
 		cmbZoomLevel.setModel(levelModel);
 		cmbZoomLevel.setSelectedIndex(prefs.getInt("map_zoomlevel", 10));
 
-		comboMapType.setSelectedIndex(WebDownloader.hasInternetConnection() ? mapToIndex(MapType.fromInt(prefs.getInt("map_type", MapType.OSM_OFFLINE.toInt()))) : MapType.OSM_OFFLINE.toInt() - 2);
+		comboMapType.setSelectedIndex(mapToIndex(MapType.fromInt(prefs.getInt("map_type", MapType.OSM_OFFLINE.toInt()))));
+		//comboMapType.setSelectedIndex(WebDownloader.hasInternetConnection() ? mapToIndex(MapType.fromInt(prefs.getInt("map_type", MapType.OSM_OFFLINE.toInt()))) : MapType.OSM_OFFLINE.toInt() - 2);
 		comboMapType.addActionListener((e) -> {
 			requiresRebootWarning = true;
 			MapType type = indexToMap(comboMapType.getSelectedIndex());
@@ -378,12 +376,12 @@ public class Settings extends JDialog  {
 		else
 			comboTimezoneRegions.setSelectedIndex(0);
 
-		txtCurrent.setText(prefs.getString("current",
-				"http://www.weatheroffice.gc.ca/rss/city/"));
-		txtCurrent.setCaretPosition(0);
-		txtForecastEnsemble.setText(prefs.getString("ensemble",
-				"http://dd.weatheroffice.ec.gc.ca/ensemble/naefs/xml/"));
-		txtForecastEnsemble.setCaretPosition(0);
+		txtSpotWXAPIKey.setText(prefs.getString("SpotAPIKey", ""));
+		txtSpotWXAPIKey.setCaretPosition(0);
+
+
+		//txtForecastEnsemble.setText(prefs.getString("ensemble",				"http://dd.weatheroffice.ec.gc.ca/ensemble/naefs/xml/"));
+		//txtForecastEnsemble.setCaretPosition(0);
 		
 		boolean wmsSel = MapType.fromInt(prefs.getInt("map_type", MapType.OSM_OFFLINE.toInt())) == MapType.WMS; 
 		btnWmsUrl.setEnabled(wmsSel);
@@ -393,8 +391,11 @@ public class Settings extends JDialog  {
 		
 		String defLanguage = Locale.getDefault().getISO3Language();
 		int def = 0;
-		if (defLanguage.indexOf("fr") >= 0)
+		if (defLanguage.contains("fr"))
 			def = 1;
+		if (defLanguage.contains("es"))
+			def = 2;
+
 		int lang = prefs.getInt("language", def);
 		comboLanguage.setSelectedIndex(lang);
 		comboLanguage.addActionListener((e) -> {
@@ -444,8 +445,9 @@ public class Settings extends JDialog  {
 			app.fbpTab.mapScalingChanged(1, MetricPrefix.DISABLE);
 		}
 
-		prefs.putString("current", this.txtCurrent.getText());
-		prefs.putString("ensemble", this.txtForecastEnsemble.getText());
+
+		prefs.putString("SpotAPIKey", this.txtSpotWXAPIKey.getText());
+		//prefs.putString("ensemble", this.txtForecastEnsemble.getText());
 		prefs.putInt("language", comboLanguage.getSelectedIndex());
 	}
 
@@ -465,9 +467,9 @@ public class Settings extends JDialog  {
 
 		chckbxScale.setSelected(false);
 		txtScale.setText("50000");
+		txtSpotWXAPIKey.setText("");
 
-		txtCurrent.setText("http://www.weatheroffice.gc.ca/rss/city/");
-		txtForecastEnsemble.setText("http://dd.weatheroffice.ec.gc.ca/ensemble/naefs/xml/");
+		//txtForecastEnsemble.setText("http://dd.weatheroffice.ec.gc.ca/ensemble/naefs/xml/");
 
 		saveSettings();
 	}

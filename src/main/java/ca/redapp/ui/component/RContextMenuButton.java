@@ -37,6 +37,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
@@ -441,8 +442,12 @@ public class RContextMenuButton extends JButton implements MouseListener, MouseM
 							if (listener != null) {
 								JMenuItem item = (JMenuItem)e.getSource();
 								int index = (Integer)item.getClientProperty("listIndex");
-								listener.contextActionClicked(actions.get(index).value1, actions.get(index).value2);
-							}
+                                try {
+                                    listener.contextActionClicked(actions.get(index).value1, actions.get(index).value2);
+                                } catch (IOException ex) {
+                                    throw new RuntimeException(ex);
+                                }
+                            }
 						}
 					});
 					menu.add(item);
@@ -513,7 +518,7 @@ public class RContextMenuButton extends JButton implements MouseListener, MouseM
 
 	public static abstract class ContextButtonClickListener {
 		public abstract void clicked();
-		public abstract void contextActionClicked(String title, Object userData);
+		public abstract void contextActionClicked(String title, Object userData) throws IOException;
 	}
 
 	/**

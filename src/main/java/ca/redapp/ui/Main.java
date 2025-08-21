@@ -19,7 +19,7 @@
 
 package ca.redapp.ui;
 
-import java.awt.Toolkit;
+import java.awt.*;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -39,19 +39,19 @@ import ca.hss.times.WTimeSpan;
 import ca.hss.times.TimeZoneInfo;
 import ca.hss.times.WorldLocation;
 import ca.hss.times.WorldLocation.TimeZoneGroup;
-import ca.redapp.ui.component.RButton;
-import ca.redapp.ui.component.RGroupBox;
-import ca.redapp.ui.component.RLabel;
-import ca.redapp.ui.component.RTextField;
+import ca.redapp.ui.component.*;
 import ca.redapp.util.ConvertUtils;
 import ca.redapp.util.Geolocate;
 import ca.redapp.util.LineEditHelper;
 import ca.redapp.util.RPreferences;
 import ca.redapp.util.ResourceManager;
 
+
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 
+import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -70,32 +70,13 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import static ca.hss.math.General.DEGREE_TO_RADIAN;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.Container;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.FocusTraversalPolicy;
-import java.awt.Font;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.KeyboardFocusManager;
-import java.awt.Point;
-import java.awt.Window;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.geom.Rectangle2D;
 import java.beans.EventHandler;
 import java.beans.PropertyChangeEvent;
@@ -103,7 +84,7 @@ import java.beans.PropertyChangeListener;
 
 public class Main implements FocusListener, DocumentListener {
 	public static ResourceManager resourceManager;
-	JFrame frmRedapp;
+ 	public	JFrame frmRedapp;
 	static RPreferences prefs;
 	static boolean shouldUseMqtt;
 
@@ -113,9 +94,8 @@ public class Main implements FocusListener, DocumentListener {
 	private RButton btnLocate;
 	private JSpinner spinnerDate;
 	private JTabbedPane tabPane;
-
-	private final List<REDappTab> tabs = new ArrayList<REDappTab>();
-	public WeatherTab weatherTab;
+	private RContextMenuButton btnHelp;
+	private final List<REDappTab> tabs = new ArrayList<>();
 	public FwiTab fwiTab;
 	public StatsTab statsTab;
 	public MapTab mapTab;
@@ -142,11 +122,19 @@ public class Main implements FocusListener, DocumentListener {
 		int def = 0;
 		if (defLanguage.toLowerCase().contains("fr"))
 			def = 1;
+		else if (defLanguage.toLowerCase().contains("es"))
+			def = 2;
+
 		int lang = prefs.getInt("language", def);
 		if (lang == 0)
 			resourceManager = new ResourceManager(Locale.ENGLISH);
+		else if (lang == 2) {
+			Locale mx = new Locale("es" );
+			resourceManager = new ResourceManager(mx);
+		}
 		else
 			resourceManager = new ResourceManager(Locale.CANADA_FRENCH);
+
 		DecimalUtils.setLocale(resourceManager.loc);
 		TranslationCallback.instance = resourceManager;
 		shouldUseMqtt = prefs.getBoolean("mqtt_active_2", false);
@@ -158,6 +146,7 @@ public class Main implements FocusListener, DocumentListener {
 			catch (ClassNotFoundException ignored) { }
 			shouldUseMqtt = cls != null;
 		}
+        prefs.putString("EncryptionKey", "yfj8aZrS77SW0yKFwIjWBw==");
 	}
 
 	/**
@@ -182,7 +171,7 @@ public class Main implements FocusListener, DocumentListener {
 				try {
 					saveAllValues();
 				} catch (Exception ignored){
-					;
+
 				}
 				tabs.forEach(REDappTab::onClosing);
 				if (Launcher.mac.isMac())
@@ -207,22 +196,16 @@ public class Main implements FocusListener, DocumentListener {
 			@Override
 			public void propertyChange(final PropertyChangeEvent evt) {
 				if (evt.getNewValue() instanceof JTextField) {
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							JTextField textField = (JTextField)evt.getNewValue();
-							textField.selectAll();
-						}
-					});
+					SwingUtilities.invokeLater(() -> {
+                        JTextField textField = (JTextField)evt.getNewValue();
+                        textField.selectAll();
+                    });
 				}
 				else if (evt.getNewValue() instanceof RTextField) {
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							RTextField textField = (RTextField)evt.getNewValue();
-							textField.selectAll();
-						}
-					});
+					SwingUtilities.invokeLater(() -> {
+                        RTextField textField = (RTextField)evt.getNewValue();
+                        textField.selectAll();
+                    });
 				}
 			}
 		});
@@ -238,6 +221,31 @@ public class Main implements FocusListener, DocumentListener {
 					System.out.println("Disabling map tab due to unsupported command line proxy specification");
 			}
 		}
+
+		if(btnHelp != null) {
+			btnHelp.setContextButtonClickListener(new RContextMenuButton.ContextButtonClickListener() {
+				@Override
+				public void clicked() {
+					//open a help document of some kind?
+				}
+
+				@Override
+				public void contextActionClicked(String title, Object value) {
+					int index = (Integer) value;
+					if (index == 0)
+						openAboutDialog();
+					else if (index == 1)
+						Assumptions.showAssumptionsDialog(Main.this, prefs);
+					else if (index == 2)
+						bugsAndSupportButton();
+
+				}
+			});
+
+			btnHelp.addContextAction(Main.resourceManager.getString("ui.label.footer.about"), 0);
+			btnHelp.addContextAction(Main.resourceManager.getString("ui.label.footer.assumptions"), 1);
+			btnHelp.addContextAction(Main.resourceManager.getString("ui.label.footer.bugs"), 2);
+		}
 	}
 
 	/**
@@ -245,15 +253,57 @@ public class Main implements FocusListener, DocumentListener {
 	 */
 	private void initialize() {
 		float dpi = Toolkit.getDefaultToolkit().getScreenResolution();
-		
-		if (dpi > 96f && isWindows()){
+
+
+		/****************
+		 *
+		 * All of this is just to try and get the window size right with different resolution sizes and scaling
+		 */
+		double scaleX = 0;
+		double scaleY = 0;
+
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gs =				ge.getScreenDevices();
+		for (int j = 0; j < gs.length; j++) {
+			GraphicsDevice gd = gs[j];
+			// Retrieve the scaling factors
+
+
+			GraphicsConfiguration[] gc = gd.getConfigurations();
+
+			for (int i=0; i < gc.length; i++) {
+				AffineTransform transform = gc[i].getDefaultTransform();
+				double display_scaleX = transform.getScaleX();
+				double display_scaleY = transform.getScaleY();
+				if(display_scaleX > scaleX){scaleX = display_scaleX;}
+				if(display_scaleY > scaleY){scaleY = display_scaleY;}
+			}
+
+		}
+
+		int dpiUnAwareHeight = 690;
+		int dpiUnAwareWidth = 1003;
+
+		// Convert inches to pixels using DPI
+		int minWidthInPixels = (int) (dpiUnAwareWidth * scaleX);
+		int minHeightInPixels = (int) (dpiUnAwareHeight * scaleY);
+
+
+
+		if (isWindows()) {
 			setUIFont(new javax.swing.plaf.FontUIResource("Label.font", Font.PLAIN, 11));
 		}
 
 		frmRedapp = new JFrame();
-		frmRedapp.setResizable(false);
+
+		frmRedapp.setResizable(true);
 		frmRedapp.setTitle(Main.resourceManager.getString("ui.app.title"));
-		List<Image> icons = new ArrayList<Image>();
+
+		frmRedapp.setMinimumSize(new Dimension(dpiUnAwareWidth, dpiUnAwareHeight)); // This is not ideal, ideally we'd like to use minWidthInPixels.  This behaves correctly after the program is launched, but launches it much larger when the monitor has scaling set
+
+
+
+		List<Image> icons = new ArrayList<>();
 		icons.add(Toolkit.getDefaultToolkit().getImage(
 				Main.class.getResource(resourceManager
 						.getImagePath("ui.icon.window.redapp"))));
@@ -264,21 +314,28 @@ public class Main implements FocusListener, DocumentListener {
 				Main.class.getResource(resourceManager
 						.getImagePath("ui.icon.window.redapp40"))));
 		frmRedapp.setIconImages(icons);
+		/*
 		if (isLinux())
 			frmRedapp.setBounds(0, 0, 993, 690);
 		else if (Launcher.javaVersion.major < 9)
 			frmRedapp.setBounds(0, 0, 993, 674);
 		else
 			frmRedapp.setBounds(0, 0, 1003, 679);
+*/
+
+
+
 		frmRedapp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmRedapp.getContentPane().setLayout(null);
+		frmRedapp.getContentPane().setLayout(new BorderLayout());
+
+
 
 		frmRedapp.setFocusTraversalPolicy(new FocusTraversalPolicy() {
 			@Override
 			public Component getLastComponent(Container aContainer) {
 				Component c = getCurrentTab();
 				if (c instanceof REDappTab)
-					return ((REDappTab)c).getLastComponent(aContainer);
+					return ((REDappTab) c).getLastComponent(aContainer);
 				return null;
 			}
 
@@ -286,7 +343,7 @@ public class Main implements FocusListener, DocumentListener {
 			public Component getFirstComponent(Container aContainer) {
 				Component c = getCurrentTab();
 				if (c instanceof REDappTab)
-					return ((REDappTab)c).getFirstComponent(aContainer);
+					return ((REDappTab) c).getFirstComponent(aContainer);
 				return null;
 			}
 
@@ -294,7 +351,7 @@ public class Main implements FocusListener, DocumentListener {
 			public Component getDefaultComponent(Container aContainer) {
 				Component c = getCurrentTab();
 				if (c instanceof REDappTab)
-					return ((REDappTab)c).getDefaultComponent(aContainer);
+					return ((REDappTab) c).getDefaultComponent(aContainer);
 				return null;
 			}
 
@@ -305,28 +362,28 @@ public class Main implements FocusListener, DocumentListener {
 				if (txtLatitude.equalsForTabs(aComponent))
 					return comboTimeZone;
 				if (aComponent == comboTimeZone)
-					return ((JSpinner.DefaultEditor)spinnerDate.getEditor()).getTextField();
-				if (aComponent == ((JSpinner.DefaultEditor)spinnerDate.getEditor()).getTextField())
+					return ((JSpinner.DefaultEditor) spinnerDate.getEditor()).getTextField();
+				if (aComponent == ((JSpinner.DefaultEditor) spinnerDate.getEditor()).getTextField())
 					return txtLongitude.componentForTabs();
 				Component c = getCurrentTab();
 				if (c instanceof REDappTab)
-					return ((REDappTab)c).getComponentBefore(aContainer, aComponent);
+					return ((REDappTab) c).getComponentBefore(aContainer, aComponent);
 				return null;
 			}
 
 			@Override
 			public Component getComponentAfter(Container aContainer, Component aComponent) {
-				if (aComponent == ((JSpinner.DefaultEditor)spinnerDate.getEditor()).getTextField())
+				if (aComponent == ((JSpinner.DefaultEditor) spinnerDate.getEditor()).getTextField())
 					return comboTimeZone;
 				if (aComponent == comboTimeZone)
 					return txtLatitude.componentForTabs();
 				if (txtLatitude.equalsForTabs(aComponent))
 					return txtLongitude.componentForTabs();
 				if (txtLongitude.equalsForTabs(aComponent))
-					return ((JSpinner.DefaultEditor)spinnerDate.getEditor()).getTextField();
+					return ((JSpinner.DefaultEditor) spinnerDate.getEditor()).getTextField();
 				Component c = getCurrentTab();
 				if (c instanceof REDappTab)
-					return ((REDappTab)c).getComponentAfter(aContainer, aComponent);
+					return ((REDappTab) c).getComponentAfter(aContainer, aComponent);
 				return null;
 			}
 		});
@@ -342,27 +399,118 @@ public class Main implements FocusListener, DocumentListener {
 				Rectangle2D.union(result, config.getBounds(), result);
 			}
 		}
+		int width = frmRedapp.getWidth();
+		int height = frmRedapp.getHeight();
+
 		if (result.contains(sx, sy))
 			frmRedapp.setBounds(sx, sy, frmRedapp.getWidth(),
 					frmRedapp.getHeight());
 
-		/* Redmine 713
-		m_StartupBusyDialog = new BusyDialog(frmRedapp);
-		m_StartupBusyDialog.setModal(false);
-		m_StartupBusyDialog.setVisible(true);
-		*/
+		AddTopPanels();
 
+
+		tabPane = new JTabbedPane(JTabbedPane.TOP);
+		/*
+		if (isMac())
+			tabPane.setBounds(2, 94, 987, 513);
+		else
+			tabPane.setBounds(10, 100, 971, 501);
+
+		 */
+		tabPane.addChangeListener((ChangeListener) EventHandler.create(ChangeListener.class, this, "tabChanged"));
+		frmRedapp.getContentPane().add(tabPane, BorderLayout.CENTER);
+
+		org.openstreetmap.josm.data.Preferences wmsPrefs = org.openstreetmap.josm.data.Preferences.main();
+		org.openstreetmap.josm.spi.preferences.Config.setPreferencesInstance(wmsPrefs);
+		org.openstreetmap.josm.spi.preferences.Config.setBaseDirectoriesProvider(org.openstreetmap.josm.data.preferences.JosmBaseDirectories.getInstance());
+		org.openstreetmap.josm.spi.preferences.Config.setUrlsProvider(org.openstreetmap.josm.data.preferences.JosmUrls.getInstance());
+
+		initFwi(tabPane);
+
+		btnHelp = new RContextMenuButton(resourceManager.getString("ui.label.footer.help"));
+
+		btnHelp.setBounds(860, 600, 121, 41);
+
+		SwingUtilities.invokeLater(() -> {
+			initFbp(tabPane);
+			initStats(tabPane);
+			initMap(tabPane);
+			initSpotting(tabPane);
+
+			initMqtt(tabPane);
+
+			statsTab.addStatsTabListener(fbpTab);
+			if (Boolean.parseBoolean(prefs.getString("saveValues", "true"))) {
+				fbpTab.loadAllValues();
+				fwiTab.loadAllValues();
+				spottingTab.loadAllValues(prefs);
+			}
+
+			JPanel btnPanel = new JPanel();
+			btnPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			btnPanel.setBounds(300, 595, 687, 51);
+			btnPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+			frmRedapp.getContentPane().add(btnPanel, BorderLayout.PAGE_END);
+
+			RButton btnSettings = new RButton(resourceManager.getString("ui.label.footer.settings"));
+			btnSettings.addActionListener((e) -> showSettings());
+			btnSettings.setBounds(618, 600, 121, 41);
+			btnPanel.add(btnSettings);
+
+			btnPanel.add(btnHelp);
+
+			if (isMac()) {
+				int index = tabPane.indexOfComponent(mapTab);
+				tabPane.setEnabledAt(index, false);
+				tabPane.setToolTipTextAt(index, resourceManager.getString("ui.label.map.nomap"));
+				if (Launcher.debugJavaFX) {
+					int value = 0;
+					value = value | 2;
+					if (isMac())
+						value = value | 4;
+					System.out.println("Disabling the map tab due to unsupported platform " + value);
+				}
+			}
+
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					initGeneral();
+				}
+			});
+
+
+		});
+
+		//frmRedapp.setMinimumSize(new Dimension(dpiUnAwareWidth, dpiUnAwareHeight));
+		//frmRedapp.setSize(new Dimension(dpiUnAwareWidth, dpiUnAwareHeight));
+		frmRedapp.setVisible(true);
+		//frmRedapp.setMinimumSize(new Dimension(minWidthInPixels, minHeightInPixels));
+		frmRedapp.pack();
+
+	}
+
+	private RGroupBox GetDateGroupBox(){
 		RGroupBox panelDate = new RGroupBox();
+		panelDate.setLayout(new GridBagLayout());
 		panelDate.setBorderColour(new Color(168, 69, 69));
 		panelDate.setTextColour(new Color(168, 69, 69));
 		panelDate.setBackgroundColour(new Color(245, 245, 245));
 		panelDate.setText(resourceManager.getString("ui.label.header.datetime"));
-		panelDate.setBounds(8, 10, 473, 81);
-		frmRedapp.getContentPane().add(panelDate);
-		
+		//panelDate.setBounds(8, 10, 473, 81);
+
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(3,10,3,10);
+
+
+
 		RLabel lblDate = new RLabel(resourceManager.getString("ui.label.header.date"));
 		lblDate.setBounds(10, 20, 121, 21);
-		panelDate.add(lblDate);
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 0.0;
+		panelDate.add(lblDate, gbc);
 
 		spinnerDate = new JSpinner();
 		spinnerDate.setLocale(resourceManager.loc);
@@ -378,132 +526,118 @@ public class Main implements FocusListener, DocumentListener {
 			if (isLinux())
 				editor.getTextField().setFont(editor.getTextField().getFont().deriveFont(11.0f));
 		}
-		panelDate.add(spinnerDate);
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.weightx = 1.0;
+		panelDate.add(spinnerDate, gbc);
 
 		RLabel lblTimeZone = new RLabel(resourceManager.getString("ui.label.header.timezone"));
 		lblTimeZone.setBounds(10, 50, 121, 21);
-		panelDate.add(lblTimeZone);
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.weightx = 0.0;
+		panelDate.add(lblTimeZone, gbc);
 
 		comboTimeZone = new JComboBox<TimeZoneInfo>();
 		comboTimeZone.setBounds(150, 50, 301, 22);
 		comboTimeZone.addActionListener((e) -> timeZoneChanged());
 		populateTimezoneComboBox();
-		panelDate.add(comboTimeZone);
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		gbc.weightx = 1.0;
+		panelDate.add(comboTimeZone, gbc);
 
+
+		panelDate.revalidate();
+		panelDate.repaint();
+		return panelDate;
+	}
+
+	private RGroupBox GetLocationPanel(){
 		RGroupBox panelLocation = new RGroupBox();
+		panelLocation.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(3,10,3,10);
+
 		panelLocation.setBorderColour(new Color(168, 69, 69));
 		panelLocation.setTextColour(new Color(168, 69, 69));
 		panelLocation.setBackgroundColour(new Color(245, 245, 245));
 		panelLocation.setText(resourceManager.getString("ui.label.header.ignition"));
 		panelLocation.setBounds(490, 10, 491, 81);
-		frmRedapp.getContentPane().add(panelLocation);
+		//frmRedapp.getContentPane().add(panelLocation, BorderLayout.NORTH);
+
+
 
 		RLabel lblLatitude = new RLabel(
 				resourceManager.getString("ui.label.header.latitude"));
 		lblLatitude.setBounds(10, 20, 91, 21);
-		panelLocation.add(lblLatitude);
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 0.0;
+		panelLocation.add(lblLatitude, gbc);
 
 		RLabel lblLongitude = new RLabel(
 				resourceManager.getString("ui.label.header.longitude"));
 		lblLongitude.setBounds(10, 50, 91, 21);
-		panelLocation.add(lblLongitude);
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.weightx = 0.0;
+		panelLocation.add(lblLongitude, gbc);
 
 		txtLongitude = new RTextField();
 		txtLongitude.setBounds(110, 49, 111, 22);
-		panelLocation.add(txtLongitude);
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		gbc.weightx = 1.0;
+		panelLocation.add(txtLongitude, gbc);
 		txtLongitude.setColumns(10);
 		txtLongitude.addFocusListener(this);
 		txtLongitude.getDocument().addDocumentListener(this);
 
 		txtLatitude = new RTextField();
 		txtLatitude.setBounds(110, 19, 111, 22);
-		panelLocation.add(txtLatitude);
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.weightx = 1.0;
+		panelLocation.add(txtLatitude, gbc);
 		txtLatitude.setColumns(10);
 		txtLatitude.addFocusListener(this);
 		txtLatitude.getDocument().addDocumentListener(this);
 
 		btnLocate = new RButton(resourceManager.getString("ui.label.header.locate"));
 		Dimension d = btnLocate.getSize();
-		btnLocate.setBounds(471 - d.width, 20, 121, 41);
+
 		btnLocate.addActionListener((e) -> locate());
-		panelLocation.add(btnLocate);
+		gbc.gridx = 2;
+		gbc.gridy = 0;
+		gbc.gridheight = 2;
 
-		tabPane = new JTabbedPane(JTabbedPane.TOP);
-		if (isMac())
-			tabPane.setBounds(2, 94, 987, 513);
-		else
-			tabPane.setBounds(10, 100, 971, 501); 
-		tabPane.addChangeListener((ChangeListener)EventHandler.create(ChangeListener.class, this, "tabChanged"));
-		frmRedapp.getContentPane().add(tabPane);
-		
-        org.openstreetmap.josm.data.Preferences wmsPrefs = org.openstreetmap.josm.data.Preferences.main();
-        org.openstreetmap.josm.spi.preferences.Config.setPreferencesInstance(wmsPrefs);
-        org.openstreetmap.josm.spi.preferences.Config.setBaseDirectoriesProvider(org.openstreetmap.josm.data.preferences.JosmBaseDirectories.getInstance());
-        org.openstreetmap.josm.spi.preferences.Config.setUrlsProvider(org.openstreetmap.josm.data.preferences.JosmUrls.getInstance());
-		
-		initFwi(tabPane);
+		gbc.weightx = 0.0;
+		panelLocation.add(btnLocate, gbc);
 
-		SwingUtilities.invokeLater(() -> {
-			initFbp(tabPane);
-			initStats(tabPane);
-			initMap(tabPane);
-			initSpotting(tabPane);
-			initWeather(tabPane);
-			initMqtt(tabPane);
-			statsTab.addStatsTabListener(weatherTab);
-			statsTab.addStatsTabListener(fbpTab);
-			if (Boolean.parseBoolean(prefs.getString("saveValues", "true"))) {
-				fbpTab.loadAllValues();
-				fwiTab.loadAllValues();
-				spottingTab.loadAllValues(prefs);
-			}
-	
-			JPanel btnPanel = new JPanel();
-			btnPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			btnPanel.setBounds(300, 595, 687, 51);
-			btnPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-			frmRedapp.getContentPane().add(btnPanel);
-	
-			RButton btnBugsAndSupport = new RButton(resourceManager.getString("ui.label.footer.bugs"));
-			btnBugsAndSupport.setBounds(860, 600, 121, 41);
-			btnBugsAndSupport.addActionListener((e) -> bugsAndSupportButton());
-			btnPanel.add(btnBugsAndSupport);
-	
-			RButton btnSettings = new RButton(resourceManager.getString("ui.label.footer.settings"));
-			btnSettings.addActionListener((e) -> showSettings());
-			btnSettings.setBounds(618, 600, 121, 41);
-			btnPanel.add(btnSettings);
-	
-			RButton btnAssumptions = new RButton(resourceManager.getString("ui.label.footer.assumptions"));
-			btnAssumptions.addActionListener((e) -> Assumptions.showAssumptionsDialog(Main.this, prefs));
-			btnAssumptions.setBounds(497, 600, 121, 41);
-			btnPanel.add(btnAssumptions);
-	
-			RButton btnAbout = new RButton(resourceManager.getString("ui.label.footer.about"));
-			btnAbout.setBounds(860, 600, 121, 41);
-			btnAbout.addActionListener((e) -> openAboutDialog());
-			btnPanel.add(btnAbout);
-	
-			if (isMac()) {
-				int index = tabPane.indexOfComponent(mapTab);
-				tabPane.setEnabledAt(index, false);
-				tabPane.setToolTipTextAt(index, resourceManager.getString("ui.label.map.nomap"));
-				if (Launcher.debugJavaFX) {
-					int value = 0;
-					value = value | 2;
-					if (isMac())
-						value = value | 4;
-					System.out.println("Disabling the map tab due to unsupported platform " + value);
-				}
-			}
-	
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					initGeneral();
-				}
-			});
-		});
+		return panelLocation;
+	}
+
+	private void AddTopPanels (){
+		JPanel topPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(3,10,3,10);
+
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 0.5;
+		RGroupBox panelDate = GetDateGroupBox();
+		topPanel.add(panelDate, gbc);
+
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.weightx = 0.7;
+		RGroupBox panelLocation = GetLocationPanel();
+		topPanel.add(panelLocation, gbc);
+
+		frmRedapp.getContentPane().add(topPanel, BorderLayout.NORTH);
 	}
 
 	/**
@@ -597,7 +731,7 @@ public class Main implements FocusListener, DocumentListener {
 		btnLocate.setVisible(false);
 		tabPane.setSelectedComponent(fwiTab);
 		
-		int indexTab = tabPane.indexOfComponent(weatherTab);
+		int indexTab = tabPane.indexOfComponent(fwiTab);
 		tabPane.setEnabledAt(indexTab, false);
 		tabPane.setToolTipTextAt(indexTab, resourceManager.getString("ui.label.header.internet.testing"));
 
@@ -643,19 +777,11 @@ public class Main implements FocusListener, DocumentListener {
 		txtLongitude.setText(ConvertUtils.formatDegrees(d));
 	}
 
-	private void initWeather(JTabbedPane tabs) {
-		weatherTab = new WeatherTab(this);
-		tabs.insertTab(Main.resourceManager.getString("ui.dlg.title.weather"), null, weatherTab, null, 0);
-		this.tabs.add(weatherTab);
-	}
+
 
 	private void initFwi(JTabbedPane tabs) {
 		fwiTab = new FwiTab(this);
-		if (weatherTab != null) {
-			int index = tabs.indexOfComponent(weatherTab);
-			tabs.insertTab(Main.resourceManager.getString("ui.dlg.title.fwi"), null, fwiTab, null, index + 1);
-		}
-		else if (fbpTab != null) {
+		if (fbpTab != null) {
 			int index = tabs.indexOfComponent(fbpTab);
 			tabs.insertTab(Main.resourceManager.getString("ui.dlg.title.fwi"), null, fwiTab, null, index);
 		}
@@ -850,12 +976,7 @@ public class Main implements FocusListener, DocumentListener {
 		synchronized (this) {
 			mapTab.internetFound();
 			
-			if (m_StartupThread.locations != null) {
-				weatherTab.locationData = m_StartupThread.locations;
-				mapTab.locationData = m_StartupThread.locations;
-			} else
-				weatherTab.locationData = null;
-			
+
 			if (WebDownloader.hasInternetConnection()) {
 				locator = new Geolocate(this);
 				
@@ -866,7 +987,7 @@ public class Main implements FocusListener, DocumentListener {
 				hasNetworkConnection = true;
 				btnLocate.setVisible(true);
 				
-				indexTab = tabPane.indexOfComponent(weatherTab);
+				indexTab = tabPane.indexOfComponent(fwiTab);
 				tabPane.setEnabledAt(indexTab, true);
 				tabPane.setToolTipTextAt(indexTab, "");
 
@@ -878,7 +999,7 @@ public class Main implements FocusListener, DocumentListener {
 				tabPane.setSelectedComponent(fwiTab);
 				*/
 				
-				int index = tabPane.indexOfComponent(weatherTab);
+				int index = tabPane.indexOfComponent(fwiTab);
 				tabPane.setToolTipTextAt(index, resourceManager.getString("ui.label.header.internet.error.brief"));
 
 				fbpTab.setInternetConnected(false);
@@ -897,7 +1018,7 @@ public class Main implements FocusListener, DocumentListener {
 			m_StartupBusyDialog = null;
 			*/
 			
-			weatherTab.filterForCanadianCities();
+
 			m_StartupThread = null;
 		}
 	}
@@ -973,7 +1094,7 @@ public class Main implements FocusListener, DocumentListener {
 
 	public void settingsUpdated() {
 		populateTimezoneComboBox();
-		weatherTab.settingsUpdated();
+
 		fwiTab.settingsUpdated();
 		fbpTab.settingsUpdated();
 		spottingTab.settingsUpdated();
@@ -1056,11 +1177,18 @@ public class Main implements FocusListener, DocumentListener {
 	}
 
 	public static volatile Boolean french = null;
+	public static volatile Boolean spanish = null;
 	public static boolean isFrench() {
 		if (french == null) {
 			french = resourceManager.loc.getISO3Language().contains("fr");
 		}
 		return french;
+	}
+	public static boolean isSpanish() {
+		if (spanish == null) {
+			spanish = resourceManager.loc.getISO3Language().contains("es");
+		}
+		return spanish;
 	}
 
 	private static volatile Boolean linux = null;

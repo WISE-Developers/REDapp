@@ -95,7 +95,6 @@ public class Import extends JDialog {
 	private JTextField delOtherValue;
 	private boolean delimiterValid = true;
 	private String filename;
-	
 	private Main app;
 	
 	/*Redmine 809
@@ -103,6 +102,8 @@ public class Import extends JDialog {
 	private JCheckBox chckbxOverrideTimeZone;
 	private RLabel lblTimeZone;
 	*/
+
+
 
 	/**
 	 * Create the dialog.
@@ -345,7 +346,7 @@ public class Import extends JDialog {
 		weatherRadio.setSelected(false);
 		delimRadio.setSelected(true);
 		noonRadio.setSelected(false);
-		if (filename.toLowerCase().endsWith(".csv")) {
+		if (filename != null && !filename.isEmpty() && filename.toLowerCase().endsWith(".csv")) {
 			delComma.setSelected(true);
 		}
 	}

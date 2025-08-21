@@ -23,10 +23,7 @@ import static ca.redapp.util.LineEditHelper.getDoubleFromLineEdit;
 import static ca.redapp.util.LineEditHelper.getIntegerFromLineEdit;
 import static ca.redapp.util.LineEditHelper.lineEditHandleError;
 
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -89,44 +86,44 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 	}
 
 	private void burningPileClicked() {
-	    CardLayout cl = (CardLayout)(cardsSpottingFireType.getLayout());
-	    txtSpottingFireTypeFlameHeight.setEnabled(true);
-	    txtSpottingFireTypeFlameLength.setEnabled(false);
-	    comboSpottingSpecies.setEnabled(false);
-	    txtSpottingDBH.setEnabled(false);
-	    txtSpottingTreeHeight.setEnabled(false);
-	    txtSpottingNumberTreeTorching.setEnabled(false);
-	    cl.show(cardsSpottingFireType, "Burning Pile");
+		CardLayout cl = (CardLayout) (cardsSpottingFireType.getLayout());
+		txtSpottingFireTypeFlameHeight.setEnabled(true);
+		txtSpottingFireTypeFlameLength.setEnabled(false);
+		comboSpottingSpecies.setEnabled(false);
+		txtSpottingDBH.setEnabled(false);
+		txtSpottingTreeHeight.setEnabled(false);
+		txtSpottingNumberTreeTorching.setEnabled(false);
+		cl.show(cardsSpottingFireType, "Burning Pile");
 		calculator.setFireType(FireType.BurningPile);
 	}
 
 	private void surfaceFireClicked() {
-	    CardLayout cl = (CardLayout)(cardsSpottingFireType.getLayout());
-	    txtSpottingFireTypeFlameHeight.setEnabled(false);
-	    txtSpottingFireTypeFlameLength.setEnabled(true);
-	    comboSpottingSpecies.setEnabled(false);
-	    txtSpottingDBH.setEnabled(false);
-	    txtSpottingTreeHeight.setEnabled(false);
-	    txtSpottingNumberTreeTorching.setEnabled(false);
-	    cl.show(cardsSpottingFireType, "Surface Fire");
+		CardLayout cl = (CardLayout) (cardsSpottingFireType.getLayout());
+		txtSpottingFireTypeFlameHeight.setEnabled(false);
+		txtSpottingFireTypeFlameLength.setEnabled(true);
+		comboSpottingSpecies.setEnabled(false);
+		txtSpottingDBH.setEnabled(false);
+		txtSpottingTreeHeight.setEnabled(false);
+		txtSpottingNumberTreeTorching.setEnabled(false);
+		cl.show(cardsSpottingFireType, "Surface Fire");
 		calculator.setFireType(FireType.SurfaceFire);
 	}
 
 	private void torchingTreesClicked() {
-	    CardLayout cl = (CardLayout)(cardsSpottingFireType.getLayout());
-	    txtSpottingFireTypeFlameHeight.setEnabled(false);
-	    txtSpottingFireTypeFlameLength.setEnabled(false);
-	    comboSpottingSpecies.setEnabled(true);
-	    txtSpottingDBH.setEnabled(true);
-	    txtSpottingTreeHeight.setEnabled(true);
-	    txtSpottingNumberTreeTorching.setEnabled(true);
-	    cl.show(cardsSpottingFireType, "Torching Trees");
+		CardLayout cl = (CardLayout) (cardsSpottingFireType.getLayout());
+		txtSpottingFireTypeFlameHeight.setEnabled(false);
+		txtSpottingFireTypeFlameLength.setEnabled(false);
+		comboSpottingSpecies.setEnabled(true);
+		txtSpottingDBH.setEnabled(true);
+		txtSpottingTreeHeight.setEnabled(true);
+		txtSpottingNumberTreeTorching.setEnabled(true);
+		cl.show(cardsSpottingFireType, "Torching Trees");
 		calculator.setFireType(FireType.TorchingTrees);
 	}
 
-	private void toggleTerrainType(){
+	private void toggleTerrainType() {
 		boolean flag = rdbtnSpottingMountainousTerrain.isSelected();
-		if(flag)
+		if (flag)
 			calculator.setTerrainType(TerrainType.MountainousTerrain);
 		else
 			calculator.setTerrainType(TerrainType.FlatTerrain);
@@ -140,12 +137,11 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 		if (!getValuesOnForm()) {
 			calculator.calculate();
 			setValuesOnForm();
-		}
-		else {
+		} else {
 			JOptionPane.showMessageDialog(null,
-				    Main.resourceManager.getString("ui.label.spotting.error"),
-				    "Error",
-				    JOptionPane.ERROR_MESSAGE);
+					Main.resourceManager.getString("ui.label.spotting.error"),
+					"Error",
+					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 	}
@@ -162,12 +158,10 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 		if (calculator.getFireType() == FireType.TorchingTrees) {
 			txtSpottingFlameDuration.setText(DecimalUtils.format(calculator.getOutputFlameDuration()));
 			lblSpottingFireTypeFlameHeight.setText(Main.resourceManager.getString("ui.label.spotting.fire.fheight"));
-		}
-		else {
+		} else {
 			if (calculator.getFireType() == FireType.SurfaceFire) {
 				lblSpottingFireTypeFlameHeight.setText(Main.resourceManager.getString("ui.label.spotting.fire.flength"));
-			}
-			else {
+			} else {
 				lblSpottingFireTypeFlameHeight.setText(Main.resourceManager.getString("ui.label.spotting.fire.fheight"));
 			}
 			txtSpottingFlameDuration.setText("");
@@ -253,8 +247,7 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 					lineEditHandleError(txtSpottingFireTypeFlameHeight, builder.toString());
 				}
 			}
-		}
-		else if (rdbtnSpottingSurfaceFire.isSelected()) {
+		} else if (rdbtnSpottingSurfaceFire.isSelected()) {
 			d = getDoubleFromLineEdit(txtSpottingFireTypeFlameLength);
 			if (d == null)
 				error = true;
@@ -278,8 +271,7 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 					lineEditHandleError(txtSpottingFireTypeFlameLength, builder.toString());
 				}
 			}
-		}
-		else if (rdbtnSpottingTorchingTrees.isSelected()) {
+		} else if (rdbtnSpottingTorchingTrees.isSelected()) {
 			int species = comboSpottingSpecies.getSelectedIndex();
 			calculator.setSpotSpecies(SpotSpecies.fromInt(species));
 
@@ -430,12 +422,10 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 		if (fireType.equalsIgnoreCase(FireType.BurningPile.name())) {
 			rdbtnSpottingBurningPile.setSelected(true);
 			burningPileClicked();
-		}
-		else if (fireType.equalsIgnoreCase(FireType.SurfaceFire.name())) {
+		} else if (fireType.equalsIgnoreCase(FireType.SurfaceFire.name())) {
 			rdbtnSpottingSurfaceFire.setSelected(true);
 			surfaceFireClicked();
-		}
-		else {
+		} else {
 			rdbtnSpottingTorchingTrees.setSelected(true);
 			torchingTreesClicked();
 		}
@@ -443,8 +433,7 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 		if (terrainType.equalsIgnoreCase(TerrainType.FlatTerrain.name())) {
 			rdbtnSpottingFlatTerrain.setSelected(true);
 			toggleTerrainType();
-		}
-		else {
+		} else {
 			rdbtnSpottingMountainousTerrain.setSelected(true);
 			toggleTerrainType();
 		}
@@ -505,19 +494,18 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 	public void actionPerformed(ActionEvent e) {
 		clearOutputValuesOnForm();
 		Object obj = e.getSource();
-		if(obj instanceof JRadioButton){
+		if (obj instanceof JRadioButton) {
 			JRadioButton src = (JRadioButton) obj;
-			if(src == rdbtnSpottingBurningPile)
+			if (src == rdbtnSpottingBurningPile)
 				burningPileClicked();
-			else if(src == rdbtnSpottingSurfaceFire)
+			else if (src == rdbtnSpottingSurfaceFire)
 				surfaceFireClicked();
-			else if(src == rdbtnSpottingTorchingTrees)
+			else if (src == rdbtnSpottingTorchingTrees)
 				torchingTreesClicked();
 			else
 				toggleTerrainType();
-		}
-		else if(obj instanceof JButton)
-			if(obj == btnSpottingCalculate)
+		} else if (obj instanceof JButton)
+			if (obj == btnSpottingCalculate)
 				calculate();
 	}
 
@@ -546,6 +534,7 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 
 	/**
 	 * Set the text in the wind speed textbox.
+	 *
 	 * @param speed
 	 */
 	public void setWindSpeed(String speed) {
@@ -637,7 +626,15 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 			return;
 		initialized = true;
 
-		setLayout(null);
+		setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.insets = new Insets(3, 10, 3, 10);
+
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+
+
 		if (Launcher.javaVersion.major < 9)
 			setBounds(0, 0, 971, 501);
 		else
@@ -648,14 +645,20 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 
 		RGroupBox groupSpottingTerrain = new RGroupBox();
 		groupSpottingTerrain.setText(Main.resourceManager.getString("ui.label.spotting.terrain.title"));
-		groupSpottingTerrain.setBounds(5, 130, 351, 171);
-		add(groupSpottingTerrain);
+		groupSpottingTerrain.setLayout(new BorderLayout());
+		//groupSpottingTerrain.setBounds(5, 130, 351, 171);
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		gbc.weighty = 1.0;
+		add(groupSpottingTerrain, gbc);
 
 		JPanel panelSpottingTerrain = new JPanel();
 		panelSpottingTerrain.setBackground(new Color(245, 245, 245));
 		panelSpottingTerrain.setLayout(new SpringLayout());
 		panelSpottingTerrain.setBounds(10, 15, 331, 151);
-		groupSpottingTerrain.add(panelSpottingTerrain);
+		groupSpottingTerrain.add(panelSpottingTerrain, BorderLayout.NORTH);
 
 		ButtonGroup btnGroupSpottingTerrainType = new ButtonGroup();
 
@@ -798,14 +801,21 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 
 		RGroupBox groupSpottingGeneral = new RGroupBox();
 		groupSpottingGeneral.setText(Main.resourceManager.getString("ui.label.spotting.general.title"));
-		groupSpottingGeneral.setBounds(5, 10, 351, 110);
-		add(groupSpottingGeneral);
+		groupSpottingGeneral.setLayout(new BorderLayout());
+		//groupSpottingGeneral.setBounds(5, 10, 351, 110);
+
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		gbc.weighty = 1.0;
+		add(groupSpottingGeneral, gbc);
 
 		JPanel panelSpottingGeneral = new JPanel();
 		panelSpottingGeneral.setBackground(new Color(245, 245, 245));
 		panelSpottingGeneral.setLayout(new SpringLayout());
 		panelSpottingGeneral.setBounds(10, 15, 331, 90);
-		groupSpottingGeneral.add(panelSpottingGeneral);
+		groupSpottingGeneral.add(panelSpottingGeneral, BorderLayout.NORTH);
 
 		RLabel lblSpottingWindSpeed = new RLabel(Main.resourceManager.getString("ui.label.spotting.general.ws"));
 		panelSpottingGeneral.add(lblSpottingWindSpeed);
@@ -825,7 +835,7 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 		panelSpottingGeneral.add(lblmWindSpeed);
 
 		cmbWindHeight = new RComboBox<String>();
-		cmbWindHeight.setModel(new DefaultComboBoxModel<String>(new String[] {"10m", "20ft"}));
+		cmbWindHeight.setModel(new DefaultComboBoxModel<String>(new String[]{"10m", "20ft"}));
 		//cmbWindHeight.setBounds(200, 49, 81, 22);
 		cmbWindHeight.addActionListener((e) -> clearOutputValuesOnForm());
 		panelSpottingGeneral.add(cmbWindHeight);
@@ -848,143 +858,283 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 
 		SpringUtilities.makeCompactGrid(panelSpottingGeneral, 3, 3, 5, 5, 5, 5, 10, 10);
 
+
+		/*****************************
+		 * Fire Type Panel
+		 */
+
 		RGroupBox panelSpottingFireType = new RGroupBox();
 		panelSpottingFireType.setText(Main.resourceManager.getString("ui.label.spotting.fire.title"));
-		panelSpottingFireType.setBounds(365, 10, 301, 291);
-		add(panelSpottingFireType);
+		panelSpottingFireType.setLayout(new GridBagLayout());
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.gridheight = 2;
+		gbc.gridwidth = 1;
+		add(panelSpottingFireType, gbc);
+
+		//These will be used for elements within the panelSpottingFireType
+		GridBagConstraints gbcFireType = new GridBagConstraints();
+		gbcFireType.weighty = 0.0;
+		gbcFireType.weightx = 1.0;
+		gbcFireType.insets = new Insets(3, 10, 3, 10);
+		gbcFireType.fill = GridBagConstraints.HORIZONTAL;
+		gbcFireType.anchor = GridBagConstraints.NORTH;
+		gbcFireType.ipady = 10;
+
+
+		//These are the three radio buttons at the top of the panel
 
 		ButtonGroup btnGroupSpottingFireType = new ButtonGroup();
 
 		rdbtnSpottingBurningPile = new JRadioButton(Main.resourceManager.getString("ui.label.spotting.fire.pile"));
 		if (Main.isLinux())
 			rdbtnSpottingBurningPile.setFont(rdbtnSpottingBurningPile.getFont().deriveFont(12.0f));
+
+
 		rdbtnSpottingBurningPile.setBackground(new Color(245, 245, 245));
 		btnGroupSpottingFireType.add(rdbtnSpottingBurningPile);
-		rdbtnSpottingBurningPile.setBounds(10, 30, 281, 20);
-		panelSpottingFireType.add(rdbtnSpottingBurningPile);
+		//rdbtnSpottingBurningPile.setBounds(10, 30, 281, 20);
+		gbcFireType.gridx = 0;
+		gbcFireType.gridwidth = 2;
+		gbcFireType.gridy = 0;
+		panelSpottingFireType.add(rdbtnSpottingBurningPile, gbcFireType);
 
 		rdbtnSpottingSurfaceFire = new JRadioButton(Main.resourceManager.getString("ui.label.spotting.fire.surface"));
 		if (Main.isLinux())
 			rdbtnSpottingSurfaceFire.setFont(rdbtnSpottingSurfaceFire.getFont().deriveFont(12.0f));
 		rdbtnSpottingSurfaceFire.setBackground(new Color(245, 245, 245));
 		btnGroupSpottingFireType.add(rdbtnSpottingSurfaceFire);
-		rdbtnSpottingSurfaceFire.setBounds(10, 60, 281, 20);
-		panelSpottingFireType.add(rdbtnSpottingSurfaceFire);
+		//rdbtnSpottingSurfaceFire.setBounds(10, 60, 281, 20);
+		gbcFireType.gridx = 0;
+		gbcFireType.gridwidth = 2;
+		gbcFireType.gridy = 1;
+		panelSpottingFireType.add(rdbtnSpottingSurfaceFire, gbcFireType);
 
 		rdbtnSpottingTorchingTrees = new JRadioButton(Main.resourceManager.getString("ui.label.spotting.fire.trees"));
 		if (Main.isLinux())
 			rdbtnSpottingTorchingTrees.setFont(rdbtnSpottingTorchingTrees.getFont().deriveFont(12.0f));
 		rdbtnSpottingTorchingTrees.setBackground(new Color(245, 245, 245));
 		btnGroupSpottingFireType.add(rdbtnSpottingTorchingTrees);
-		rdbtnSpottingTorchingTrees.setBounds(10, 90, 281, 20);
-		panelSpottingFireType.add(rdbtnSpottingTorchingTrees);
+		//rdbtnSpottingTorchingTrees.setBounds(10, 90, 281, 20);
+		gbcFireType.gridx = 0;
+		gbcFireType.gridwidth = 2;
+		gbcFireType.gridy = 2;
+		panelSpottingFireType.add(rdbtnSpottingTorchingTrees, gbcFireType);
+
+
+		//This will hold the values for all three options, only one will be shown in cardsSpottingFireType at a time
 
 		cardsSpottingFireType = new JPanel();
 		cardsSpottingFireType.setBackground(new Color(245, 245, 245));
-		cardsSpottingFireType.setBounds(7, 110, 291, 141);
-		panelSpottingFireType.add(cardsSpottingFireType);
+		//cardsSpottingFireType.setBounds(7, 110, 291, 141);
+
 		cardsSpottingFireType.setLayout(new CardLayout(0, 0));
+		gbcFireType.gridx = 0;
+		gbcFireType.gridwidth = 2;
+		gbcFireType.gridy = 3;
+		gbcFireType.weighty = 1.0;
+		gbcFireType.fill = GridBagConstraints.HORIZONTAL;
+		panelSpottingFireType.add(cardsSpottingFireType, gbcFireType);
+
+
+		//The options shown for Burning Pile
 
 		JPanel cardSpottingBurningPile = new JPanel();
 		cardSpottingBurningPile.setBackground(new Color(245, 245, 245));
 		cardsSpottingFireType.add(cardSpottingBurningPile, "Burning Pile");
-		cardSpottingBurningPile.setLayout(null);
+		cardSpottingBurningPile.setLayout(new GridBagLayout());
+		GridBagConstraints gbcBurningPile = new GridBagConstraints();
+		gbcBurningPile.weighty = 1.0;
+		gbcBurningPile.weightx = 0.5;
+		gbcBurningPile.ipady = 10;
+		gbcBurningPile.gridx = 0;
+		gbcBurningPile.gridy = 0;
+		gbcBurningPile.fill = GridBagConstraints.HORIZONTAL;
+		gbcBurningPile.anchor = GridBagConstraints.NORTH;
+		gbcBurningPile.insets = new Insets(3, 3, 3, 3);
 
 		lblSpottingFireTypeFlameHeight = new RLabel(Main.resourceManager.getString("ui.label.spotting.fire.fheight"));
-		lblSpottingFireTypeFlameHeight.setBounds(0, 20, 141, 20);
-		cardSpottingBurningPile.add(lblSpottingFireTypeFlameHeight);
+		//lblSpottingFireTypeFlameHeight.setBounds(0, 20, 141, 20);
+		cardSpottingBurningPile.add(lblSpottingFireTypeFlameHeight, gbcBurningPile);
 
 		txtSpottingFireTypeFlameHeight = new RTextField();
-		txtSpottingFireTypeFlameHeight.setBounds(160, 20, 91, 20);
-		cardSpottingBurningPile.add(txtSpottingFireTypeFlameHeight);
-		txtSpottingFireTypeFlameHeight.setColumns(10);
+		//txtSpottingFireTypeFlameHeight.setBounds(160, 20, 91, 20);
+		gbcBurningPile.gridx = 1;
+		gbcBurningPile.weightx = 1.0;
+		cardSpottingBurningPile.add(txtSpottingFireTypeFlameHeight, gbcBurningPile);
+
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblSpottingFireTypeFlameHeightUnit = new RLabel(Main.resourceManager.getString("ui.label.units.m"));
 		else
 			lblSpottingFireTypeFlameHeightUnit = new RLabel(Main.resourceManager.getString("ui.label.units.ft"));
 		lblSpottingFireTypeFlameHeightUnit.setBounds(260, 20, 31, 20);
-		cardSpottingBurningPile.add(lblSpottingFireTypeFlameHeightUnit);
+		gbcBurningPile.gridx = 2;
+		gbcBurningPile.weightx = 0.0;
+		gbcBurningPile.ipadx = 5;
+		cardSpottingBurningPile.add(lblSpottingFireTypeFlameHeightUnit, gbcBurningPile);
+
+
+		//The options shown for Surface Fire
+
 
 		cardSpottingSurfaceFire = new JPanel();
 		cardSpottingSurfaceFire.setBackground(new Color(245, 245, 245));
 		cardsSpottingFireType.add(cardSpottingSurfaceFire, "Surface Fire");
-		cardSpottingSurfaceFire.setLayout(null);
+		cardSpottingSurfaceFire.setLayout(new GridBagLayout());
+		GridBagConstraints gbcSurface = new GridBagConstraints();
+		gbcSurface.weighty = 1.0;
+		gbcSurface.weightx = 0.5;
+		gbcSurface.ipady = 10;
+		gbcSurface.gridx = 0;
+		gbcSurface.gridy = 0;
+		gbcSurface.fill = GridBagConstraints.HORIZONTAL;
+		gbcSurface.anchor = GridBagConstraints.NORTH;
+		gbcSurface.insets = new Insets(3, 3, 3, 3);
 
 		RLabel lblSpottingFlameLength = new RLabel(Main.resourceManager.getString("ui.label.spotting.fire.flength"));
-		lblSpottingFlameLength.setBounds(0, 20, 151, 20);
-		cardSpottingSurfaceFire.add(lblSpottingFlameLength);
+		cardSpottingSurfaceFire.add(lblSpottingFlameLength, gbcSurface);
 
 		txtSpottingFireTypeFlameLength = new RTextField();
-		txtSpottingFireTypeFlameLength.setBounds(160, 20, 91, 20);
-		cardSpottingSurfaceFire.add(txtSpottingFireTypeFlameLength);
+		gbcSurface.gridx = 1;
+		gbcSurface.weightx = 1.0;
+		cardSpottingSurfaceFire.add(txtSpottingFireTypeFlameLength, gbcSurface);
 		txtSpottingFireTypeFlameLength.setColumns(10);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblSpottingFireTypeFlameLengthUnit = new RLabel(Main.resourceManager.getString("ui.label.units.m"));
 		else
 			lblSpottingFireTypeFlameLengthUnit = new RLabel(Main.resourceManager.getString("ui.label.units.ft"));
-		lblSpottingFireTypeFlameLengthUnit.setBounds(260, 20, 30, 20);
-		cardSpottingSurfaceFire.add(lblSpottingFireTypeFlameLengthUnit);
+		gbcSurface.gridx = 2;
+		gbcSurface.weightx = 0.0;
+		gbcSurface.ipadx = 5;
+		cardSpottingSurfaceFire.add(lblSpottingFireTypeFlameLengthUnit, gbcSurface);
+
+
+		//The options shown for Torching Trees
+
 
 		JPanel cardSpottingTorchingTrees = new JPanel();
 		cardSpottingTorchingTrees.setBackground(new Color(245, 245, 245));
-		cardsSpottingFireType.add(cardSpottingTorchingTrees, "Torching Trees");
-		cardSpottingTorchingTrees.setLayout(null);
 
+
+		cardsSpottingFireType.add(cardSpottingTorchingTrees, "Torching Trees");
+		cardSpottingTorchingTrees.setLayout(new GridBagLayout());
+
+		GridBagConstraints gbcTorching = new GridBagConstraints();
+		gbcTorching.weighty = 1.0;
+		gbcTorching.weightx = 0.5;
+		gbcTorching.ipady = 10;
+		gbcTorching.gridx = 0;
+		gbcTorching.gridy = 0;
+		gbcTorching.fill = GridBagConstraints.HORIZONTAL;
+		gbcTorching.anchor = GridBagConstraints.NORTH;
+		gbcSurface.ipadx = 5;
+		gbcTorching.insets = new Insets(3, 3, 3, 3);
+
+		//row 0
 		RLabel lblSpottingSpecies = new RLabel(Main.resourceManager.getString("ui.label.spotting.fire.spec"));
-		lblSpottingSpecies.setBounds(0, 20, 141, 20);
-		cardSpottingTorchingTrees.add(lblSpottingSpecies);
+		//lblSpottingSpecies.setBounds(0, 20, 141, 20);
+		cardSpottingTorchingTrees.add(lblSpottingSpecies, gbcTorching);
 
 		comboSpottingSpecies = new RComboBox<String>();
-		comboSpottingSpecies.setBounds(160, 19, 121, 22);
-		cardSpottingTorchingTrees.add(comboSpottingSpecies);
+		gbcTorching.gridx = 1;
+		gbcTorching.gridwidth = 1;
+		cardSpottingTorchingTrees.add(comboSpottingSpecies, gbcTorching);
 
+		//Row 1
 		RLabel lblSpottingDBH = new RLabel(Main.resourceManager.getString("ui.label.spotting.fire.dbh"));
-		lblSpottingDBH.setBounds(0, 50, 141, 20);
-		cardSpottingTorchingTrees.add(lblSpottingDBH);
-
-		RLabel lblSpottingTreeHeight = new RLabel(Main.resourceManager.getString("ui.label.spotting.fire.theight"));
-		lblSpottingTreeHeight.setBounds(0, 80, 141, 20);
-		cardSpottingTorchingTrees.add(lblSpottingTreeHeight);
-
-		RLabel lblSpottingNumberTreeTorching = new RLabel(Main.resourceManager.getString("ui.label.spotting.fire.count"));
-		lblSpottingNumberTreeTorching.setBounds(0, 110, 141, 20);
-		cardSpottingTorchingTrees.add(lblSpottingNumberTreeTorching);
+		gbcTorching.gridx = 0;
+		gbcTorching.gridy = 1;
+		gbcTorching.gridwidth = 1;
+		gbcTorching.weightx = 0.25;
+		cardSpottingTorchingTrees.add(lblSpottingDBH, gbcTorching);
 
 		txtSpottingDBH = new RTextField();
-		txtSpottingDBH.setBounds(160, 50, 91, 20);
-		cardSpottingTorchingTrees.add(txtSpottingDBH);
-		txtSpottingDBH.setColumns(10);
-
-		txtSpottingTreeHeight = new RTextField();
-		txtSpottingTreeHeight.setColumns(10);
-		txtSpottingTreeHeight.setBounds(160, 80, 91, 20);
-		cardSpottingTorchingTrees.add(txtSpottingTreeHeight);
-
-		txtSpottingNumberTreeTorching = new RTextField();
-		txtSpottingNumberTreeTorching.setColumns(10);
-		txtSpottingNumberTreeTorching.setBounds(160, 110, 91, 20);
-		cardSpottingTorchingTrees.add(txtSpottingNumberTreeTorching);
+		gbcTorching.gridx = 1;
+		gbcTorching.gridy = 1;
+		gbcTorching.weightx = 1.0;
+		gbcTorching.gridwidth = 1;
+		cardSpottingTorchingTrees.add(txtSpottingDBH, gbcTorching);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblSpottingDbhUnit = new RLabel(Main.resourceManager.getString("ui.label.units.cm"));
 		else
 			lblSpottingDbhUnit = new RLabel(Main.resourceManager.getString("ui.label.units.in"));
-		lblSpottingDbhUnit.setBounds(260, 50, 30, 20);
-		cardSpottingTorchingTrees.add(lblSpottingDbhUnit);
+		gbcTorching.gridx = 2;
+		gbcTorching.gridy = 1;
+		gbcTorching.gridwidth = 1;
+		gbcSurface.weightx = 0.0;
+		gbcSurface.ipadx = 5;
+		cardSpottingTorchingTrees.add(lblSpottingDbhUnit, gbcTorching);
+
+		//row 2
+		RLabel lblSpottingTreeHeight = new RLabel(Main.resourceManager.getString("ui.label.spotting.fire.theight"));
+		gbcTorching.gridx = 0;
+		gbcTorching.gridy = 2;
+		gbcTorching.gridwidth = 1;
+		gbcSurface.weightx = 0.25;
+		gbcSurface.ipadx = 5;
+		cardSpottingTorchingTrees.add(lblSpottingTreeHeight, gbcTorching);
+
+		txtSpottingTreeHeight = new RTextField();
+		gbcTorching.gridx = 1;
+		gbcTorching.gridy = 2;
+		gbcTorching.weightx = 1.0;
+		gbcTorching.gridwidth = 1;
+		cardSpottingTorchingTrees.add(txtSpottingTreeHeight, gbcTorching);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblSpottingTreeHeightUnit = new RLabel(Main.resourceManager.getString("ui.label.units.m"));
 		else
 			lblSpottingTreeHeightUnit = new RLabel(Main.resourceManager.getString("ui.label.units.ft"));
 		lblSpottingTreeHeightUnit.setBounds(260, 80, 30, 20);
-		cardSpottingTorchingTrees.add(lblSpottingTreeHeightUnit);
+		gbcTorching.gridx = 2;
+		gbcTorching.gridy = 2;
+		gbcTorching.gridwidth = 1;
+		gbcSurface.weightx = 0.0;
+
+		cardSpottingTorchingTrees.add(lblSpottingTreeHeightUnit, gbcTorching);
+
+		// row 3
+		RLabel lblSpottingNumberTreeTorching = new RLabel(Main.resourceManager.getString("ui.label.spotting.fire.count"));
+		gbcTorching.gridx = 0;
+		gbcTorching.gridy = 3;
+		gbcTorching.gridwidth = 1;
+		gbcTorching.weightx = 0.25;
+		cardSpottingTorchingTrees.add(lblSpottingNumberTreeTorching, gbcTorching);
+
+		txtSpottingNumberTreeTorching = new RTextField();
+		gbcTorching.gridx = 1;
+		gbcTorching.gridy = 3;
+		gbcTorching.gridwidth = 1;
+		gbcTorching.weightx = 1.0;
+		cardSpottingTorchingTrees.add(txtSpottingNumberTreeTorching, gbcTorching);
+
+
+
+
+
+
+
+
+
+
+		/***********************************
+		 * OUTPUTS PANEL
+		 */
+
 
 		RGroupBox groupSpottingOutputs = new RGroupBox();
 		groupSpottingOutputs.setText(Main.resourceManager.getString("ui.label.spotting.output.title"));
-		groupSpottingOutputs.setBounds(675, 10, 281, 171);
-		add(groupSpottingOutputs);
+		groupSpottingOutputs.setLayout(new BorderLayout());
+		//groupSpottingOutputs.setBounds(675, 10, 281, 171);
+		gbc.gridx = 2;
+		gbc.gridy = 0;
+		gbc.gridheight = 2;
+		gbc.gridwidth = 1;
+		gbc.weightx = 1.0;
+		add(groupSpottingOutputs, gbc);
 
 		JPanel panelSpottingOutputs = new JPanel();
 		panelSpottingOutputs.setBackground(new Color(245, 245, 245));
@@ -1085,7 +1235,13 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 		panel1.setLayout(layout);
 		if (Main.isWindows())
 			panel1.setBackground(Color.white);
-		add(panel1);
+
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 3;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		add(panel1, gbc);
 
 		btnSpottingCalculate = new RButton(Main.resourceManager.getString("ui.label.spotting.calculate"), RButton.Decoration.Calc);
 		panel1.add(btnSpottingCalculate);
@@ -1151,7 +1307,8 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 	// }}
 
 	@Override
-	public void setInternetConnected(boolean conn) { }
+	public void setInternetConnected(boolean conn) {
+	}
 
 	@Override
 	public void reset() {
@@ -1175,7 +1332,7 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 		txtSpottingSpotfireDistance.setText("");
 		txtSpottingFlameDuration.setText("");
 	}
-	
+
 	@Override
 	public void settingsUpdated() {
 		if (Main.unitSystem() == UnitSystem.METRIC) {
@@ -1227,7 +1384,7 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 				temp = txtSpottingTreeHeight.getText();
 				d = DecimalUtils.valueOf(temp);
 				if (d != null) {
-					d = Convert.convertUnit(d,  UnitSystem.distanceMedium(UnitSystem.METRIC), UnitSystem.distanceMedium(UnitSystem.IMPERIAL));
+					d = Convert.convertUnit(d, UnitSystem.distanceMedium(UnitSystem.METRIC), UnitSystem.distanceMedium(UnitSystem.IMPERIAL));
 					txtSpottingTreeHeight.setText(DecimalUtils.format(d, DataType.FORCE_ATMOST_2));
 				}
 			}
@@ -1243,8 +1400,7 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 			lblSpottingCriticalCoverHeightUnit.setText(Main.resourceManager.getString("ui.label.units.m"));
 			lblSpottingFirebrandHeightUnit.setText(Main.resourceManager.getString("ui.label.units.m"));
 			lblSpottingSpotfireDistanceUnit.setText(Main.resourceManager.getString("ui.label.units.km"));
-		}
-		else {
+		} else {
 			String mi = Main.resourceManager.getString("ui.label.units.mi");
 			String r2vd = lblSpottingR2VDistanceUnit.getText();
 			if (!r2vd.equals(mi)) {
@@ -1293,7 +1449,7 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 				temp = txtSpottingTreeHeight.getText();
 				d = DecimalUtils.valueOf(temp);
 				if (d != null) {
-					d = Convert.convertUnit(d,  UnitSystem.distanceMedium(UnitSystem.IMPERIAL), UnitSystem.distanceMedium(UnitSystem.METRIC));
+					d = Convert.convertUnit(d, UnitSystem.distanceMedium(UnitSystem.IMPERIAL), UnitSystem.distanceMedium(UnitSystem.METRIC));
 					txtSpottingTreeHeight.setText(DecimalUtils.format(d, DataType.FORCE_ATMOST_2));
 				}
 			}
@@ -1319,14 +1475,18 @@ public class SpottingTab extends REDappTab implements ActionListener, DocumentLi
 	}
 
 	@Override
-	public void onLocationChanged() { }
+	public void onLocationChanged() {
+	}
 
 	@Override
-	public void onTimeZoneChanged() { }
+	public void onTimeZoneChanged() {
+	}
 
 	@Override
-	public void onDateChanged() { }
+	public void onDateChanged() {
+	}
 
 	@Override
-	public void onCurrentTabChanged() { }
+	public void onCurrentTabChanged() {
+	}
 }

@@ -38,7 +38,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import ca.redapp.ui.component.RButton;
 import ca.redapp.util.BuildConfig;
-import ca.redapp.util.MavenProjectVersionGetter;
+
 import javax.swing.event.HyperlinkListener;
 import java.awt.BorderLayout;
 import java.awt.Color;

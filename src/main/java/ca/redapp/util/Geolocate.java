@@ -20,11 +20,17 @@
 package ca.redapp.util;
 
 import java.awt.EventQueue;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,12 +38,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.prefs.Preferences;
-import java.util.stream.Stream;
 
 import javax.swing.JOptionPane;
 
 import ca.redapp.ui.BusyDialog;
 import ca.redapp.ui.Main;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+
 
 /**
  * Geolocate the user using their IP address and a list of known address locations.
@@ -73,7 +83,7 @@ public class Geolocate {
 	/**
 	 * Asynchronous call to find the location based on the IP address. Opens a modal
 	 * busy dialog until the asynchronous task completes.
-	 *
+	 * 
 	 * @param ip The machines IP address.
 	 */
 	public void locate(String ip) {
@@ -104,6 +114,57 @@ public class Geolocate {
 		});
 	}
 
+
+	public static LatLong getGeolocation(String ipAddress) {
+		String apiUrl = "http://ip-api.com/json/" + ipAddress;
+		try {
+			URL url = new URL(apiUrl);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setReadTimeout(1000);
+			conn.setRequestMethod("GET");
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			StringBuilder response = new StringBuilder();
+			String line;
+
+			while ((line = reader.readLine()) != null) {
+				response.append(line);
+			}
+			reader.close();
+
+			String sLat = getValueByKey(response.toString(), "lat");
+			String sLon = getValueByKey(response.toString(), "lon");
+
+			LatLong loc = new LatLong(Float.parseFloat(sLat), Float.parseFloat(sLon) );
+			return loc;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static String getValueByKey(String json, String key) {
+		String searchKey = "\"" + key + "\":";
+		int keyIndex = json.indexOf(searchKey);
+		if (keyIndex == -1) {
+			return null; // Key not found
+		}
+
+		int valueStart = json.indexOf(":", keyIndex) + 1;
+		int valueEnd = json.indexOf(",", valueStart);
+		if (valueEnd == -1) {
+			valueEnd = json.indexOf("}", valueStart); // Last key in object
+		}
+
+		String value = json.substring(valueStart, valueEnd).trim();
+		if (value.startsWith("\"") && value.endsWith("\"")) {
+			value = value.substring(1, value.length() - 1); // Remove quotes if it's a string
+		}
+
+		return value;
+	}
+
+
 	protected class Geolocate_internal implements Runnable {
 		String ip;
 		public boolean found = false;
@@ -112,10 +173,19 @@ public class Geolocate {
 		@Override
 		public void run() {
 			long address;
+			InetAddress add;
 			try {
-				InetAddress add = InetAddress.getByName(ip);
+				add = InetAddress.getByName(ip);
 				address = bytesToLong(add.getAddress());
 			} catch (UnknownHostException e1) {
+				_internalFinished();
+				return;
+			}
+
+			loc = getGeolocation(add.toString());
+			if(loc != null){
+				found = true;
+				map.put(address, loc);
 				_internalFinished();
 				return;
 			}
@@ -125,12 +195,11 @@ public class Geolocate {
 				_internalFinished();
 				return;
 			}
-			String CityBlocksFilePath = "/data/geolitecity_blocks.csv";
-			String LocationFilePath = "/data/geolitecity_location.csv";
-
-			InputStream geoLiteCityBlocksInputStream = this.getClass().getResourceAsStream(CityBlocksFilePath);
-			//geoLiteCityInputStream = Geolocate.class.getClassLoader().getResourceAsStream("/data/geo_lite_city_blocks.csv");
-			//in = new FileInputStream("bin/data/GeoLiteCity-Blocks.csv");
+			InputStream in;
+			//try {
+				in = Geolocate.class.getClassLoader().getResourceAsStream(
+						"data/GeoLiteCity-Blocks.csv");
+				//in = new FileInputStream("bin/data/GeoLiteCity-Blocks.csv");
 			//} catch (FileNotFoundException e1) {
 			//	_internalFinished();
 			//	return;
@@ -138,10 +207,9 @@ public class Geolocate {
 			String line, test;
 			long start, end;
 			String index = null;
-
-			if(geoLiteCityBlocksInputStream != null) {
+			if(in != null) {
 				try (BufferedReader reader = new BufferedReader(
-						new InputStreamReader(geoLiteCityBlocksInputStream))) {
+						new InputStreamReader(in))) {
 					while ((line = reader.readLine()) != null) {
 						String[] split = line.split(",");
 						if (split.length != 3)
@@ -161,60 +229,41 @@ public class Geolocate {
 						index = split[2].replaceAll("\"", "");
 						break;
 					}
-
+					in.close();
 				} catch (IOException e) {
-					System.out.println(e.getLocalizedMessage());
-				} finally {
-					try {
-						geoLiteCityBlocksInputStream.close();
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
 				}
 			}
 
 
-			if (index == null) {
-				_internalFinished();
+
+			if (index == null)
 				return;
-			}
-			//geoLiteCityInputStream = Geolocate.class.getResourceAsStream("/GeoLiteCity-Location.csv");
-
-
-			InputStream GeoLiteCityLocationInputStream = this.getClass().getResourceAsStream(LocationFilePath);
-			if (GeoLiteCityLocationInputStream != null) {
-				try (BufferedReader reader = new BufferedReader(new InputStreamReader(GeoLiteCityLocationInputStream))) {
-					int i = 0;
-					while ((line = reader.readLine()) != null) {
-						String[] split = line.split(",");
-						i++;
-						if (i == 136079) {
-							String hi = "hello";
+			in = Geolocate.class.getClassLoader().getResourceAsStream(
+					"data/GeoLiteCity-Location.csv");
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+				while ((line = reader.readLine()) != null) {
+					String[] split = line.split(",");
+					if (split.length == 0)
+						continue;
+					if (split[0].equalsIgnoreCase(index)) {
+						double lat, lng;
+						try {
+							test = split[5];
+							lat = Double.parseDouble(test);
+							test = split[6];
+							lng = Double.parseDouble(test);
+							loc = new LatLong(lat, lng);
+							found = true;
+							map.put(address, loc);
+						} catch (NumberFormatException ex) {
 						}
-						if (split.length == 0)
-							continue;
-						if (split[0].equalsIgnoreCase(index)) {
-							double lat, lng;
-							try {
-								test = split[5];
-								lat = Double.parseDouble(test);
-								test = split[6];
-								lng = Double.parseDouble(test);
-								loc = new LatLong(lat, lng);
-								found = true;
-								map.put(address, loc);
-							} catch (NumberFormatException ex) {
-								System.out.println(ex.getLocalizedMessage());
-							}
-							break;
-						}
+						break;
 					}
-					GeoLiteCityLocationInputStream.close();
-				} catch (IOException e) {
-					System.out.println(e.getLocalizedMessage());
 				}
+				in.close();
 			}
-
+			catch (IOException e) {
+			}
 			_internalFinished();
 		}
 	}

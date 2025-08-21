@@ -4,7 +4,7 @@
   <groupId>ca.redapp</groupId>
   <artifactId>REDapp</artifactId>
   <packaging>jar</packaging>
-  <version>7.25.2</version>
+  <version>7.27.0</version>
   <name>REDapp</name>
   <url>https://maven.apache.org</url>
   <properties>
@@ -54,6 +54,11 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
+    </repository>
+    <repository>
+      <id>OSGeo</id>
+      <name>OSGeo</name>
+      <url>https://repo.osgeo.org/repository/release/</url>
     </repository>
   </repositories>
 
@@ -135,8 +140,9 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>2.12.1</version>
+      <version>2.18.2</version>
     </dependency>
+
     <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -204,6 +210,7 @@
       <artifactId>wtime</artifactId>
       <version>2.5.0.21</version>
     </dependency>
+
 
     <!-- https://maven.pkg.github.com/wise-developers/redapp_lib/ca/cwfgm/redapp_lib/7.2025.1/redapp_lib-7.2025.1.pom -->
     <dependency>
@@ -439,8 +446,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.6.1</version>
         <configuration>
-          <source>22</source>
-          <target>22</target>
+          <source>8</source>
+          <target>8</target>
         </configuration>
       </plugin>
       <plugin>

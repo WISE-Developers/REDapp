@@ -43,6 +43,7 @@ import java.util.TimeZone;
 import java.util.prefs.Preferences;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -1598,7 +1599,19 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 			return;
 		initialized = true;
 
-		setLayout(null);
+		setLayout(new GridBagLayout());
+
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.insets = new Insets(3,10,3,10);
+
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+
+		GridBagConstraints gbcSecondary = new GridBagConstraints();
+		gbcSecondary.insets = new Insets(3,10,3,10);
+
+
 		if (Launcher.javaVersion.major < 9)
 			setBounds(0, 0, 971, 501);
 		else
@@ -1608,9 +1621,15 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 			setBackground(Color.white);
 
 		RGroupBox panelFbpFuelType = new RGroupBox();
+		panelFbpFuelType.setLayout(new GridBagLayout());
 		panelFbpFuelType.setText(Main.resourceManager.getString("ui.label.fbp.fuel.title"));
-		panelFbpFuelType.setBounds(5, 10, 291, 145);
-		add(panelFbpFuelType);
+		//panelFbpFuelType.setBounds(5, 10, 291, 145);
+
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		this.add(panelFbpFuelType, gbc);
 
 		comboFbpFuelType = new JComboBox<String>();
 		comboFbpFuelType.setModel(new DefaultComboBoxModel<String>(new String[] {
@@ -1634,12 +1653,20 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 				"S-2:  " + Main.resourceManager.getString("ui.label.fuel.s2"),
 				"S-3:  " + Main.resourceManager.getString("ui.label.fuel.s3") }));
 		comboFbpFuelType.setBounds(10, 30, 271, 22);
-		panelFbpFuelType.add(comboFbpFuelType);
+		 gbcSecondary.gridx = 0; gbcSecondary.gridy				 =0;
+		gbcSecondary.fill = GridBagConstraints.HORIZONTAL;
+		panelFbpFuelType.add(comboFbpFuelType, gbcSecondary);
 
 		RGroupBox groupFbpWeather = new RGroupBox();
+		groupFbpWeather.setLayout(new BorderLayout());
 		groupFbpWeather.setText(Main.resourceManager.getString("ui.label.fbp.weather.title"));
 		groupFbpWeather.setBounds(5, 164, 291, 261);
-		add(groupFbpWeather);
+
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 2;
+		this.add(groupFbpWeather, gbc);
 
 		JPanel panelFbpWeather = new JPanel();
 		panelFbpWeather.setBackground(new Color(245, 245, 245));
@@ -1778,9 +1805,15 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		SpringUtilities.makeCompactGrid(panelFbpWeather, 6, 3, 6, 6, 6, 10);
 
 		RGroupBox groupFbpTerrain = new RGroupBox();
+		groupFbpTerrain.setLayout(new BorderLayout());
 		groupFbpTerrain.setText(Main.resourceManager.getString("ui.label.fbp.terrain.title"));
 		groupFbpTerrain.setBounds(305, 10, 206, 145);
-		add(groupFbpTerrain);
+
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		this.add(groupFbpTerrain, gbc);
 
 		JPanel panelFbpTerrain = new JPanel();
 		panelFbpTerrain.setBounds(10, 20, 186, 90);
@@ -1872,9 +1905,14 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 				this, "txtAspectChanged"));
 
 		RGroupBox groupIgnition = new RGroupBox();
+		groupIgnition.setLayout(new BorderLayout());
 		groupIgnition.setText(Main.resourceManager.getString("ui.label.fbp.ignition.title"));
 		groupIgnition.setBounds(520, 10, 206, 145);
-		add(groupIgnition);
+		gbc.gridx = 2;
+		gbc.gridy = 0;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		this.add(groupIgnition, gbc);
 
 		JPanel panelIgnition = new JPanel();
 		panelIgnition.setBackground(new Color(245, 245, 245));
@@ -2048,12 +2086,18 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		SpringUtilities.makeCompactGrid(panelIgnition, 3, 2, 5, 5, 5, 5, 10, 10);
 
 		RGroupBox groupComponents = new RGroupBox();
+		groupComponents.setLayout(new BorderLayout());
 		if (Main.isLinux())
 			groupComponents.setText(Main.resourceManager.getString("ui.label.fbp.system.titleshort"));
 		else
 			groupComponents.setText(Main.resourceManager.getString("ui.label.fbp.system.title"));
 		groupComponents.setBounds(735, 10, 221, 145);
-		add(groupComponents);
+
+		gbc.gridx = 3;
+		gbc.gridy = 0;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		this.add(groupComponents, gbc);
 
 		JPanel panelComponents = new JPanel();
 		panelComponents.setBackground(new Color(245, 245, 245));
@@ -2115,15 +2159,33 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		SpringUtilities.makeCompactGrid(panelComponents, 4, 3, 5, 5, 5, 5, 10, 10);
 
 		RGroupBox groupFbpPrimary = new RGroupBox();
+		groupFbpPrimary.setLayout(new GridBagLayout());
 		groupFbpPrimary.setText(Main.resourceManager.getString("ui.label.fbp.primary.title"));
 		groupFbpPrimary.setBounds(305, 164, 651, 141);
-		add(groupFbpPrimary);
+
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		gbc.gridwidth = 3;
+		gbc.gridheight = 1;
+		this.add(groupFbpPrimary, gbc);
 
 		JPanel panelFbpPrimary1 = new JPanel();
 		panelFbpPrimary1.setBackground(new Color(245, 245, 245));
 		panelFbpPrimary1.setBounds(10, 20, 171, 115);
 		panelFbpPrimary1.setLayout(new SpringLayout());
-		groupFbpPrimary.add(panelFbpPrimary1);
+
+		GridBagConstraints gbcPrimaryOutputPanel = new GridBagConstraints();
+		gbcPrimaryOutputPanel.insets = new Insets(3,10,3,10);
+
+		gbcPrimaryOutputPanel.weighty = 1;
+		gbcPrimaryOutputPanel.weightx = 1;
+		gbcPrimaryOutputPanel.fill = GridBagConstraints.HORIZONTAL;
+
+		gbcPrimaryOutputPanel.gridx = 0;
+		gbcPrimaryOutputPanel.gridy = 0;
+		gbcPrimaryOutputPanel.gridwidth = 1;
+		gbcPrimaryOutputPanel.gridheight = 1;
+		groupFbpPrimary.add(panelFbpPrimary1, gbcPrimaryOutputPanel);
 
 		RLabel lblRos = new RLabelSub(Main.resourceManager.getString("ui.label.fire.rost"));
 		lblRos.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.rost"));
@@ -2192,7 +2254,11 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		panelFbpPrimary1.setBackground(new Color(245, 245, 245));
 		panelFbpPrimary1.setBounds(195, 20, 171, 85);
 		panelFbpPrimary1.setLayout(new SpringLayout());
-		groupFbpPrimary.add(panelFbpPrimary1);
+		gbcPrimaryOutputPanel.gridx = 1;
+		gbcPrimaryOutputPanel.gridy = 0;
+		gbcPrimaryOutputPanel.gridwidth = 1;
+		gbcPrimaryOutputPanel.gridheight = 1;
+		groupFbpPrimary.add(panelFbpPrimary1, gbcPrimaryOutputPanel);
 
 		RLabel LblFbpSFC = new RLabelSub(Main.resourceManager.getString("ui.label.fire.sfc"));
 		LblFbpSFC.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.sfc"));
@@ -2246,7 +2312,15 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 
 		RLabel lblFireDescription = new RLabel(Main.resourceManager.getString("ui.label.fbp.primary.desc"));
 		lblFireDescription.setBounds(410, 20, 231, 20);
-		groupFbpPrimary.add(lblFireDescription);
+
+		JPanel panelFireDescription = new JPanel(new BorderLayout());
+		gbcPrimaryOutputPanel.gridx = 2;
+		gbcPrimaryOutputPanel.gridy = 0;
+		gbcPrimaryOutputPanel.gridwidth = 1;
+		gbcPrimaryOutputPanel.gridheight = 1;
+		gbcPrimaryOutputPanel.fill = GridBagConstraints.BOTH;
+		groupFbpPrimary.add(panelFireDescription, gbcPrimaryOutputPanel);
+		panelFireDescription.add(lblFireDescription, BorderLayout.NORTH);
 
 		txtFbpFireDescription = new RTextArea();
 		txtFbpFireDescription.setFont(txtFbpCFC.getFont());
@@ -2254,19 +2328,39 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 				.getColor("TextField.disabledBackground"));
 		txtFbpFireDescription.setEditable(false);
 		txtFbpFireDescription.setBounds(410, 40, 231, 61);
-		groupFbpPrimary.add(txtFbpFireDescription);
+		panelFireDescription.add(txtFbpFireDescription, BorderLayout.CENTER);
 		txtFbpFireDescription.setColumns(10);
 
 		RGroupBox groupFbpSecondary = new RGroupBox();
+		groupFbpSecondary.setLayout(new GridBagLayout());
 		groupFbpSecondary.setText(Main.resourceManager.getString("ui.label.fbp.secondary.title"));
 		groupFbpSecondary.setBounds(305, 314, 651, 111);
-		add(groupFbpSecondary);
+
+		gbc.gridx = 1;
+		gbc.gridy = 2;
+		gbc.gridwidth = 3;
+		gbc.gridheight = 1;
+		this.add(groupFbpSecondary, gbc);
+
+		GridBagConstraints gbcSecondaryOutputs = new GridBagConstraints();
+
+		gbcSecondaryOutputs.insets = new Insets(3,10,3,10);
+
+		gbcSecondaryOutputs.weighty = 1;
+		gbcSecondaryOutputs.weightx = 1;
+		gbcSecondaryOutputs.fill = GridBagConstraints.HORIZONTAL;
+
+		gbcSecondaryOutputs.gridx = 0;
+		gbcSecondaryOutputs.gridy = 0;
+		gbcSecondaryOutputs.gridwidth = 1;
+		gbcSecondaryOutputs.gridheight = 1;
+
 
 		JPanel panelFbpSecondary1 = new JPanel();
 		panelFbpSecondary1.setBackground(new Color(245, 245, 245));
 		panelFbpSecondary1.setLayout(new SpringLayout());
 		panelFbpSecondary1.setBounds(10, 20, 166, 85);
-		groupFbpSecondary.add(panelFbpSecondary1);
+		groupFbpSecondary.add(panelFbpSecondary1, gbcSecondaryOutputs);
 
 		RLabel LblFbpRSO = new RLabelSub(Main.resourceManager.getString("ui.label.fire.rso"));
 		LblFbpRSO.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.rso"));
@@ -2322,7 +2416,9 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		panelFbpSecondary1.setBackground(new Color(245, 245, 245));
 		panelFbpSecondary1.setLayout(new SpringLayout());
 		panelFbpSecondary1.setBounds(175, 20, 156, 85);
-		groupFbpSecondary.add(panelFbpSecondary1);
+		gbcSecondaryOutputs.gridx = 1;
+		gbcSecondaryOutputs.gridy = 0;
+		groupFbpSecondary.add(panelFbpSecondary1, gbcSecondaryOutputs);
 
 		RLabel LblFbpCSI = new RLabelSub(Main.resourceManager.getString("ui.label.fire.csi"));
 		LblFbpCSI.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.csi"));
@@ -2378,7 +2474,9 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		panelFbpSecondary1.setBackground(new Color(245, 245, 245));
 		panelFbpSecondary1.setLayout(new SpringLayout());
 		panelFbpSecondary1.setBounds(330, 20, 141, 85);
-		groupFbpSecondary.add(panelFbpSecondary1);
+		gbcSecondaryOutputs.gridx = 2;
+		gbcSecondaryOutputs.gridy = 0;
+		groupFbpSecondary.add(panelFbpSecondary1, gbcSecondaryOutputs);
 
 		RLabel LblFbpDH = new RLabelSub(Main.resourceManager.getString("ui.label.fire.dh"));
 		LblFbpDH.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.dh"));
@@ -2431,7 +2529,9 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		panelFbpSecondary1.setBackground(new Color(245, 245, 245));
 		panelFbpSecondary1.setLayout(new SpringLayout());
 		panelFbpSecondary1.setBounds(470, 20, 171, 85);
-		groupFbpSecondary.add(panelFbpSecondary1);
+		gbcSecondaryOutputs.gridx = 3;
+		gbcSecondaryOutputs.gridy = 0;
+		groupFbpSecondary.add(panelFbpSecondary1, gbcSecondaryOutputs);
 
 		RLabel LblFbpLB = new RLabelSub(Main.resourceManager.getString("ui.label.fire.lb"));
 		LblFbpLB.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.lb"));
@@ -2483,7 +2583,9 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		JPanel panelFbpFuelTypeInputs = new JPanel();
 		panelFbpFuelTypeInputs.setBackground(new Color(245, 245, 245));
 		panelFbpFuelTypeInputs.setBounds(10, 60, 271, 78);
-		panelFbpFuelType.add(panelFbpFuelTypeInputs);
+		 gbcSecondary.gridx = 0; gbcSecondary.gridy				 =1;
+		gbcSecondary.fill = GridBagConstraints.HORIZONTAL;
+		panelFbpFuelType.add(panelFbpFuelTypeInputs, gbcSecondary);
 		GridBagLayout gbl_panelFbpFuelTypeInputs = new GridBagLayout();
 		gbl_panelFbpFuelTypeInputs.columnWidths = new int[] { 0, 0, 0, 0 };
 		gbl_panelFbpFuelTypeInputs.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
@@ -2660,7 +2762,13 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		panel1.setLayout(layout);
 		if (Main.isWindows())
 			panel1.setBackground(Color.white);
-		add(panel1);
+
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 4;
+
+		this.add(panel1, gbc);
 
 		RButton BtnFbpCalculate = new RButton(Main.resourceManager.getString("ui.label.fbp.calculate"), RButton.Decoration.Calc);
 		BtnFbpCalculate.addActionListener((e) -> {
@@ -2705,6 +2813,8 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 				false));
 		txtFbpDF.setShowConverted(Main.prefs.getBoolean("fbp_df_showConverted",
 				false));
+
+
 	}
 
 	private void initTabOrder() {

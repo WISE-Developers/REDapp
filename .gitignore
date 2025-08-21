@@ -87,3 +87,4 @@ src/main/java/ca/hss/math/proto
 /res/data/GeoLiteCity-Blocks.csv
 /res/data/GeoLiteCity-Location.csv
 /licence.out
+/res/key.properties

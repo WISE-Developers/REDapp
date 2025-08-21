@@ -22,9 +22,7 @@ package ca.redapp.ui;
 import static ca.redapp.util.LineEditHelper.getDoubleFromLineEdit;
 import static ca.redapp.util.LineEditHelper.lineEditHandleError;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.EventHandler;
@@ -37,17 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.prefs.Preferences;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
-import javax.swing.SpringLayout;
+import javax.swing.*;
 import javax.swing.SpringLayout.Constraints;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -80,11 +68,11 @@ public class FwiTab extends REDappTab implements DocumentListener {
 	private boolean initialized = false;
 	private Main app;
 	private boolean calcLawson = false;
-	
+
 	public static OutVariable<WTime> rise = new OutVariable<>();
 	public static OutVariable<WTime> set = new OutVariable<>();
 	public static OutVariable<WTime> noon = new OutVariable<>();
-	
+
 	private double prvFfmc = -1;
 	private boolean fwiCalc = false;
 
@@ -104,10 +92,10 @@ public class FwiTab extends REDappTab implements DocumentListener {
 		txtFwiHourlyRelHumidity.getDocument().addDocumentListener(this);
 		txtFwiHourlyPrecip.getDocument().addDocumentListener(this);
 		txtFwiHourlyWindSpeed.getDocument().addDocumentListener(this);
-		
+
 		txtFwiHourlyPrevHourFFMC.getDocument().addDocumentListener((DocumentListener)EventHandler.create(DocumentListener.class,
 				this, "txtFwiHourlyPrevHourFFMCChanged"));
-		
+
 		txtFwiYstrdyFFMC.getDocument().addDocumentListener(this);
 		txtFwiYstrdyDMC.getDocument().addDocumentListener(this);
 		txtFwiYstrdyDC.getDocument().addDocumentListener(this);
@@ -124,7 +112,7 @@ public class FwiTab extends REDappTab implements DocumentListener {
 		btnFwiTransferToFBP.addActionListener((e) -> transferToFBP());
 		btnFwiExport.addActionListener((e) -> export());
 	}
-	
+
 	public void txtFwiHourlyPrevHourFFMCChanged() {
 		String temp = txtFwiHourlyPrevHourFFMC.getText();
 		Double val = DecimalUtils.valueOf(temp);
@@ -183,10 +171,10 @@ public class FwiTab extends REDappTab implements DocumentListener {
 
 		fwiCalculations.FWICalculateDailyStatisticsCOM();
 		setOutputValuesOnForm();
-		
+
 		btnFwiTransferToFBP.setEnabled(true);
 	}
-	
+
 	private void comboFwiMethodChanged() {
 		clearOutputValuesOnForm();
 		int index = comboFwiHourlyMethod.getSelectedIndex();
@@ -210,7 +198,7 @@ public class FwiTab extends REDappTab implements DocumentListener {
 			btnFwiTransferToFBP.setEnabled(false);
 		}
 	}
-	
+
 	public void clearHourlyOutputValuesOnForm() {
 		txtFwiHourlyFFMC.setText("");
 		txtFwiHourlyISI.setText("");
@@ -239,10 +227,10 @@ public class FwiTab extends REDappTab implements DocumentListener {
 			}
 			//Task #544
 			d = getDoubleFromLineEdit(txtFwiHourlyWindSpeed);
-			if (Main.unitSystem() != UnitSystem.METRIC) 
+			if (Main.unitSystem() != UnitSystem.METRIC)
 				d = Convert.convertUnit(d, UnitSystem.speed(UnitSystem.METRIC), UnitSystem.speed(Main.unitSystem()));
 			d = DecimalUtils.formatNumber(d, DecimalUtils.DataType.FORCE_2);
-			
+
 			if (d == null)
 				error = true;
 			else {
@@ -264,10 +252,10 @@ public class FwiTab extends REDappTab implements DocumentListener {
 			if (fwiCalculations.useVanWagner) {
 				//Task #544
 				d = getDoubleFromLineEdit(txtFwiNoonTemp);
-				if (Main.unitSystem() != UnitSystem.METRIC) 
+				if (Main.unitSystem() != UnitSystem.METRIC)
 					d = Convert.convertUnit(d, UnitSystem.temperature(UnitSystem.METRIC), UnitSystem.temperature(Main.unitSystem()));
 				d = DecimalUtils.formatNumber(d, DecimalUtils.DataType.FORCE_2);
-				
+
 				if (d == null)
 					error = true;
 				else {
@@ -285,13 +273,13 @@ public class FwiTab extends REDappTab implements DocumentListener {
 								Main.resourceManager.getString("ui.label.range.temp", DecimalUtils.format(min, DataType.TEMPERATURE), DecimalUtils.format(max, DataType.TEMPERATURE), unit));
 					}
 				}
-				
+
 				//Task #544
 				d = getDoubleFromLineEdit(txtFwiHourlyPrecip);
-				if (Main.unitSystem() != UnitSystem.METRIC) 
+				if (Main.unitSystem() != UnitSystem.METRIC)
 					d = Convert.convertUnit(d, UnitSystem.distanceSmall(UnitSystem.METRIC), UnitSystem.distanceSmall(Main.unitSystem()));
 				d = DecimalUtils.formatNumber(d, DecimalUtils.DataType.FORCE_2);
-				
+
 				if (d == null)
 					error = true;
 				else {
@@ -384,13 +372,13 @@ public class FwiTab extends REDappTab implements DocumentListener {
 						Main.resourceManager.getString("ui.label.range.dc"));
 			}
 		}
-		
+
 		//Task #544
 		d = getDoubleFromLineEdit(txtFwiNoonTemp);
-		if (Main.unitSystem() != UnitSystem.METRIC) 
+		if (Main.unitSystem() != UnitSystem.METRIC)
 			d = Convert.convertUnit(d, UnitSystem.temperature(UnitSystem.METRIC), UnitSystem.temperature(Main.unitSystem()));
 		d = DecimalUtils.formatNumber(d, DecimalUtils.DataType.FORCE_2);
-		
+
 		if (d == null)
 			error = true;
 		else {
@@ -420,13 +408,13 @@ public class FwiTab extends REDappTab implements DocumentListener {
 						Main.resourceManager.getString("ui.label.range.rh"));
 			}
 		}
-		
+
 		//Task #544
 		d = getDoubleFromLineEdit(txtFwiNoonPrecip);
-		if (Main.unitSystem() != UnitSystem.METRIC) 
+		if (Main.unitSystem() != UnitSystem.METRIC)
 			d = Convert.convertUnit(d, UnitSystem.distanceSmall(UnitSystem.METRIC), UnitSystem.distanceSmall(Main.unitSystem()));
 		d = DecimalUtils.formatNumber(d, DecimalUtils.DataType.FORCE_2);
-		
+
 		if (d == null)
 			error = true;
 		else {
@@ -447,10 +435,10 @@ public class FwiTab extends REDappTab implements DocumentListener {
 
 		//Task #544
 		d = getDoubleFromLineEdit(txtFwiNoonWindSpeed);
-		if (Main.unitSystem() != UnitSystem.METRIC) 
+		if (Main.unitSystem() != UnitSystem.METRIC)
 			d = Convert.convertUnit(d, UnitSystem.speed(UnitSystem.METRIC), UnitSystem.speed(Main.unitSystem()));
 		d = DecimalUtils.formatNumber(d, DecimalUtils.DataType.FORCE_2);
-		
+
 		if (d == null)
 			error = true;
 		else {
@@ -500,7 +488,7 @@ public class FwiTab extends REDappTab implements DocumentListener {
 			txtFwiHourlyPrevHourFFMC.setText(DecimalUtils.format(fwiCalculations.prvhlyFFMC, DecimalUtils.DataType.FFMC));
 			fwiCalc = false;
 		}
-		
+
 		txtFwiDailyFFMC.setText(DecimalUtils.format(fwiCalculations.dlyFFMC, DecimalUtils.DataType.FFMC));
 		txtFwiDailyDC.setText(DecimalUtils.format(fwiCalculations.dlyDC, DecimalUtils.DataType.DC));
 		txtFwiDailyDMC.setText(DecimalUtils.format(fwiCalculations.dlyDMC, DecimalUtils.DataType.DMC));
@@ -531,9 +519,9 @@ public class FwiTab extends REDappTab implements DocumentListener {
 			lawsonUseRH = hour < 13 && hour >= 7;
 		else
 			lawsonUseRH = hour < 12 && hour >= 6;
-		
+
 		LineEditHelper.setEnabled(spinnerFwiHourlyTime, checked);
-		
+
 		lblFwiHourlyFFMC.setForeground(checked ? Color.BLACK : Color.GRAY);
 		txtFwiHourlyFFMC.setEnabled(checked);
 		lblFwiHourlyISI.setForeground(checked ? Color.BLACK : Color.GRAY);
@@ -544,7 +532,7 @@ public class FwiTab extends REDappTab implements DocumentListener {
 		lblFwiHourlyTime.setForeground(checked ? Color.BLACK : Color.GRAY);
 		lblFwiHourlyWindSpeed.setForeground(checked ? Color.BLACK : Color.GRAY);
 		lblFwiHourlyWindSpeedUnit.setForeground(checked ? Color.BLACK : Color.GRAY);
-		
+
 		lblFwiHourlyTemp.setForeground((checked && fwiCalculations.useVanWagner) ? Color.BLACK : Color.GRAY);
 		lblFwiHourlyTempUnit.setForeground((checked && fwiCalculations.useVanWagner) ? Color.BLACK : Color.GRAY);
 		LineEditHelper.setEnabled(txtFwiHourlyTemp, (checked && fwiCalculations.useVanWagner));
@@ -553,17 +541,17 @@ public class FwiTab extends REDappTab implements DocumentListener {
 		strTime = strTime.substring(strTime.indexOf(':') - 2, strTime.indexOf(':'));
 		int selTime = Integer.parseInt(strTime);
 		boolean lawsonMorning = !(fwiCalculations.useVanWagner) && (selTime >= 6) && (selTime < 12);
-		
+
 		lblFwiHourlyRelHumidity.setForeground((checked && (fwiCalculations.useVanWagner || lawsonMorning)) ? Color.BLACK : Color.GRAY);
 		lblFwiHourlyRelHumidityUnit.setForeground((checked && (fwiCalculations.useVanWagner || lawsonMorning)) ? Color.BLACK : Color.GRAY);
 		LineEditHelper.setEnabled(txtFwiHourlyRelHumidity, (checked && (fwiCalculations.useVanWagner || (!fwiCalculations.useVanWagner && lawsonUseRH) || lawsonMorning)));
-		
+
 		lblFwiHourlyPrecip.setForeground((checked && fwiCalculations.useVanWagner) ? Color.BLACK : Color.GRAY);
 		lblFwiHourlyPrecipUnit.setForeground((checked && fwiCalculations.useVanWagner) ? Color.BLACK : Color.GRAY);
 		LineEditHelper.setEnabled(txtFwiHourlyPrecip, (checked && fwiCalculations.useVanWagner));
-		
+
 		LineEditHelper.setEnabled(txtFwiHourlyWindSpeed, checked);
-		
+
 		chckbxFwiPrevHourCalculate.setForeground((checked && fwiCalculations.useVanWagner) ? Color.BLACK : Color.GRAY);
 		chckbxFwiPrevHourCalculate.setEnabled(checked && fwiCalculations.useVanWagner);
 		txtFwiHourlyPrevHourFFMC.setEnabled(checked && comboFwiHourlyMethod.getSelectedIndex() == 1);
@@ -1012,11 +1000,15 @@ public class FwiTab extends REDappTab implements DocumentListener {
 			return;
 		initialized = true;
 
-		setLayout(null);
-		if (Launcher.javaVersion.major < 9)
-			setBounds(0, 0, 971, 501);
-		else
-			setBounds(0, 0, 981, 506);
+		setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.weighty = 1.0;
+		gbc.anchor = GridBagConstraints.NORTH;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(3,10,3,10);
+
+
 
 		if (Main.isWindows())
 			setBackground(Color.white);
@@ -1025,67 +1017,69 @@ public class FwiTab extends REDappTab implements DocumentListener {
 		
 		RGroupBox groupSunrise = new RGroupBox();
 		groupSunrise.setText(Main.resourceManager.getString("ui.label.fwi.sunrise.title"));
-		if (Main.isMac())
-			groupSunrise.setBounds(445, 5, 511, 121);
-		else
-			groupSunrise.setBounds(450, 10, 511, 121);
-		add(groupSunrise);
-		
-		JPanel panelSunrise = new JPanel();
-		panelSunrise.setBackground(new Color(245, 245, 245));
-		panelSunrise.setLayout(new SpringLayout());
-		panelSunrise.setBounds(10, 20, 492, 85);
-		groupSunrise.add(panelSunrise);
+
+		gbc.weightx = 1.0;
+
+		gbc.gridwidth = 2;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		groupSunrise.setLayout(new GridBagLayout());
+		this.add(groupSunrise, gbc);
+
+		GridBagConstraints gbcSunrise = new GridBagConstraints();
+		gbcSunrise.weighty = 1.0;
+		gbcSunrise.weightx = 0.0;
+		gbcSunrise.insets = new Insets(3,10,3,10);
+		gbcSunrise.fill = GridBagConstraints.HORIZONTAL;
+		gbcSunrise.anchor = GridBagConstraints.NORTH;
 
 		RLabel lblSunrise = new RLabel(Main.resourceManager.getString("ui.label.fwi.sunrise.sunrise"));
-		panelSunrise.add(lblSunrise);
+		gbcSunrise.gridx = 0; gbcSunrise.gridy = 0;
+		gbcSunrise.weightx = 0.0;
+		groupSunrise.add(lblSunrise, gbcSunrise);
 		
 		JPanel pnl = new JPanel();
-		pnl.setBackground(new Color(245, 245, 245));
-		panelSunrise.add(pnl);
+		//pnl.setBackground(new Color(245, 245, 245));
+		//groupSunrise.add(pnl);
 		
 		txtSunrise = new RTextField();
 		txtSunrise.setEditable(false);
-		txtSunrise.setColumns(10);
-		txtSunrise.setMinimumSize(new Dimension(363, 20));
-		txtSunrise.setMaximumSize(new Dimension(363, 20));
-		txtSunrise.setPreferredSize(new Dimension(363, 20));
-		txtSunrise.setBounds(0, 0, 352, 20);
-		panelSunrise.add(txtSunrise);
+		gbcSunrise.gridx = 1; gbcSunrise.gridy = 0;
+		gbcSunrise.weightx = 1.0;
+		groupSunrise.add(txtSunrise, gbcSunrise);
 		
 		RLabel lblSolarNoon = new RLabel(Main.resourceManager.getString("ui.label.fwi.sunrise.noon"));
-		panelSunrise.add(lblSolarNoon);
-		
+		gbcSunrise.gridx = 0; gbcSunrise.gridy = 1;
+		gbcSunrise.weightx = 0.0;
+		groupSunrise.add(lblSolarNoon, gbcSunrise);
+		/*
 		pnl = new JPanel();
 		pnl.setBackground(new Color(245, 245, 245));
-		panelSunrise.add(pnl);
-
+		groupSunrise.add(pnl);
+*/
 		txtSolarNoon = new RTextField();
 		txtSolarNoon.setEditable(false);
-		txtSolarNoon.setColumns(10);
-		txtSolarNoon.setMinimumSize(new Dimension(363, 20));
-		txtSolarNoon.setMaximumSize(new Dimension(363, 20));
-		txtSolarNoon.setPreferredSize(new Dimension(363, 20));
-		txtSolarNoon.setBounds(0, 0, 352, 20);
-		panelSunrise.add(txtSolarNoon);
+		gbcSunrise.gridx = 1; gbcSunrise.gridy = 1;
+		gbcSunrise.weightx = 1.0;
+		groupSunrise.add(txtSolarNoon, gbcSunrise);
 		
 		RLabel lblSunset = new RLabel(Main.resourceManager.getString("ui.label.fwi.sunrise.sunset"));
-		panelSunrise.add(lblSunset);
-		
+		gbcSunrise.gridx = 0; gbcSunrise.gridy = 2;
+		gbcSunrise.weightx = 0.0;
+		groupSunrise.add(lblSunset, gbcSunrise);
+		/*
 		pnl = new JPanel();
 		pnl.setBackground(new Color(245, 245, 245));
-		panelSunrise.add(pnl);
-
+		groupSunrise.add(pnl);
+*/
 		txtSunset = new RTextField();
 		txtSunset.setEditable(false);
-		txtSunset.setColumns(10);
-		txtSunset.setMinimumSize(new Dimension(363, 20));
-		txtSunset.setMaximumSize(new Dimension(363, 20));
-		txtSunset.setPreferredSize(new Dimension(363, 20));
-		txtSunset.setBounds(0, 0, 352, 20);
-		panelSunrise.add(txtSunset);
+		gbcSunrise.gridx = 1; gbcSunrise.gridy = 2;
+		gbcSunrise.weightx = 1.0;
+		groupSunrise.add(txtSunset, gbcSunrise);
 		
-		SpringUtilities.makeCompactGrid(panelSunrise, 3, 3, 0, 5, 0, 5, 6, 10);
+		//SpringUtilities.makeCompactGrid(panelSunrise, 3, 3, 0, 5, 0, 5, 6, 10);
 		
 		//
 		
@@ -1096,7 +1090,13 @@ public class FwiTab extends REDappTab implements DocumentListener {
 		else
 			panelFwiNoon.setBounds(10, 10, 431, 85);
 		panelFwiNoon.setLayout(new SpringLayout());
-		add(panelFwiNoon);
+
+		gbc.weightx = 1.0;
+		gbc.gridwidth = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		panelFwiNoon.setLayout(new SpringLayout());
+		this.add(panelFwiNoon, gbc);
 
 		JPanel panelFwiNoonLeft = new JPanel();
 		panelFwiNoonLeft.setLayout(new SpringLayout());
@@ -1168,13 +1168,18 @@ public class FwiTab extends REDappTab implements DocumentListener {
 		SpringUtilities.makeCompactGrid(panelFwiNoonLeft, 2, 3, 0, 0, 6, 10);
 		SpringUtilities.makeCompactGrid(panelFwiNoon, 1, 2, 6, 2, 6, 6, 6, 0);
 
+
+
+
 		RGroupBox groupFwiHourlyObs = new RGroupBox();
 		groupFwiHourlyObs.setText(Main.resourceManager.getString("ui.label.fwi.hourly.title"));
-		if (Main.isLinux())
-			groupFwiHourlyObs.setBounds(5, 99, 430, 242);
-		else
-			groupFwiHourlyObs.setBounds(10, 104, 430, 242);
-		add(groupFwiHourlyObs);
+
+		gbc.weightx = 1.0;
+		gbc.gridwidth = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		groupFwiHourlyObs.setLayout(new GridBagLayout());
+		this.add(groupFwiHourlyObs, gbc);
 
 		JPanel panelFwiHourlyObs = new JPanel();
 		panelFwiHourlyObs.setBounds(10, 20, 410, 214);
@@ -1323,7 +1328,14 @@ public class FwiTab extends REDappTab implements DocumentListener {
 			groupFwiYstrdy.setBounds(5, 350, 430, 111);
 		else
 			groupFwiYstrdy.setBounds(10, 355, 430, 111);
-		add(groupFwiYstrdy);
+
+		gbc.weightx = 1.0;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 2;
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		groupFwiYstrdy.setLayout(new BorderLayout());
+		add(groupFwiYstrdy, gbc);
 
 		JPanel panelFwiYstrdy = new JPanel();
 		panelFwiYstrdy.setBounds(10, 20, 410, 85);
@@ -1385,226 +1397,195 @@ public class FwiTab extends REDappTab implements DocumentListener {
 		pnl.setMinimumSize(new Dimension(wid, 5));
 		pnl.setMaximumSize(new Dimension(wid, 5));
 		panelFwiYstrdy.add(pnl);
-		
+
 		SpringUtilities.makeCompactGrid(panelFwiYstrdy, 3, 3, 0, 0, 5, 5, 6, 10);
+
+
+		/* Calculated daily codes and indicies */
+
 
 		RGroupBox groupFwiDaily = new RGroupBox();
 		if (Main.isLinux()) {
 			groupFwiDaily.setText(Main.resourceManager.getString("ui.label.fwi.calc.daily.titleshort"));
-			groupFwiDaily.setBounds(445, 135, 241, 240);
+
 		}
 		else {
 			groupFwiDaily.setText(Main.resourceManager.getString("ui.label.fwi.calc.daily.title"));
-			groupFwiDaily.setBounds(450, 140, 241, 240);
-		}
-		add(groupFwiDaily);
 
-		JPanel panelFwiDaily = new JPanel();
-		panelFwiDaily.setBackground(new Color(245, 245, 245));
-		panelFwiDaily.setBounds(10, 20, 220, 206);
-		panelFwiDaily.setLayout(new SpringLayout());
-		groupFwiDaily.add(panelFwiDaily);
+		}
+
+		gbc.weightx = 1.0;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		groupFwiDaily.setLayout(new GridBagLayout());
+		add(groupFwiDaily, gbc);
+
+
+		GridBagConstraints gbcFwiDaily = new GridBagConstraints();
+		gbcFwiDaily.weighty = 1.0;
+		gbcFwiDaily.weightx = 0.0;
+		gbcFwiDaily.insets = new Insets(3,10,3,10);
+		gbcFwiDaily.fill = GridBagConstraints.HORIZONTAL;
+		gbcFwiDaily.anchor = GridBagConstraints.NORTH;
+
 
 		RLabel lblFwiDailyFFMC = new RLabel(Main.resourceManager.getString("ui.label.fire.ffmc"));
 		lblFwiDailyFFMC.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.ffmc"));
 		//lblFwiDailyFFMC.setBounds(20, 20, 101, 21);
-		panelFwiDaily.add(lblFwiDailyFFMC);
+		gbcFwiDaily.gridx = 0; gbcFwiDaily.gridy = 0; gbcFwiDaily.weightx = 0.0;
+		groupFwiDaily.add(lblFwiDailyFFMC, gbcFwiDaily);
 
-		pnl = new JPanel();
-		pnl.setBackground(new Color(245, 245, 245));
-		panelFwiDaily.add(pnl);
+
 
 		txtFwiDailyFFMC = new RTextField();
 		txtFwiDailyFFMC.setEditable(false);
-		txtFwiDailyFFMC.setColumns(10);
-		txtFwiDailyFFMC.setMinimumSize(new Dimension(91, 20));
-		txtFwiDailyFFMC.setMaximumSize(new Dimension(91, 20));
-		txtFwiDailyFFMC.setPreferredSize(new Dimension(91, 20));
-		txtFwiDailyFFMC.setBounds(0, 0, 91, 20);
-		panelFwiDaily.add(txtFwiDailyFFMC);
+		gbcFwiDaily.gridx = 1; gbcFwiDaily.gridy = 0; gbcFwiDaily.weightx = 1.0;
+		groupFwiDaily.add(txtFwiDailyFFMC, gbcFwiDaily);
 
 		RLabel lblFwiDailyDMC = new RLabel(Main.resourceManager.getString("ui.label.fire.dmc"));
 		lblFwiDailyDMC.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.dmc"));
 		//lblFwiDailyDMC.setBounds(20, 50, 101, 21);
-		panelFwiDaily.add(lblFwiDailyDMC);
+		gbcFwiDaily.gridx = 0; gbcFwiDaily.gridy = 1; gbcFwiDaily.weightx = 0.0;
+		groupFwiDaily.add(lblFwiDailyDMC, gbcFwiDaily);
 
-		pnl = new JPanel();
-		pnl.setBackground(new Color(245, 245, 245));
-		panelFwiDaily.add(pnl);
+
 
 		txtFwiDailyDMC = new RTextField();
 		txtFwiDailyDMC.setEditable(false);
-		txtFwiDailyDMC.setColumns(10);
-		txtFwiDailyDMC.setMinimumSize(new Dimension(91, 20));
-		txtFwiDailyDMC.setMaximumSize(new Dimension(91, 20));
-		txtFwiDailyDMC.setPreferredSize(new Dimension(91, 20));
-		txtFwiDailyDMC.setBounds(0, 0, 91, 20);
-		panelFwiDaily.add(txtFwiDailyDMC);
+		gbcFwiDaily.gridx = 1; gbcFwiDaily.gridy = 1; gbcFwiDaily.weightx = 1.0;
+		groupFwiDaily.add(txtFwiDailyDMC, gbcFwiDaily);
 
 		RLabel lblFwiDailyDC = new RLabel(Main.resourceManager.getString("ui.label.fire.dc"));
 		lblFwiDailyDC.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.dc"));
 		//lblFwiDailyDC.setBounds(20, 80, 101, 21);
-		panelFwiDaily.add(lblFwiDailyDC);
+		gbcFwiDaily.gridx = 0; gbcFwiDaily.gridy = 2; gbcFwiDaily.weightx = 0.0;
+		groupFwiDaily.add(lblFwiDailyDC, gbcFwiDaily);
 
-		pnl = new JPanel();
-		pnl.setBackground(new Color(245, 245, 245));
-		panelFwiDaily.add(pnl);
 
 		txtFwiDailyDC = new RTextField();
 		txtFwiDailyDC.setEditable(false);
-		txtFwiDailyDC.setColumns(10);
-		txtFwiDailyDC.setMinimumSize(new Dimension(91, 20));
-		txtFwiDailyDC.setMaximumSize(new Dimension(91, 20));
-		txtFwiDailyDC.setPreferredSize(new Dimension(91, 20));
-		txtFwiDailyDC.setBounds(0, 0, 91, 20);
-		panelFwiDaily.add(txtFwiDailyDC);
+		gbcFwiDaily.gridx = 1; gbcFwiDaily.gridy = 2; gbcFwiDaily.weightx = 1.0;
+		groupFwiDaily.add(txtFwiDailyDC, gbcFwiDaily);
 
 		RLabel lblFwiDailyISI = new RLabel(Main.resourceManager.getString("ui.label.fire.isi"));
 		lblFwiDailyISI.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.isi"));
-		//lblFwiDailyISI.setBounds(20, 110, 101, 21);
-		panelFwiDaily.add(lblFwiDailyISI);
-
-		pnl = new JPanel();
-		pnl.setBackground(new Color(245, 245, 245));
-		panelFwiDaily.add(pnl);
+		gbcFwiDaily.gridx = 0; gbcFwiDaily.gridy = 3; gbcFwiDaily.weightx = 0.0;
+		groupFwiDaily.add(lblFwiDailyISI, gbcFwiDaily);
 
 		txtFwiDailyISI = new RTextField();
 		txtFwiDailyISI.setEditable(false);
-		txtFwiDailyISI.setColumns(10);
-		txtFwiDailyISI.setMinimumSize(new Dimension(91, 20));
-		txtFwiDailyISI.setMaximumSize(new Dimension(91, 20));
-		txtFwiDailyISI.setPreferredSize(new Dimension(91, 20));
-		txtFwiDailyISI.setBounds(0, 0, 91, 20);
-		panelFwiDaily.add(txtFwiDailyISI);
+		gbcFwiDaily.gridx = 1; gbcFwiDaily.gridy =3; gbcFwiDaily.weightx = 1.0;
+		groupFwiDaily.add(txtFwiDailyISI, gbcFwiDaily);
 
 		RLabel lblFwiDailyBUI = new RLabel(Main.resourceManager.getString("ui.label.fire.bui"));
 		lblFwiDailyBUI.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.bui"));
-		//lblFwiDailyBUI.setBounds(20, 140, 101, 21);
-		panelFwiDaily.add(lblFwiDailyBUI);
+		gbcFwiDaily.gridx = 0; gbcFwiDaily.gridy = 4; gbcFwiDaily.weightx = 0.0;
+		groupFwiDaily.add(lblFwiDailyBUI, gbcFwiDaily);
 
-		pnl = new JPanel();
-		pnl.setBackground(new Color(245, 245, 245));
-		panelFwiDaily.add(pnl);
 
 		txtFwiDailyBUI = new RTextField();
 		txtFwiDailyBUI.setEditable(false);
-		txtFwiDailyBUI.setColumns(10);
-		txtFwiDailyBUI.setMinimumSize(new Dimension(91, 20));
-		txtFwiDailyBUI.setMaximumSize(new Dimension(91, 20));
-		txtFwiDailyBUI.setPreferredSize(new Dimension(91, 20));
-		txtFwiDailyBUI.setBounds(0, 0, 91, 20);
-		panelFwiDaily.add(txtFwiDailyBUI);
+		gbcFwiDaily.gridx = 1; gbcFwiDaily.gridy = 4; gbcFwiDaily.weightx = 1.0;
+		groupFwiDaily.add(txtFwiDailyBUI, gbcFwiDaily);
 
 		RLabel lblFwiDailyFWI = new RLabel(Main.resourceManager.getString("ui.label.fire.fwi"));
 		lblFwiDailyFWI.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.fwi"));
-		//lblFwiDailyFWI.setBounds(20, 170, 101, 21);
-		panelFwiDaily.add(lblFwiDailyFWI);
+		gbcFwiDaily.gridx = 0; gbcFwiDaily.gridy = 5; gbcFwiDaily.weightx = 0.0;
+		groupFwiDaily.add(lblFwiDailyFWI, gbcFwiDaily);
 
-		pnl = new JPanel();
-		pnl.setBackground(new Color(245, 245, 245));
-		panelFwiDaily.add(pnl);
+
 
 		txtFwiDailyFWI = new RTextField();
 		txtFwiDailyFWI.setEditable(false);
-		txtFwiDailyFWI.setColumns(10);
-		txtFwiDailyFWI.setMinimumSize(new Dimension(91, 20));
-		txtFwiDailyFWI.setMaximumSize(new Dimension(91, 20));
-		txtFwiDailyFWI.setPreferredSize(new Dimension(91, 20));
-		txtFwiDailyFWI.setBounds(0, 0, 91, 20);
-		panelFwiDaily.add(txtFwiDailyFWI);
+		gbcFwiDaily.gridx = 1; gbcFwiDaily.gridy = 5; gbcFwiDaily.weightx = 1.0;
+		groupFwiDaily.add(txtFwiDailyFWI, gbcFwiDaily);
 
 		RLabel lblFwiDailyDSR = new RLabel(Main.resourceManager.getString("ui.label.fire.dsr"));
 		lblFwiDailyDSR.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.dsr"));
-		//lblFwiDailyDSR.setBounds(20, 200, 101, 21);
-		panelFwiDaily.add(lblFwiDailyDSR);
+		gbcFwiDaily.gridx = 0; gbcFwiDaily.gridy = 6; gbcFwiDaily.weightx = 0.0;
+		groupFwiDaily.add(lblFwiDailyDSR, gbcFwiDaily);
 
-		pnl = new JPanel();
-		pnl.setBackground(new Color(245, 245, 245));
-		panelFwiDaily.add(pnl);
+
 
 		txtFwiDailyDSR = new RTextField();
 		txtFwiDailyDSR.setEditable(false);
-		txtFwiDailyDSR.setColumns(10);
-		txtFwiDailyDSR.setMinimumSize(new Dimension(91, 20));
-		txtFwiDailyDSR.setMaximumSize(new Dimension(91, 20));
-		txtFwiDailyDSR.setPreferredSize(new Dimension(91, 20));
-		txtFwiDailyDSR.setBounds(0, 0, 91, 20);
-		panelFwiDaily.add(txtFwiDailyDSR);
+		gbcFwiDaily.gridx = 1; gbcFwiDaily.gridy = 6; gbcFwiDaily.weightx = 1.0;
+		groupFwiDaily.add(txtFwiDailyDSR, gbcFwiDaily);
 
-		SpringUtilities.makeCompactGrid(panelFwiDaily, 7, 3, 0, 5, 0, 5, 6, 10);
+
+
+
+		/* Calculated Hourly Codes and Indicies */
 
 		RGroupBox groupFwiHourly = new RGroupBox();
+		groupFwiHourly.setLayout(new GridBagLayout());
 		if (Main.isLinux()) {
 			groupFwiHourly.setText(Main.resourceManager.getString("ui.label.fwi.calc.hourly.titleshort"));
-			groupFwiHourly.setBounds(695, 135, 261, 121);
+
 		}
 		else {
 			groupFwiHourly.setText(Main.resourceManager.getString("ui.label.fwi.calc.hourly.title"));
-			groupFwiHourly.setBounds(700, 140, 261, 121);
-		}
-		add(groupFwiHourly);
 
-		JPanel panelFwiHourly = new JPanel();
-		panelFwiHourly.setBackground(new Color(245, 245, 245));
-		panelFwiHourly.setLayout(new SpringLayout());
-		panelFwiHourly.setBounds(10, 20, 241, 85);
-		groupFwiHourly.add(panelFwiHourly);
+		}
+
+		gbc.weightx = 1.0;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.gridx = 2;
+		gbc.gridy = 1;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		this.add(groupFwiHourly, gbc);
+
+
+		GridBagConstraints gbcFwiHourly = new GridBagConstraints();
+		gbcFwiHourly.weighty = 1.0;
+		gbcFwiHourly.weightx = 0.0;
+		gbcFwiHourly.insets = new Insets(6,10,6,10);
+		gbcFwiHourly.fill = GridBagConstraints.HORIZONTAL;
+		gbcFwiHourly.anchor = GridBagConstraints.NORTH;
 
 		lblFwiHourlyFFMC = new RLabel(Main.resourceManager.getString("ui.label.fire.hffmc"));
 		lblFwiHourlyFFMC.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.hffmc"));
 		//lblFwiHourlyFFMC.setBounds(10, 20, 91, 21);
-		panelFwiHourly.add(lblFwiHourlyFFMC);
+		gbcFwiHourly.gridx = 0; gbcFwiHourly.gridy = 0; gbcFwiHourly.weightx = 0.0;
+		groupFwiHourly.add(lblFwiHourlyFFMC, gbcFwiHourly);
 
-		pnl = new JPanel();
-		pnl.setBackground(new Color(245, 245, 245));
-		panelFwiHourly.add(pnl);
 
 		txtFwiHourlyFFMC = new RTextField();
 		txtFwiHourlyFFMC.setEditable(false);
-		txtFwiHourlyFFMC.setColumns(10);
-		txtFwiHourlyFFMC.setMinimumSize(new Dimension(91, 20));
-		txtFwiHourlyFFMC.setMaximumSize(new Dimension(91, 20));
-		txtFwiHourlyFFMC.setPreferredSize(new Dimension(91, 20));
-		txtFwiHourlyFFMC.setBounds(0, 0, 91, 20);
-		panelFwiHourly.add(txtFwiHourlyFFMC);
+		gbcFwiHourly.gridx = 1; gbcFwiHourly.gridy = 0; gbcFwiHourly.weightx = 1.0;
+		groupFwiHourly.add(txtFwiHourlyFFMC, gbcFwiHourly);
 
 		lblFwiHourlyISI = new RLabel(Main.resourceManager.getString("ui.label.fire.hisi"));
 		lblFwiHourlyISI.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.hisi"));
 		//lblFwiHourlyISI.setBounds(10, 50, 91, 21);
-		panelFwiHourly.add(lblFwiHourlyISI);
+		gbcFwiHourly.gridx = 0; gbcFwiHourly.gridy = 1; gbcFwiHourly.weightx = 0.0;
+		groupFwiHourly.add(lblFwiHourlyISI, gbcFwiHourly);
 
-		pnl = new JPanel();
-		pnl.setBackground(new Color(245, 245, 245));
-		panelFwiHourly.add(pnl);
+
 
 		txtFwiHourlyISI = new RTextField();
 		txtFwiHourlyISI.setEditable(false);
-		txtFwiHourlyISI.setColumns(10);
-		txtFwiHourlyISI.setMinimumSize(new Dimension(91, 20));
-		txtFwiHourlyISI.setMaximumSize(new Dimension(91, 20));
-		txtFwiHourlyISI.setPreferredSize(new Dimension(91, 20));
-		txtFwiHourlyISI.setBounds(0, 0, 91, 20);
-		panelFwiHourly.add(txtFwiHourlyISI);
+		gbcFwiHourly.gridx = 1; gbcFwiHourly.gridy = 1; gbcFwiHourly.weightx = 1.0;
+		groupFwiHourly.add(txtFwiHourlyISI, gbcFwiHourly);
 
 		lblFwiHourlyFWI = new RLabel(Main.resourceManager.getString("ui.label.fire.hfwi"));
 		lblFwiHourlyFWI.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.hfwi"));
 		//lblFwiHourlyFWI.setBounds(10, 80, 91, 21);
-		panelFwiHourly.add(lblFwiHourlyFWI);
+		gbcFwiHourly.gridx = 0; gbcFwiHourly.gridy = 2; gbcFwiHourly.weightx = 0.0;
+		groupFwiHourly.add(lblFwiHourlyFWI, gbcFwiHourly);
 
-		pnl = new JPanel();
-		pnl.setBackground(new Color(245, 245, 245));
-		panelFwiHourly.add(pnl);
+
 
 		txtFwiHourlyFWI = new RTextField();
 		txtFwiHourlyFWI.setEditable(false);
-		txtFwiHourlyFWI.setColumns(10);
-		txtFwiHourlyFWI.setMinimumSize(new Dimension(91, 20));
-		txtFwiHourlyFWI.setMaximumSize(new Dimension(91, 20));
-		txtFwiHourlyFWI.setPreferredSize(new Dimension(91, 20));
-		txtFwiHourlyFWI.setBounds(0, 0, 91, 20);
-		panelFwiHourly.add(txtFwiHourlyFWI);
+		gbcFwiHourly.gridx = 1; gbcFwiHourly.gridy = 2; gbcFwiHourly.weightx = 1.0;
+		gbcFwiHourly.insets = new Insets(6,10,10,10);
+		groupFwiHourly.add(txtFwiHourlyFWI, gbcFwiHourly);
 
-		SpringUtilities.makeCompactGrid(panelFwiHourly, 3, 3, 0, 5, 0, 5, 6, 10);
+
 
 		JPanel panel1 = new JPanel();
 		if (Main.isWindows())
@@ -1616,7 +1597,15 @@ public class FwiTab extends REDappTab implements DocumentListener {
 		panel1.setLayout(layout2);
 		if (Main.isWindows())
 			panel1.setBackground(Color.white);
-		add(panel1);
+
+		gbc.weightx = 1.0;
+		gbc.gridwidth = 2;
+		gbc.gridheight = 1;
+		gbc.gridx = 1;
+		gbc.gridy = 3;
+		gbc.ipady = 30;
+		gbc.anchor = GridBagConstraints.SOUTHEAST;
+		add(panel1, gbc);
 		
 		RButton btnFwiCalculate = new RButton(Main.resourceManager.getString("ui.label.fwi.calculate"), RButton.Decoration.Calc);
 		btnFwiCalculate.addActionListener((e) -> calculate());
