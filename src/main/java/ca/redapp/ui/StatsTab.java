@@ -354,7 +354,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		editItem.addActionListener((e) -> editRequest());
 		editItem2.addActionListener((e) -> editRequest());
 		transferItem.addActionListener((e) -> transfer_to_fbp());
-		viewMapItem.addActionListener((e) -> display_on_map());
+		//viewMapItem.addActionListener((e) -> display_on_map());
 		
 		txtDailyFFMC.getDocument().addDocumentListener((DocumentListener)EventHandler.create(DocumentListener.class, this, "txtDailyFFMCChanged"));
 		txtDailyDMC.getDocument().addDocumentListener((DocumentListener)EventHandler.create(DocumentListener.class, this, "txtDailyDMCChanged"));
@@ -4420,6 +4420,8 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 	double _db;
 	double _raz;
 	double _area;
+
+    /*
 	public void display_on_map() {
 		Column c = model.getColumn(StatsDataType.DH);
 		Double val;
@@ -4497,6 +4499,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		}
 		app.mapTab.drawFBP(this);
 	}
+*/
 
 	public double getDH() {
 		return _dh;

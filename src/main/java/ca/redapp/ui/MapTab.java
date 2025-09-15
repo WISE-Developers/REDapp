@@ -373,7 +373,7 @@ public class MapTab extends REDappTab implements javax.swing.event.ChangeListene
 		
 		treeMap.setDisplayPosition(coords, Main.prefs.getInt("map_zoomlevel", 0));
 
-		app.setCurrentTab(app.mapTab);
+		//app.setCurrentTab(app.mapTab);
 	}
 
 	public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
