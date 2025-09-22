@@ -3,11 +3,11 @@
 
 # REDapp &#8211; The Universal Fire Behaviour Calculator
 
-![REDapp Logo](https://firegrowthmodel.ca/pages/images/redapplogo_129x129.png)
+![REDapp Logo](https://firegrowthmodel.ca/images/redapplogo_129x129.png)
 
 This is the repository for the REDapp UI.
 
-You can visit the REDapp homepage by following [this link](https://firegrowthmodel.ca/pages/redapp_overview_e.html).
+You can visit the REDapp homepage by following [this link](https://firegrowthmodel.ca/#/redapp_overview).
 
 ## What is this repository for? ##
 
