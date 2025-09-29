@@ -1206,13 +1206,15 @@ public class Main implements FocusListener, DocumentListener {
 
 	private static volatile Boolean map = null;
 	public static boolean useMap() {
-		if (map == null) {
+		return false;
+        /*
+        if (map == null) {
 			if (!WebDownloader.hasInternetConnection())
 				map = false;
 			else
 				map = true;
 		}
-		return map;
+		return map;*/
 	}
 	
 	public static int unitSystem() {

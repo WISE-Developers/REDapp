@@ -2844,10 +2844,10 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		if (!Main.useMap()) {
 			btnFbpExportMap = new RButton(Main.resourceManager.getString("ui.label.fbp.mapdata"));
 			panel1.add(btnFbpExportMap);
-		}
-		btnFbpDisplayOnMap = new RButton(Main.resourceManager.getString("ui.label.fbp.map"));
-		panel1.add(btnFbpDisplayOnMap);
-
+		} else {
+            btnFbpDisplayOnMap = new RButton(Main.resourceManager.getString("ui.label.fbp.map"));
+            panel1.add(btnFbpDisplayOnMap);
+        }
 		btnFbpTransferToStats = new RButton(Main.resourceManager.getString("ui.label.fbp.tostats"), RButton.Decoration.Arrow);
 		panel1.add(btnFbpTransferToStats);
 
