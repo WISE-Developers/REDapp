@@ -44,6 +44,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -119,15 +120,17 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		rdBtnFbpLine.addActionListener((e) -> clearOutputValuesOnForm());
 
 		btnFbpExport.addActionListener((e) -> export());
-		
+
+        /*
 		if (!Main.useMap())
 			btnFbpExportMap.addActionListener((e) -> {
 				if (!Main.useMap())
 					app.mapTab.export(app.getLatitude(), app.getLongitude(), getDH(), getDF(), getDB(), getRAZ());
 			});
-		
-		btnFbpDisplayOnMap.addActionListener((e) -> app.mapTab.drawFBP(this));
 
+
+		btnFbpDisplayOnMap.addActionListener((e) -> app.mapTab.drawFBP(this));
+*/
 		txtFbpDB.setShowConverted(Main.prefs.getBoolean(
 				"fbp_db_showConverted", false));
 		txtFbpDH.setShowConverted(Main.prefs.getBoolean(
@@ -2342,243 +2345,305 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		gbc.gridheight = 1;
 		this.add(groupFbpSecondary, gbc);
 
+        //These constraints will be used for the four overall columns in the group
 		GridBagConstraints gbcSecondaryOutputs = new GridBagConstraints();
-
-		gbcSecondaryOutputs.insets = new Insets(3,10,3,10);
-
+        gbcSecondaryOutputs.insets = new Insets(3,3,3,3);
 		gbcSecondaryOutputs.weighty = 1;
 		gbcSecondaryOutputs.weightx = 1;
 		gbcSecondaryOutputs.fill = GridBagConstraints.HORIZONTAL;
-
 		gbcSecondaryOutputs.gridx = 0;
 		gbcSecondaryOutputs.gridy = 0;
 		gbcSecondaryOutputs.gridwidth = 1;
 		gbcSecondaryOutputs.gridheight = 1;
 
+        //These constraints will be used for the three sub columns within each of those main columns (label, value, uom)
+        GridBagConstraints gbcSubLabelCol = new GridBagConstraints();
+        gbcSubLabelCol.insets = new Insets(5,0,5,2);
+        gbcSubLabelCol.weighty = 1;
+        gbcSubLabelCol.weightx = 0;
+        //gbcSubLabelCol.anchor = GridBagConstraints.EAST;
+        //gbcSubLabelCol.fill = GridBagConstraints.HORIZONTAL;
+        gbcSubLabelCol.gridx = 0;
+        gbcSubLabelCol.gridwidth = 1;
+        gbcSubLabelCol.gridheight = 1;
+
+        GridBagConstraints gbcSubValueCol = new GridBagConstraints();
+        gbcSubValueCol.insets = new Insets(5,1,5,1);
+        gbcSubValueCol.weighty = 1;
+        gbcSubValueCol.weightx = 1.0;
+        gbcSubValueCol.fill = GridBagConstraints.BOTH;
+        gbcSubValueCol.gridx = 1;
+        gbcSubValueCol.gridwidth = 1;
+        gbcSubValueCol.gridheight = 1;
+
+        GridBagConstraints gbcSubUomCol = new GridBagConstraints();
+        gbcSubUomCol.insets = new Insets(5,1,5,1);
+        gbcSubUomCol.weighty = 1;
+        gbcSubUomCol.weightx = 0;
+        gbcSubUomCol.anchor = GridBagConstraints.WEST;
+        gbcSubUomCol.fill = GridBagConstraints.HORIZONTAL;
+        //gbcSubLabelCol.fill = GridBagConstraints.LINE_START;
+        gbcSubUomCol.gridx = 2;
+        gbcSubUomCol.gridwidth = 1;
+        gbcSubUomCol.gridheight = 1;
 
 		JPanel panelFbpSecondary1 = new JPanel();
 		panelFbpSecondary1.setBackground(new Color(245, 245, 245));
-		panelFbpSecondary1.setLayout(new SpringLayout());
-		panelFbpSecondary1.setBounds(10, 20, 166, 85);
+     	panelFbpSecondary1.setLayout(new GridBagLayout());
+		//panelFbpSecondary1.setBounds(10, 20, 166, 85);
 		groupFbpSecondary.add(panelFbpSecondary1, gbcSecondaryOutputs);
 
 		RLabel LblFbpRSO = new RLabelSub(Main.resourceManager.getString("ui.label.fire.rso"));
 		LblFbpRSO.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.rso"));
-		LblFbpRSO.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpRSO);
+		//LblFbpRSO.setHorizontalAlignment(SwingConstants.RIGHT);
+        gbcSubLabelCol.gridy = 0;
+        LblFbpRSO.setHorizontalAlignment(SwingConstants.RIGHT);
+		panelFbpSecondary1.add(LblFbpRSO, gbcSubLabelCol);
 
 		txtFbpRSO = new RTextField();
 		txtFbpRSO.setEditable(false);
-		txtFbpRSO.setColumns(10);
-		panelFbpSecondary1.add(txtFbpRSO);
+		//txtFbpRSO.setColumns(10);
+        gbcSubValueCol.gridy = 0;
+		panelFbpSecondary1.add(txtFbpRSO, gbcSubValueCol);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblFbpRsoUnit = new RLabel(Main.resourceManager.getString("ui.label.units.mmin"));
 		else
 			lblFbpRsoUnit = new RLabel(Main.resourceManager.getString("ui.label.units.chhr"));
-		panelFbpSecondary1.add(lblFbpRsoUnit);
+        gbcSubUomCol.gridy = 0;
+		panelFbpSecondary1.add(lblFbpRsoUnit, gbcSubUomCol);
 
 		RLabel LblFbpFROS = new RLabelSub(Main.resourceManager.getString("ui.label.fire.fros"), Main.isFrench() ? 55 : 40);
 		LblFbpFROS.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.fros"));
-		LblFbpFROS.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpFROS);
+		//LblFbpFROS.setHorizontalAlignment(SwingConstants.RIGHT);
+        gbcSubLabelCol.gridy = 1;
+        LblFbpFROS.setHorizontalAlignment(SwingConstants.RIGHT);
+		panelFbpSecondary1.add(LblFbpFROS, gbcSubLabelCol);
 
 		txtFbpFROS = new RTextField();
 		txtFbpFROS.setEditable(false);
-		txtFbpFROS.setColumns(10);
-		panelFbpSecondary1.add(txtFbpFROS);
+		//txtFbpFROS.setColumns(10);
+        gbcSubValueCol.gridy = 1;
+		panelFbpSecondary1.add(txtFbpFROS, gbcSubValueCol);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblFbpFrosUnit = new RLabelSub(Main.resourceManager.getString("ui.label.units.mmin"));
 		else
 			lblFbpFrosUnit = new RLabelSub(Main.resourceManager.getString("ui.label.units.chhr"));
-		panelFbpSecondary1.add(lblFbpFrosUnit);
+        gbcSubUomCol.gridy = 1;
+		panelFbpSecondary1.add(lblFbpFrosUnit, gbcSubUomCol);
 
 		RLabel LblFbpBROS = new RLabelSub(Main.resourceManager.getString("ui.label.fire.bros"));
 		LblFbpBROS.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.bros"));
-		LblFbpBROS.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpBROS);
+		//LblFbpBROS.setHorizontalAlignment(SwingConstants.RIGHT);
+        gbcSubLabelCol.gridy = 2;
+        LblFbpBROS.setHorizontalAlignment(SwingConstants.RIGHT);
+		panelFbpSecondary1.add(LblFbpBROS, gbcSubLabelCol);
 
 		txtFbpBROS = new RTextField();
 		txtFbpBROS.setEditable(false);
-		txtFbpBROS.setColumns(10);
-		panelFbpSecondary1.add(txtFbpBROS);
+		//txtFbpBROS.setColumns(10);
+        gbcSubValueCol.gridy = 2;
+		panelFbpSecondary1.add(txtFbpBROS, gbcSubValueCol);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblFbpBrosUnit = new RLabel(Main.resourceManager.getString("ui.label.units.mmin"));
 		else
 			lblFbpBrosUnit = new RLabel(Main.resourceManager.getString("ui.label.units.chhr"));
-		panelFbpSecondary1.add(lblFbpBrosUnit);
+        gbcSubUomCol.gridy = 2;
+		panelFbpSecondary1.add(lblFbpBrosUnit, gbcSubUomCol);
 
-		SpringUtilities.makeCompactGrid(panelFbpSecondary1, 3, 3, 5, 0, 5, 5, 10, 10);
+		//SpringUtilities.makeCompactGrid(panelFbpSecondary1, 3, 3, 5, 0, 5, 5, 10, 10);
 
-		panelFbpSecondary1 = new JPanel();
-		panelFbpSecondary1.setBackground(new Color(245, 245, 245));
-		panelFbpSecondary1.setLayout(new SpringLayout());
-		panelFbpSecondary1.setBounds(175, 20, 156, 85);
+
+	 JPanel	panelFbpSecondary2 = new JPanel();
+        panelFbpSecondary2.setBackground(new Color(245, 245, 245));
+        panelFbpSecondary2.setLayout(new GridBagLayout());
+		//panelFbpSecondary1.setBounds(175, 20, 156, 85);
 		gbcSecondaryOutputs.gridx = 1;
 		gbcSecondaryOutputs.gridy = 0;
-		groupFbpSecondary.add(panelFbpSecondary1, gbcSecondaryOutputs);
+		groupFbpSecondary.add(panelFbpSecondary2, gbcSecondaryOutputs);
 
 		RLabel LblFbpCSI = new RLabelSub(Main.resourceManager.getString("ui.label.fire.csi"));
 		LblFbpCSI.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.csi"));
-		LblFbpCSI.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpCSI);
+        gbcSubLabelCol.gridy = 0;
+        LblFbpCSI.setHorizontalAlignment(SwingConstants.RIGHT);
+        panelFbpSecondary2.add(LblFbpCSI, gbcSubLabelCol);
 
 		txtFbpCSI = new RTextField();
 		txtFbpCSI.setEditable(false);
-		txtFbpCSI.setColumns(10);
-		panelFbpSecondary1.add(txtFbpCSI);
+        gbcSubValueCol.gridy = 0;
+        panelFbpSecondary2.add(txtFbpCSI, gbcSubValueCol);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblFbpCsiUnit = new RLabel(Main.resourceManager.getString("ui.label.units.kwm"));
 		else
 			lblFbpCsiUnit = new RLabel(Main.resourceManager.getString("ui.label.units.btufts"));
-		panelFbpSecondary1.add(lblFbpCsiUnit);
+        gbcSubUomCol.gridy = 0;
+        panelFbpSecondary2.add(lblFbpCsiUnit, gbcSubUomCol);
 
 		RLabel LblFbpFFI = new RLabelSub(Main.resourceManager.getString("ui.label.fire.ffi"));
 		LblFbpFFI.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.ffi"));
-		LblFbpFFI.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpFFI);
+        gbcSubLabelCol.gridy = 1;
+        LblFbpFFI.setHorizontalAlignment(SwingConstants.RIGHT);
+        panelFbpSecondary2.add(LblFbpFFI, gbcSubLabelCol);
 
 		txtFbpFFI = new RTextField();
 		txtFbpFFI.setEditable(false);
-		txtFbpFFI.setColumns(10);
-		panelFbpSecondary1.add(txtFbpFFI);
+        gbcSubValueCol.gridy = 1;
+        panelFbpSecondary2.add(txtFbpFFI, gbcSubValueCol);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblFbpFfiUnit = new RLabel(Main.resourceManager.getString("ui.label.units.kwm"));
 		else
 			lblFbpFfiUnit = new RLabel(Main.resourceManager.getString("ui.label.units.btufts"));
-		panelFbpSecondary1.add(lblFbpFfiUnit);
+        gbcSubUomCol.gridy = 1;
+        panelFbpSecondary2.add(lblFbpFfiUnit, gbcSubUomCol);
 
 		RLabel LblFbpBFI = new RLabelSub(Main.resourceManager.getString("ui.label.fire.bfi"));
 		LblFbpBFI.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.bfi"));
-		LblFbpBFI.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpBFI);
+        gbcSubLabelCol.gridy = 2;
+        LblFbpBFI.setHorizontalAlignment(SwingConstants.RIGHT);
+        panelFbpSecondary2.add(LblFbpBFI, gbcSubLabelCol);
 
 		txtFbpBFI = new RTextField();
 		txtFbpBFI.setEditable(false);
-		txtFbpBFI.setColumns(10);
-		panelFbpSecondary1.add(txtFbpBFI);
+        gbcSubValueCol.gridy = 2;
+        panelFbpSecondary2.add(txtFbpBFI, gbcSubValueCol);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblFbpBfiUnit = new RLabel(Main.resourceManager.getString("ui.label.units.kwm"));
 		else
 			lblFbpBfiUnit = new RLabel(Main.resourceManager.getString("ui.label.units.btufts"));
-		panelFbpSecondary1.add(lblFbpBfiUnit);
+        gbcSubUomCol.gridy = 2;
+        panelFbpSecondary2.add(lblFbpBfiUnit, gbcSubUomCol);
 
-		SpringUtilities.makeCompactGrid(panelFbpSecondary1, 3, 3, 5, 0, 5, 5, 10, 10);
+		//SpringUtilities.makeCompactGrid(panelFbpSecondary2, 3, 3, 5, 0, 5, 5, 10, 10);
 
-		panelFbpSecondary1 = new JPanel();
-		panelFbpSecondary1.setBackground(new Color(245, 245, 245));
-		panelFbpSecondary1.setLayout(new SpringLayout());
-		panelFbpSecondary1.setBounds(330, 20, 141, 85);
+	JPanel	panelFbpSecondary3 = new JPanel();
+        panelFbpSecondary3.setBackground(new Color(245, 245, 245));
+        panelFbpSecondary3.setLayout(new GridBagLayout());
+        //panelFbpSecondary3.setBounds(330, 20, 141, 85);
 		gbcSecondaryOutputs.gridx = 2;
 		gbcSecondaryOutputs.gridy = 0;
-		groupFbpSecondary.add(panelFbpSecondary1, gbcSecondaryOutputs);
+		groupFbpSecondary.add(panelFbpSecondary3, gbcSecondaryOutputs);
 
 		RLabel LblFbpDH = new RLabelSub(Main.resourceManager.getString("ui.label.fire.dh"));
 		LblFbpDH.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.dh"));
-		LblFbpDH.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpDH);
+        gbcSubLabelCol.gridy = 0;
+        LblFbpDH.setHorizontalAlignment(SwingConstants.RIGHT);
+        panelFbpSecondary3.add(LblFbpDH, gbcSubLabelCol);
 
 		txtFbpDH = new RMapValueTextField();
-		panelFbpSecondary1.add(txtFbpDH);
+        gbcSubValueCol.gridy = 0;
+        panelFbpSecondary3.add(txtFbpDH, gbcSubValueCol);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblFbpDHUnit = new RLabel(Main.resourceManager.getString("ui.label.units.m"));
 		else
 			lblFbpDHUnit = new RLabel(Main.resourceManager.getString("ui.label.units.ft"));
-		panelFbpSecondary1.add(lblFbpDHUnit);
-		txtFbpDH.attachUnitLabel(lblFbpDHUnit);
+        gbcSubUomCol.gridy = 0;
+        panelFbpSecondary3.add(lblFbpDHUnit, gbcSubUomCol);
+		//txtFbpDH.attachUnitLabel(lblFbpDHUnit);
 
 		RLabel LblFbpDF = new RLabelSub(Main.resourceManager.getString("ui.label.fire.df"), Main.isFrench() ? 55 : 40);
 		LblFbpDF.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.df"));
-		LblFbpDF.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpDF);
+        gbcSubLabelCol.gridy = 1;
+        LblFbpDF.setHorizontalAlignment(SwingConstants.RIGHT);
+        panelFbpSecondary3.add(LblFbpDF,gbcSubLabelCol);
 
 		txtFbpDF = new RMapValueTextField();
-		panelFbpSecondary1.add(txtFbpDF);
+        gbcSubValueCol.gridy = 1;
+        panelFbpSecondary3.add(txtFbpDF, gbcSubValueCol);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblFbpDFUnit = new RLabel(Main.resourceManager.getString("ui.label.units.m"));
 		else
 			lblFbpDFUnit = new RLabel(Main.resourceManager.getString("ui.label.units.ft"));
-		panelFbpSecondary1.add(lblFbpDFUnit);
-		txtFbpDF.attachUnitLabel(lblFbpDFUnit);
+        gbcSubUomCol.gridy = 1;
+        panelFbpSecondary3.add(lblFbpDFUnit,gbcSubUomCol);
+		//txtFbpDF.attachUnitLabel(lblFbpDFUnit);
 
 		RLabel LblFbpDB = new RLabelSub(Main.resourceManager.getString("ui.label.fire.db"));
 		LblFbpDB.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.db"));
-		LblFbpDB.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpDB);
+        gbcSubLabelCol.gridy = 2;
+        LblFbpDB.setHorizontalAlignment(SwingConstants.RIGHT);
+        panelFbpSecondary3.add(LblFbpDB,gbcSubLabelCol);
 
 		txtFbpDB = new RMapValueTextField();
-		panelFbpSecondary1.add(txtFbpDB);
+        gbcSubValueCol.gridy = 2;
+        panelFbpSecondary3.add(txtFbpDB, gbcSubValueCol);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblFbpDBUnit = new RLabel(Main.resourceManager.getString("ui.label.units.m"));
 		else
 			lblFbpDBUnit = new RLabel(Main.resourceManager.getString("ui.label.units.ft"));
-		panelFbpSecondary1.add(lblFbpDBUnit);
-		txtFbpDB.attachUnitLabel(lblFbpDBUnit);
+        gbcSubUomCol.gridy = 2;
+        panelFbpSecondary3.add(lblFbpDBUnit,gbcSubUomCol);
+		//txtFbpDB.attachUnitLabel(lblFbpDBUnit);
 
-		SpringUtilities.makeCompactGrid(panelFbpSecondary1, 3, 3, 5, 0, 5, 5, 10, 10);
 
-		panelFbpSecondary1 = new JPanel();
-		panelFbpSecondary1.setBackground(new Color(245, 245, 245));
-		panelFbpSecondary1.setLayout(new SpringLayout());
-		panelFbpSecondary1.setBounds(470, 20, 171, 85);
+
+	JPanel	panelFbpSecondary4 = new JPanel();
+        panelFbpSecondary4.setBackground(new Color(245, 245, 245));
+        panelFbpSecondary4.setLayout(new GridBagLayout());
+        //panelFbpSecondary4.setBounds(470, 20, 171, 85);
 		gbcSecondaryOutputs.gridx = 3;
 		gbcSecondaryOutputs.gridy = 0;
-		groupFbpSecondary.add(panelFbpSecondary1, gbcSecondaryOutputs);
+		groupFbpSecondary.add(panelFbpSecondary4, gbcSecondaryOutputs);
 
 		RLabel LblFbpLB = new RLabelSub(Main.resourceManager.getString("ui.label.fire.lb"));
 		LblFbpLB.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.lb"));
-		LblFbpLB.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpLB);
+		gbcSubLabelCol.gridy = 0;
+        LblFbpLB.setHorizontalAlignment(SwingConstants.RIGHT);
+        panelFbpSecondary4.add(LblFbpLB, gbcSubLabelCol);
 
 		txtFbpLB = new RTextField();
 		txtFbpLB.setEditable(false);
-		txtFbpLB.setColumns(10);
-		panelFbpSecondary1.add(txtFbpLB);
+		gbcSubValueCol.gridy = 0;
+        panelFbpSecondary4.add(txtFbpLB, gbcSubValueCol);
 
 		lbl = new JLabel("");
-		panelFbpSecondary1.add(lbl);
+        gbcSubUomCol.gridy = 0;
+        panelFbpSecondary4.add(lbl, gbcSubUomCol);
 
 		RLabel LblFbpArea = new RLabelSub(Main.resourceManager.getString("ui.label.fire.area"));
 		LblFbpArea.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.area"));
-		LblFbpArea.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpArea);
+        gbcSubLabelCol.gridy = 1;
+        LblFbpArea.setHorizontalAlignment(SwingConstants.RIGHT);
+        panelFbpSecondary4.add(LblFbpArea,gbcSubLabelCol);
 
 		txtFbpArea = new RTextField();
 		txtFbpArea.setEditable(false);
-		txtFbpArea.setColumns(10);
-		panelFbpSecondary1.add(txtFbpArea);
+        gbcSubValueCol.gridy = 1;
+        panelFbpSecondary4.add(txtFbpArea, gbcSubValueCol);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblFbpAreaUnit = new RLabel(Main.resourceManager.getString("ui.label.units.ha"));
 		else
 			lblFbpAreaUnit = new RLabel(Main.resourceManager.getString("ui.label.units.ac"));
-		panelFbpSecondary1.add(lblFbpAreaUnit);
+        gbcSubUomCol.gridy = 1;
+        panelFbpSecondary4.add(lblFbpAreaUnit, gbcSubUomCol);
 
 		RLabel LblFbpPerimiter = new RLabel(Main.resourceManager.getString("ui.label.fire.perim"));
 		LblFbpPerimiter.setToolTipText(Main.resourceManager.getString("ui.label.fire.desc.perim"));
-		LblFbpPerimiter.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelFbpSecondary1.add(LblFbpPerimiter);
+        gbcSubLabelCol.gridy = 2;
+        LblFbpPerimiter.setHorizontalAlignment(SwingConstants.RIGHT);
+        panelFbpSecondary4.add(LblFbpPerimiter,gbcSubLabelCol);
 
 		txtFbpPerimeter = new RTextField();
 		txtFbpPerimeter.setEditable(false);
-		txtFbpPerimeter.setColumns(10);
-		panelFbpSecondary1.add(txtFbpPerimeter);
+        gbcSubValueCol.gridy = 2;
+        panelFbpSecondary4.add(txtFbpPerimeter, gbcSubValueCol);
 
 		if (Main.unitSystem() == UnitSystem.METRIC)
 			lblFbpPerimiterUnit = new RLabel(Main.resourceManager.getString("ui.label.units.m"));
 		else
 			lblFbpPerimiterUnit = new RLabel(Main.resourceManager.getString("ui.label.units.ch"));
-		panelFbpSecondary1.add(lblFbpPerimiterUnit);
+        gbcSubUomCol.gridy = 2;
+        panelFbpSecondary4.add(lblFbpPerimiterUnit, gbcSubUomCol);
 
-		SpringUtilities.makeCompactGrid(panelFbpSecondary1, 3, 3, 5, 0, 5, 5, 10, 10);
+
 
 		JPanel panelFbpFuelTypeInputs = new JPanel();
 		panelFbpFuelTypeInputs.setBackground(new Color(245, 245, 245));
@@ -2779,10 +2844,10 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		if (!Main.useMap()) {
 			btnFbpExportMap = new RButton(Main.resourceManager.getString("ui.label.fbp.mapdata"));
 			panel1.add(btnFbpExportMap);
-		}
-		btnFbpDisplayOnMap = new RButton(Main.resourceManager.getString("ui.label.fbp.map"));
-		panel1.add(btnFbpDisplayOnMap);
-
+		} else {
+            btnFbpDisplayOnMap = new RButton(Main.resourceManager.getString("ui.label.fbp.map"));
+            panel1.add(btnFbpDisplayOnMap);
+        }
 		btnFbpTransferToStats = new RButton(Main.resourceManager.getString("ui.label.fbp.tostats"), RButton.Decoration.Arrow);
 		panel1.add(btnFbpTransferToStats);
 

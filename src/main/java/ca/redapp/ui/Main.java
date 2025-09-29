@@ -98,7 +98,7 @@ public class Main implements FocusListener, DocumentListener {
 	private final List<REDappTab> tabs = new ArrayList<>();
 	public FwiTab fwiTab;
 	public StatsTab statsTab;
-	public MapTab mapTab;
+	//public MapTab mapTab;
 	public FbpTab fbpTab;
 	public SpottingTab spottingTab;
 	public REDappTab mqttTab;
@@ -210,6 +210,7 @@ public class Main implements FocusListener, DocumentListener {
 			}
 		});
 
+        /*
 		for (String arg : Main.vmArgs) {
 			if (arg.toLowerCase().contains("-dhttp.proxyhost")) {
 				//Why would they set this from the command line,
@@ -220,7 +221,7 @@ public class Main implements FocusListener, DocumentListener {
 				if (Launcher.debugJavaFX)
 					System.out.println("Disabling map tab due to unsupported command line proxy specification");
 			}
-		}
+		}*/
 
 		if(btnHelp != null) {
 			btnHelp.setContextButtonClickListener(new RContextMenuButton.ContextButtonClickListener() {
@@ -434,7 +435,7 @@ public class Main implements FocusListener, DocumentListener {
 		SwingUtilities.invokeLater(() -> {
 			initFbp(tabPane);
 			initStats(tabPane);
-			initMap(tabPane);
+			//initMap(tabPane);
 			initSpotting(tabPane);
 
 			initMqtt(tabPane);
@@ -458,7 +459,7 @@ public class Main implements FocusListener, DocumentListener {
 			btnPanel.add(btnSettings);
 
 			btnPanel.add(btnHelp);
-
+/*
 			if (isMac()) {
 				int index = tabPane.indexOfComponent(mapTab);
 				tabPane.setEnabledAt(index, false);
@@ -471,7 +472,7 @@ public class Main implements FocusListener, DocumentListener {
 					System.out.println("Disabling the map tab due to unsupported platform " + value);
 				}
 			}
-
+*/
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
@@ -796,15 +797,15 @@ public class Main implements FocusListener, DocumentListener {
 			int index = tabs.indexOfComponent(fwiTab);
 			tabs.insertTab(Main.resourceManager.getString("ui.dlg.title.fbp"), null, fbpTab, null, index + 1);
 		}
-		else if (mapTab != null) {
+	/*	else if (mapTab != null) {
 			int index = tabs.indexOfComponent(mapTab);
 			tabs.insertTab(Main.resourceManager.getString("ui.dlg.title.fbp"), null, fbpTab, null, index);
-		}
+		}*/
 		else
 			tabs.addTab(Main.resourceManager.getString("ui.dlg.title.fbp"), null, fbpTab, null);
 		this.tabs.add(fbpTab);
 	}
-
+/*
 	private void initMap(JTabbedPane tabs) {
 		mapTab = new MapTab(this);
 		if (fbpTab != null) {
@@ -819,14 +820,15 @@ public class Main implements FocusListener, DocumentListener {
 			tabs.addTab(Main.resourceManager.getString("ui.dlg.title.map"), null, mapTab, null);
 		this.tabs.add(mapTab);
 	}
-
+*/
 	private void initSpotting(JTabbedPane tabs) {
 		spottingTab = new SpottingTab();
-		if (mapTab != null) {
+	/*	if (mapTab != null) {
 			int index = tabs.indexOfComponent(mapTab);
 			tabs.insertTab(Main.resourceManager.getString("ui.dlg.title.spotting"), null, spottingTab, null, index + 1);
 		}
-		else if (statsTab != null) {
+		else*/
+        if (statsTab != null) {
 			int index = tabs.indexOfComponent(statsTab);
 			tabs.insertTab(Main.resourceManager.getString("ui.dlg.title.spotting"), null, spottingTab, null, index);
 		}
@@ -974,30 +976,26 @@ public class Main implements FocusListener, DocumentListener {
 
 	public void internetDetected() {
 		synchronized (this) {
-			mapTab.internetFound();
+            //mapTab.internetFound();
 			
 
 			if (WebDownloader.hasInternetConnection()) {
 				locator = new Geolocate(this);
 				
-				int indexTab = tabPane.indexOfComponent(mapTab);
-				tabPane.setEnabledAt(indexTab, true);
-				tabPane.setToolTipTextAt(indexTab, "");
+				//int indexTab = tabPane.indexOfComponent(mapTab);
+				//tabPane.setEnabledAt(indexTab, true);
+				//tabPane.setToolTipTextAt(indexTab, "");
 				
 				hasNetworkConnection = true;
 				btnLocate.setVisible(true);
 				
-				indexTab = tabPane.indexOfComponent(fwiTab);
+				int indexTab = tabPane.indexOfComponent(fwiTab);
 				tabPane.setEnabledAt(indexTab, true);
 				tabPane.setToolTipTextAt(indexTab, "");
 
 				fbpTab.setInternetConnected(true);
 			} else {
-				/* Redmine 713
-				hasNetworkConnection = false;
-				btnLocate.setVisible(false);
-				tabPane.setSelectedComponent(fwiTab);
-				*/
+
 				
 				int index = tabPane.indexOfComponent(fwiTab);
 				tabPane.setToolTipTextAt(index, resourceManager.getString("ui.label.header.internet.error.brief"));
@@ -1013,10 +1011,7 @@ public class Main implements FocusListener, DocumentListener {
 								"Warning", JOptionPane.WARNING_MESSAGE);
 			}
 			
-			/* Redmine 713
-			m_StartupBusyDialog.setVisible(false);
-			m_StartupBusyDialog = null;
-			*/
+
 			
 
 			m_StartupThread = null;
@@ -1098,7 +1093,7 @@ public class Main implements FocusListener, DocumentListener {
 		fwiTab.settingsUpdated();
 		fbpTab.settingsUpdated();
 		spottingTab.settingsUpdated();
-		mapTab.settingsUpdated();
+        //mapTab.settingsUpdated();
 		statsTab.settingsUpdated();
 		if (mqttTab != null)
 			mqttTab.settingsUpdated();
@@ -1211,13 +1206,15 @@ public class Main implements FocusListener, DocumentListener {
 
 	private static volatile Boolean map = null;
 	public static boolean useMap() {
-		if (map == null) {
+		return false;
+        /*
+        if (map == null) {
 			if (!WebDownloader.hasInternetConnection())
 				map = false;
 			else
 				map = true;
 		}
-		return map;
+		return map;*/
 	}
 	
 	public static int unitSystem() {

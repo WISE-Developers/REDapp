@@ -21,17 +21,10 @@ package ca.redapp.ui;
 
 import static ca.redapp.util.LineEditHelper.getIntegerFromLineEdit;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Image;
-import java.awt.Window;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.Toolkit;
 
 import ca.cwfgm.mapunits.MetricPrefix;
 import ca.hss.general.WebDownloader;
@@ -202,16 +195,25 @@ public class Settings extends JDialog  {
 
 		RGroupBox panelLink = new RGroupBox();
 		panelLink.setText(Main.resourceManager.getString("ui.label.settings.links.title"));
-		panelLink.setLayout(new SpringLayout());
+		panelLink.setLayout(new GridBagLayout());
 		contentPanel.add(panelLink);
 
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5,5,5,5);
+        gbc.weighty = 1;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
 		RLabel lblSpotAPI = new RLabel(Main.resourceManager.getString("ui.label.settings.weather.spotwxapikey"));
-		panelLink.add(lblSpotAPI);
+		panelLink.add(lblSpotAPI, gbc);
 
 		txtSpotWXAPIKey = new RTextField();
 		txtSpotWXAPIKey.setColumns(10);
 		txtSpotWXAPIKey.setHorizontalAlignment(JTextField.LEFT);
-		panelLink.add(txtSpotWXAPIKey);
+        gbc.gridx = 1; gbc.weightx = 1.0;
+		panelLink.add(txtSpotWXAPIKey, gbc);
 
 		panelLink.add(new JLabel());
 
@@ -226,11 +228,11 @@ public class Settings extends JDialog  {
 		txtForecastEnsemble.setHorizontalAlignment(JTextField.LEFT);
 		panelLink.add(txtForecastEnsemble);
 		*/
-		SpringUtilities.makeCompactGrid(panelLink, 1, 2, 6, 6, 6, 6);
+		//SpringUtilities.makeCompactGrid(panelLink, 1, 2, 6, 6, 6, 6);
 		
 		contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 		
-		RGroupBox panelMap = new RGroupBox();
+		/*RGroupBox panelMap = new RGroupBox();
 		panelMap.setText(Main.resourceManager.getString("ui.label.settings.general.mapgroup"));
 		panelMap.setLayout(new SpringLayout());
 		contentPanel.add(panelMap);
@@ -276,7 +278,7 @@ public class Settings extends JDialog  {
 		panelUrlBtn.add(btnWmsUrl, BorderLayout.EAST);
 
 		SpringUtilities.makeCompactGrid(panelMap, 4, 2, 6, 6, 6, 6);
-
+*/
 		btnClose = new RButton(Main.resourceManager.getString("ui.label.settings.close"), RButton.Decoration.Close);
 		btnClose.addActionListener((e) -> closeButton());
 		btnClose.setBounds(250, 414, 121, 41);
@@ -341,7 +343,7 @@ public class Settings extends JDialog  {
 		txtScale.setText(prefs.getString("fbp_mapScale", "50000"));
 		txtScale.setEnabled(b);
 	
-
+/*
 		ZoomLevel levels[] = ZoomLevel.values();
 		DefaultComboBoxModel<String> levelModel = new DefaultComboBoxModel<String>();
 		for (ZoomLevel level : levels) {
@@ -358,7 +360,7 @@ public class Settings extends JDialog  {
 			txtWmsUrl.setEnabled(type == MapType.WMS);
 			btnWmsUrl.setEnabled(type == MapType.WMS);
 		});
-		
+		*/
 		chckbxSaveValues.setSelected(Boolean.parseBoolean(prefs.getString(
 				"saveValues", "true")));
 
@@ -382,13 +384,13 @@ public class Settings extends JDialog  {
 
 		//txtForecastEnsemble.setText(prefs.getString("ensemble",				"http://dd.weatheroffice.ec.gc.ca/ensemble/naefs/xml/"));
 		//txtForecastEnsemble.setCaretPosition(0);
-		
+		/*
 		boolean wmsSel = MapType.fromInt(prefs.getInt("map_type", MapType.OSM_OFFLINE.toInt())) == MapType.WMS; 
 		btnWmsUrl.setEnabled(wmsSel);
 		txtWmsUrl.setEnabled(wmsSel);
 		txtWmsUrl.setText(prefs.getString("wms_url", ""));
 		txtWmsUrl.setCaretPosition(0);
-		
+		*/
 		String defLanguage = Locale.getDefault().getISO3Language();
 		int def = 0;
 		if (defLanguage.contains("fr"))
