@@ -88,3 +88,4 @@ src/main/java/ca/hss/math/proto
 /res/data/GeoLiteCity-Location.csv
 /licence.out
 /res/key.properties
+.DS_Store
