@@ -34,7 +34,11 @@ body:
       label: Version
       description: What version of our software are you running (if your version is not listed, download the latest instead)?
       options:
-        - (Release) V7.2022.3-0 (latest release)
+        - (Release) 7.27.2 (Latest)
+        - (Release) 7.26.1
+        - (Release) 7.26.0-alpha
+        - (Release) 7.25.2
+        - (Release) V7.2022.3-0
         - (Release) 2022.03.xx
         - (Release) 6.2.4
         - (Release) 6.2.3
