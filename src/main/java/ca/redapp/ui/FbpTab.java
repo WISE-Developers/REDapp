@@ -121,14 +121,14 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 
 		btnFbpExport.addActionListener((e) -> export());
 
-        /*
+
 		if (!Main.useMap())
 			btnFbpExportMap.addActionListener((e) -> {
 				if (!Main.useMap())
 					app.mapTab.export(app.getLatitude(), app.getLongitude(), getDH(), getDF(), getDB(), getRAZ());
 			});
 
-
+ /*
 		btnFbpDisplayOnMap.addActionListener((e) -> app.mapTab.drawFBP(this));
 */
 		txtFbpDB.setShowConverted(Main.prefs.getBoolean(
@@ -2843,7 +2843,7 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 
 		if (!Main.useMap()) {
 			btnFbpExportMap = new RButton(Main.resourceManager.getString("ui.label.fbp.mapdata"));
-			panel1.add(btnFbpExportMap);
+			//panel1.add(btnFbpExportMap);
 		} else {
             btnFbpDisplayOnMap = new RButton(Main.resourceManager.getString("ui.label.fbp.map"));
             panel1.add(btnFbpDisplayOnMap);
