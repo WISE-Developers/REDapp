@@ -4,14 +4,14 @@
   <groupId>ca.redapp</groupId>
   <artifactId>REDapp</artifactId>
   <packaging>jar</packaging>
-  <version>7.27.2</version>
+  <version>7.27.3</version>
   <name>REDapp</name>
   <url>https://maven.apache.org</url>
   <properties>
     <at>@</at>
     <release.time.en>10:00</release.time.en>
     <release.time.fr>10:00</release.time.fr>
-    <release.year>2025</release.year>
+    <release.year>2026</release.year>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -83,12 +83,12 @@
       <version>5.4.0</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-compress</artifactId>
-      <version>1.27.1</version>
-    </dependency>
+      <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+      <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-compress</artifactId>
+          <version>1.28.0</version>
+      </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
     <dependency>
@@ -164,18 +164,18 @@
       <version>5.3.0-RC1</version>
       <scope>test</scope>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
-    <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>3.0.0</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
-    <dependency>
-      <groupId>org.glassfish.jaxb</groupId>
-      <artifactId>jaxb-runtime</artifactId>
-      <version>3.0.0</version>
-    </dependency>
+      <!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+      <dependency>
+          <groupId>jakarta.xml.bind</groupId>
+          <artifactId>jakarta.xml.bind-api</artifactId>
+          <version>4.0.2</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
+      <dependency>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+          <version>4.0.6</version>
+      </dependency>
     <!-- https://josm.openstreetmap.de/nexus/content/groups/public/org/openstreetmap/jmapviewer -->
     <dependency>
       <groupId>org.openstreetmap.jmapviewer</groupId>
@@ -188,12 +188,13 @@
       <artifactId>josm</artifactId>
       <version>17915</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.geotools/gt-shapefile -->
-    <dependency>
-      <groupId>org.geotools</groupId>
-      <artifactId>gt-shapefile</artifactId>
-      <version>26.3</version>
-    </dependency>
+      <!-- https://mvnrepository.com/artifact/org.geotools/gt-shapefile -->
+      <dependency>
+          <groupId>org.geotools</groupId>
+          <artifactId>gt-shapefile</artifactId>
+          <version>26.7</version>
+          <scope>compile</scope>
+      </dependency>
     <!-- https://mvnrepository.com/artifact/io.github.g00fy2/versioncompare -->
     <dependency>
       <groupId>io.github.g00fy2</groupId>

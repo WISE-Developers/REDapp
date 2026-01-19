@@ -98,7 +98,7 @@ public class Main implements FocusListener, DocumentListener {
 	private final List<REDappTab> tabs = new ArrayList<>();
 	public FwiTab fwiTab;
 	public StatsTab statsTab;
-	//public MapTab mapTab;
+	public MapTab mapTab;
 	public FbpTab fbpTab;
 	public SpottingTab spottingTab;
 	public REDappTab mqttTab;
@@ -435,7 +435,7 @@ public class Main implements FocusListener, DocumentListener {
 		SwingUtilities.invokeLater(() -> {
 			initFbp(tabPane);
 			initStats(tabPane);
-			//initMap(tabPane);
+			initMap(tabPane);
 			initSpotting(tabPane);
 
 			initMqtt(tabPane);
@@ -805,9 +805,11 @@ public class Main implements FocusListener, DocumentListener {
 			tabs.addTab(Main.resourceManager.getString("ui.dlg.title.fbp"), null, fbpTab, null);
 		this.tabs.add(fbpTab);
 	}
-/*
+
 	private void initMap(JTabbedPane tabs) {
 		mapTab = new MapTab(this);
+
+        /*
 		if (fbpTab != null) {
 			int index = tabs.indexOfComponent(fbpTab);
 			tabs.insertTab(Main.resourceManager.getString("ui.dlg.title.map"), null, mapTab, null, index + 1);
@@ -819,8 +821,10 @@ public class Main implements FocusListener, DocumentListener {
 		else
 			tabs.addTab(Main.resourceManager.getString("ui.dlg.title.map"), null, mapTab, null);
 		this.tabs.add(mapTab);
+		*/
+
 	}
-*/
+
 	private void initSpotting(JTabbedPane tabs) {
 		spottingTab = new SpottingTab();
 	/*	if (mapTab != null) {
@@ -1206,9 +1210,9 @@ public class Main implements FocusListener, DocumentListener {
 
 	private static volatile Boolean map = null;
 	public static boolean useMap() {
-		return false;
-        /*
-        if (map == null) {
+
+        return false;
+       /* if (map == null) {
 			if (!WebDownloader.hasInternetConnection())
 				map = false;
 			else

@@ -3301,29 +3301,25 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		while (WTime.lessThanEqualTo(time, endTime)) {
 			double temp_isi = 0;
 			double temp_fwi = 0;
-			WTime temp = new WTime(timeWS);
+            WTime rainEndTime = new WTime(timeWS);
+            WTime rainStartTime;
 
+			WTime temp = new WTime(timeWS);
 			WTime noon = new WTime(timeWS);
-			WTime rainEndTime = new WTime(timeWS);
-			WTime rainStartTime;
-			
+			WTimeSpan endDst = timeWS.getTimeManager().getWorldLocation().getEndDST();
+            noon.subtract(new WTimeSpan(0, 12, 0, 0));
+            noon.purgeToDay(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST);
 			if (timeWS.getTimeManager().getWorldLocation().getEndDST().getTotalSeconds() > 0) {
-				noon.subtract(new WTimeSpan(0, 12, 0, 0));
-				noon.purgeToDay(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST);
 				noon.add(new WTimeSpan(0, 13, 0, 0));
 				temp.add(new WTimeSpan(0, 13, 0, 0));
-				//rainEndTime.Add(new WTimeSpan(0, 14, 0, 0));
 			}
 			else {
-				noon.subtract(new WTimeSpan(0, 12, 0, 0));
-				noon.purgeToDay(WTime.FORMAT_AS_LOCAL | WTime.FORMAT_WITHDST);
 				noon.add(new WTimeSpan(0, 12, 0, 0));
 				temp.add(new WTimeSpan(0, 12, 0, 0));
-				//rainEndTime.Add(new WTimeSpan(0, 13, 0, 0));
 			}
 			rainStartTime = new WTime(noon);
 			rainStartTime.add(new WTimeSpan(0, 1, 0, 0));
-			ws.getInstantaneousValues(temp, 0, wx, ifwi, dfwi);
+			ws.getInstantaneousValues(noon, 0, wx, ifwi, dfwi);
 			try {
 				ws.getInstantaneousValues(noon, 0, wxnoon, null, null);
 				if (wxnoon.value == null) {
