@@ -410,11 +410,11 @@ public class Settings extends JDialog  {
 		prefs.putString("saveValues", (chckbxSaveValues.isSelected() ? "true"
 				: "false"));
 		prefs.putInt("regionindex", comboTimezoneRegions.getSelectedIndex());
-		prefs.putInt("map_zoomlevel", cmbZoomLevel.getSelectedIndex());
+		//prefs.putInt("map_zoomlevel", cmbZoomLevel.getSelectedIndex());
 		prefs.putInt("general_units", currentUnits);
-		prefs.putInt("map_type", indexToMap(comboMapType.getSelectedIndex()).toInt());
+		//prefs.putInt("map_type", indexToMap(comboMapType.getSelectedIndex()).toInt());
 		
-		prefs.putString("wms_url", this.txtWmsUrl.getText());
+		//prefs.putString("wms_url", this.txtWmsUrl.getText());
 		
 		Double la = app.getLatitude();
 		Double lo = app.getLongitude();
