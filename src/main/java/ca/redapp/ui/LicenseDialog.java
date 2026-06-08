@@ -114,7 +114,7 @@ public class LicenseDialog extends JDialog {
 		String[] extensionFiltersNames = new String[] {
 				Main.resourceManager.getString("ui.label.file.txt") + " (*.txt)",
 		};
-		fc.setExtensionFilters(extensionFilters, extensionFiltersNames, 0);
+		fc.setExtensionFilters(extensionFilters, extensionFiltersNames, 0, false);
 		fc.setTitle(Main.resourceManager.getString("ui.label.fbp.export.title"));
 		int retval = fc.showDialog(parent.frmRedapp);
 
