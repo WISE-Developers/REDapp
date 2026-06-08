@@ -60,9 +60,9 @@ public class RFileChooser {
 	/**
 	 * Set the file extension filters.
 	 */
-	public void setExtensionFilters(String[] extensionFilters, String[] extensionFiltersNames, int selectedExtensionFilterIndex) {
+	public void setExtensionFilters(String[] extensionFilters, String[] extensionFiltersNames, int selectedExtensionFilterIndex, boolean acceptAllFileFilters) {
 		int length = Math.min(extensionFilters.length, extensionFiltersNames.length);
-		_InternalJava.setAcceptAllFileFilterUsed(false);
+		_InternalJava.setAcceptAllFileFilterUsed(acceptAllFileFilters);
 		for (int i = 0; i < length; i++) {
 			String extensions = extensionFilters[i];
 			String[] extensionList = extensions.split(";");
