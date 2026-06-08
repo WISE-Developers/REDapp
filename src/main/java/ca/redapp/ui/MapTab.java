@@ -443,7 +443,7 @@ public class MapTab extends REDappTab implements javax.swing.event.ChangeListene
 			extensionFiltersNames = new String[] { Main.resourceManager.getString("ui.label.file.kmz") + " (*.kmz)",
 												   Main.resourceManager.getString("ui.label.file.kml") + " (*.kml)",
 												   Main.resourceManager.getString("ui.label.file.shp") + " (*.shp)"};
-			chooser.setExtensionFilters(extensionFilters, extensionFiltersNames, 0);
+			chooser.setExtensionFilters(extensionFilters, extensionFiltersNames, 0, false);
 			int retval = chooser.showDialog(this);
 			String extension = "kml";
 			if (retval == JFileChooser.APPROVE_OPTION) {
