@@ -73,7 +73,7 @@ public class RMapValueTextField extends JPanel {
 		textField = new RTextField();
 		textField.setEditable(false);
 		setLayout(null);
-		textField.setBounds(0, 0, getWidth(), getHeight());
+		//textField.setBounds(0, 0, getWidth(), getHeight());
 		button = new JButton();
 		button.setIcon(new ImageIcon(RClearTextField.class.getResource("/images/icons/ExpandArrow.png")));
 		button.setBounds(0, 0, 16, getHeight());
@@ -138,7 +138,7 @@ public class RMapValueTextField extends JPanel {
 		add(button);
 		add(textField);
 		setMinimumSize(new Dimension(40, 20));
-		setPreferredSize(new Dimension(100, 20));
+		//setPreferredSize(new Dimension(100, 20));
 		setOpaque(false);
 	}
 

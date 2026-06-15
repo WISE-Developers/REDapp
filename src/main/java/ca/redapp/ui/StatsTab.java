@@ -52,7 +52,6 @@ import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.URI;
 import java.text.NumberFormat;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.List;
@@ -2381,35 +2380,141 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 
 
 	}
+
+
+	//This method will be used when ImportFile rejects a prometheus weather file for having a date before 0hrs
+	//It needs to remove all the rows until an acceptable hour is hit, and then return the results
+	
+	private int findFirstPrometheusImportRow(String filePath) throws IOException {
+		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+			String line;
+			int rowIndex = 0;
+			while ((line = reader.readLine()) != null) {
+				String[] columns = splitPrometheusImportRow(line);
+				if (columns.length > 1) {
+					WTime testTime = parsePrometheusImportTime(columns[1]);
+					if (testTime != null && prometheusImportCheckTime(testTime)) {
+						return rowIndex;
+					}
+				}
+				rowIndex++;
+			}
+		}
+		return -1;
+	}
+	
+	private String recreatePrometheusImportFile(String filePath) throws IOException {
+		int firstValidRow = findFirstPrometheusImportRow(filePath);
+		File tempFile = File.createTempFile("spotwximport", ".csv");
+		
+		try (BufferedReader reader = new BufferedReader(new FileReader(filePath));
+			 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+			String line = reader.readLine();
+			if (line == null) {
+				return tempFile.getAbsolutePath();
+			}
+			
+			writer.write(line);
+			writer.newLine();
+			
+			int rowIndex = 1;
+			while ((line = reader.readLine()) != null) {
+				if (firstValidRow != -1 && rowIndex >= firstValidRow) {
+					writer.write(line);
+					writer.newLine();
+				}
+				rowIndex++;
+			}
+		}
+		return tempFile.getAbsolutePath();
+	}
+	
+	private String[] splitPrometheusImportRow(String line) {
+		if (line.contains("\t")) {
+			return line.split("\t", -1);
+		}
+		return line.split(",", -1);
+	}
+	
+	private WTime parsePrometheusImportTime(String rawTime) {
+		if (rawTime == null) {
+			return null;
+		}
+		
+		String timeValue = rawTime.trim();
+		if (timeValue.isEmpty()) {
+			return null;
+		}
+		if (timeValue.startsWith("\"") && timeValue.endsWith("\"") && timeValue.length() > 1) {
+			timeValue = timeValue.substring(1, timeValue.length() - 1);
+		}
+		
+		try {
+			int hour = Integer.parseInt(timeValue);
+			WTimeManager timeManager = new WTimeManager(new WorldLocation());
+			WTime testTime = new WTime(0L, timeManager);
+			testTime.add(new WTimeSpan(0L, hour, 0L, 0L));
+			return testTime;
+		}
+		catch (NumberFormatException ex) {
+			return null;
+		}
+	}
+	
+
+	private Boolean prometheusImportCheckTime(WTime testTime) {
+
+		WorldLocation m_worldLocation = new WorldLocation();
+		WTimeManager m_timeManager = new WTimeManager(m_worldLocation);
+
+		WTime m_time = new WTime(0L, m_timeManager);
+		WTime dayNeutral = new WTime(m_time, 83886080L, (short)1);
+		WTime dayLST = new WTime(dayNeutral, 16777216L, (short)-1);
+		dayLST.add(new WTimeSpan(0L, 12L, 0L, 0L));
+
+		if (WTime.greaterThan(testTime, dayLST)) {
+			return false;
+		}
+		return true;
+	}
+
+
 	/**
 	 * Import a weather stream file.
 	 * @param filename
 	 * @param type
 	 */
 	public void importFile(String filename, Import.FileType type) {
-	    highlightCorrectedRows = false;
-	    
+		highlightCorrectedRows = false;
+
 		if (type == Import.FileType.WEATHER_STREAM) {
 			long err;
 			try {
-				err = ws.importFile(filename, (int)(WEATHERSTREAM_IMPORT.PURGE | WEATHERSTREAM_IMPORT.INVALID_FIX));
+				err = ws.importFile(filename, (int) (WEATHERSTREAM_IMPORT.PURGE | WEATHERSTREAM_IMPORT.INVALID_FIX));
+				if (err == -2147470841L) {
+					String tempPath = recreatePrometheusImportFile(filename);
+					err = ws.importFile(tempPath, (int) (WEATHERSTREAM_IMPORT.PURGE | WEATHERSTREAM_IMPORT.INVALID_FIX));
 
-			}
-			catch (IOException ex) {
+					//todo display a message on screen to say you've done this
+					//JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.warning.partial"), "Warning", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Warning: a few rows at the start of your weather file were removed, weather files need to start at 0000hrs", "Warning", JOptionPane.WARNING_MESSAGE);
+				}
+			} catch (IOException ex) {
 				JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.error.import2"), "Error", JOptionPane.ERROR_MESSAGE);
 				err = ca.hss.general.ERROR.INVALID_DATA;
+				JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.warning.partial"), "Warning", JOptionPane.WARNING_MESSAGE);
 			}
-			
+
 			CreateTempWSDialog dlg = null;
-			if(ws.getWeatherMode() == 1) {
+			if (ws.getWeatherMode() == 1) {
 				if (((err & ca.hss.general.ERROR.SEVERITY_WARNING) == 0) && (err != -1)) {
 					dlg = new CreateTempWSDialog(app.frmRedapp);
 					setDialogPosition(dlg);
-					dlg.setVisible(true);	
+					dlg.setVisible(true);
 					err = dlg.getResult();
 				}
 			}
-			
+
 			if (((err & ca.hss.general.ERROR.SEVERITY_WARNING) == 0) && (err != -1)) {
 				if (dlg != null) {
 					txtTempAlphaChanged(dlg.getTempAlpha());
@@ -2419,7 +2524,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 					txtWSBetaChanged(dlg.getWSBeta());
 					txtWSGammaChanged(dlg.getWSGamma());
 				}
-				
+
 				tglHourly.setEnabled(true);
 				tglDaily.setEnabled(true);
 				if (tglHourly.isSelected())
@@ -2430,25 +2535,24 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 					boxDisplayNoonChanged();
 				if (err == ca.hss.general.ERROR.INTERPOLATE || err == ca.hss.general.ERROR.INTERPOLATE_BEFORE_INVALID_DATA) {
 					JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.warning.interpolation"), "Warning", JOptionPane.WARNING_MESSAGE);
-                    //there was imported data out of valid ranges that was corrected
-                    if (ws.hasAnyCorrected()) {
-                        if (JOptionPane.showConfirmDialog(null, Main.resourceManager.getString("ui.label.stats.warning.corrected"), "Warning",
-                                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-                            highlightCorrectedRows = true;
-                        }
-                    }
+					//there was imported data out of valid ranges that was corrected
+					if (ws.hasAnyCorrected()) {
+						if (JOptionPane.showConfirmDialog(null, Main.resourceManager.getString("ui.label.stats.warning.corrected"), "Warning",
+								JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+							highlightCorrectedRows = true;
+						}
+					}
 				}
 				if (err == ca.hss.general.ERROR.INVALID_DATA) {
-				    //there was imported data out of valid ranges that was corrected
-				    if (ws.hasAnyCorrected()) {
-				        if (JOptionPane.showConfirmDialog(null, Main.resourceManager.getString("ui.label.stats.warning.corrected"), "Warning",
-				                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-				            highlightCorrectedRows = true;
-				        }
-				    }
-				    else if (err == ca.hss.general.ERROR.INTERPOLATE_BEFORE_INVALID_DATA) {
-				        JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.warning.partial"), "Warning", JOptionPane.WARNING_MESSAGE);
-				    }
+					//there was imported data out of valid ranges that was corrected
+					if (ws.hasAnyCorrected()) {
+						if (JOptionPane.showConfirmDialog(null, Main.resourceManager.getString("ui.label.stats.warning.corrected"), "Warning",
+								JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+							highlightCorrectedRows = true;
+						}
+					} else if (err == ca.hss.general.ERROR.INTERPOLATE_BEFORE_INVALID_DATA) {
+						JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.warning.partial"), "Warning", JOptionPane.WARNING_MESSAGE);
+					}
 				}
 				if (!model.columnExists(StatsDataType.IMPORT_TEMPERATURE)) {
 					model.new Column(StatsDataType.IMPORT_TEMPERATURE);
@@ -2526,23 +2630,20 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				cmbHourlyStartSkipAction = true;
 				calculate();
 				cmbHourlyStartSkipAction = false;
-				
+
 				if (app.getCurrentTab() == this) {
 					firstImport = false;
 					model.importComplete();
-				}else
+				} else
 					checkboxUpdateNeeded = true;
-			}
-			else {
+			} else {
 				JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.error.import2"), "Error", JOptionPane.WARNING_MESSAGE);
 			}
-		}
-		else if (type == FileType.NOON_WEATHER) {
+		} else if (type == FileType.NOON_WEATHER) {
 			long err;
 			try {
-				err = nwc.importFile(filename, (int)WEATHERSTREAM_IMPORT.PURGE);
-			}
-			catch (IOException ex) {
+				err = nwc.importFile(filename, (int) WEATHERSTREAM_IMPORT.PURGE);
+			} catch (IOException ex) {
 				JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.error.import2"), "Error", JOptionPane.ERROR_MESSAGE);
 				err = ca.hss.general.ERROR.INVALID_DATA;
 			}
@@ -2567,14 +2668,13 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				if (!model.columnExists(StatsDataType.NOON_PRECIP)) {
 					model.new Column(StatsDataType.NOON_PRECIP, true, DisplayType.NOON);
 				}
-				
+
 				calculate();
 				if (app.getCurrentTab() == this)
 					model.importComplete();
 				else
 					checkboxUpdateNeeded = true;
-			}
-			else {
+			} else {
 				JOptionPane.showMessageDialog(null, Main.resourceManager.getString("ui.label.stats.error.import2"), "Error", JOptionPane.WARNING_MESSAGE);
 			}
 		}
@@ -2742,6 +2842,18 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		String str = null;
 		RFileChooser chooser = RFileChooser.filePicker();
 		chooser.setCurrentDirectory(dir);
+
+	 String[]	extensionFilters = new String[] {
+				"*.csv",
+				"*.xls",
+				"*.xlsx" };
+		String[] extensionFiltersNames = new String[] {
+				Main.resourceManager.getString("ui.label.file.csv") + " (*.csv)",
+				Main.resourceManager.getString("ui.label.file.xls") + " (*.xls)",
+				Main.resourceManager.getString("ui.label.file.xlsx") + " (*.xlsx)" };
+
+		chooser.setExtensionFilters(extensionFilters, extensionFiltersNames, 1, true);
+
 		chooser.setTitle(Main.resourceManager.getString("ui.label.stats.import.title"));
 		int retval = chooser.showDialog(this);
 		
@@ -2921,7 +3033,7 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 				Main.resourceManager.getString("ui.label.file.xls") + " (*.xls)",
 				Main.resourceManager.getString("ui.label.file.xlsx") + " (*.xlsx)",
 				Main.resourceManager.getString("ui.label.file.xml") + " (*.xml)" };
-		chooser.setExtensionFilters(extensionFilters, extensionFiltersNames, 0);
+		chooser.setExtensionFilters(extensionFilters, extensionFiltersNames, 0, false);
 		chooser.setTitle("Export File");
 		int retval = chooser.showDialog(this);
 		if (retval == JFileChooser.APPROVE_OPTION) {
@@ -4929,4 +5041,3 @@ public class StatsTab extends REDappTab implements StatsTableListener, Displayab
 		return null;
 	}
 }
-

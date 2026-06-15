@@ -732,7 +732,7 @@ public class FwiTab extends REDappTab implements DocumentListener {
 				Main.resourceManager.getString("ui.label.file.xlsx") + " (*.xlsx)",
 				Main.resourceManager.getString("ui.label.file.xml") + " (*.xml)",
 		};
-		fc.setExtensionFilters(extensionFilters, extensionFiltersNames, 0);
+		fc.setExtensionFilters(extensionFilters, extensionFiltersNames, 0, false);
 		fc.setTitle(Main.resourceManager.getString("ui.label.fbp.export.title"));
 		int retval = fc.showDialog(app.frmRedapp);
 

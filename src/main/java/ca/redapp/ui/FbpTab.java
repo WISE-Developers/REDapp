@@ -871,7 +871,7 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 					Main.resourceManager.getString("ui.label.file.xlsx") + " (*.xlsx)",
 					Main.resourceManager.getString("ui.label.file.xml") + " (*.xml)",
 			};
-			fc.setExtensionFilters(extensionFilters, extensionFiltersNames, 0);
+			fc.setExtensionFilters(extensionFilters, extensionFiltersNames, 0, false);
 			fc.setTitle(Main.resourceManager.getString("ui.label.fbp.export.title"));
 			int retval = fc.showDialog(app.frmRedapp);
 
@@ -2337,7 +2337,7 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		RGroupBox groupFbpSecondary = new RGroupBox();
 		groupFbpSecondary.setLayout(new GridBagLayout());
 		groupFbpSecondary.setText(Main.resourceManager.getString("ui.label.fbp.secondary.title"));
-		groupFbpSecondary.setBounds(305, 314, 651, 111);
+		//groupFbpSecondary.setBounds(305, 314, 651, 111);
 
 		gbc.gridx = 1;
 		gbc.gridy = 2;
@@ -2361,11 +2361,11 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
         gbcSubLabelCol.insets = new Insets(5,0,5,2);
         gbcSubLabelCol.weighty = 1;
         gbcSubLabelCol.weightx = 0;
-        //gbcSubLabelCol.anchor = GridBagConstraints.EAST;
-        //gbcSubLabelCol.fill = GridBagConstraints.HORIZONTAL;
+        gbcSubLabelCol.anchor = GridBagConstraints.EAST;
         gbcSubLabelCol.gridx = 0;
         gbcSubLabelCol.gridwidth = 1;
         gbcSubLabelCol.gridheight = 1;
+
 
         GridBagConstraints gbcSubValueCol = new GridBagConstraints();
         gbcSubValueCol.insets = new Insets(5,1,5,1);
@@ -2381,8 +2381,6 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
         gbcSubUomCol.weighty = 1;
         gbcSubUomCol.weightx = 0;
         gbcSubUomCol.anchor = GridBagConstraints.WEST;
-        gbcSubUomCol.fill = GridBagConstraints.HORIZONTAL;
-        //gbcSubLabelCol.fill = GridBagConstraints.LINE_START;
         gbcSubUomCol.gridx = 2;
         gbcSubUomCol.gridwidth = 1;
         gbcSubUomCol.gridheight = 1;
@@ -2454,6 +2452,14 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
 		panelFbpSecondary1.add(lblFbpBrosUnit, gbcSubUomCol);
 
 		//SpringUtilities.makeCompactGrid(panelFbpSecondary1, 3, 3, 5, 0, 5, 5, 10, 10);
+
+
+
+
+
+
+
+
 
 
 	 JPanel	panelFbpSecondary2 = new JPanel();
@@ -2535,6 +2541,7 @@ public class FbpTab extends REDappTab implements DocumentListener, DisplayableMa
         panelFbpSecondary3.add(LblFbpDH, gbcSubLabelCol);
 
 		txtFbpDH = new RMapValueTextField();
+
         gbcSubValueCol.gridy = 0;
         panelFbpSecondary3.add(txtFbpDH, gbcSubValueCol);
 
